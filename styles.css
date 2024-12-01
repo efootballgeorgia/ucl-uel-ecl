@@ -106,12 +106,6 @@ tbody tr:hover {
   width: 22%;
   text-align: center;
   box-sizing: border-box;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.team:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
 }
 
 .team img {
@@ -191,17 +185,6 @@ tbody tr:hover {
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
-  .team {
-    width: 30%;
-  }
-
-  .image-gallery img {
-    width: 110px;
-    height: 90px;
-  }
-}
-
 @media (max-width: 768px) {
   .team {
     width: 45%;
@@ -221,11 +204,5 @@ tbody tr:hover {
   .image-gallery img {
     width: 90px;
     height: 70px;
-  }
-}
-
-@media (max-width: 320px) {
-  .team h3 {
-    font-size: 1.2em;
   }
 }
