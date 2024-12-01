@@ -5,20 +5,19 @@ body {
   color: #fff;
   text-align: center;
   margin: 0;
-  position: relative;
   padding-bottom: 40px; /* Prevents overlap with the footer */
-  overflow-x: hidden; /* Prevents horizontal scrolling */
+  position: relative;
 }
 
 /* Background Video */
 #bg-video {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  z-index: -2; /* Ensure the background stays behind header and content */
+  z-index: -1; /* Ensure the video stays behind all content */
 }
 
 /* Header Styling */
@@ -29,31 +28,21 @@ header {
   z-index: 1;
 }
 
-#header-video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -1; /* Ensure video stays behind logo and text */
-}
-
-header .header-content {
-  position: relative;
-  z-index: 1; /* Ensures content like logo and text are above the video */
-}
-
 header img.league-logo {
   max-width: 200px;
   height: auto;
   margin-top: 20px;
+  z-index: 1;
+  position: relative; /* Ensures it stays above the video */
 }
 
 header h2 {
   font-size: 1.5em;
   margin: 10px 0;
+  z-index: 1;
+  position: relative;
   color: #fff;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Add shadow for better readability */
 }
 
 /* League Table Section */
@@ -125,6 +114,12 @@ tbody tr:hover {
   width: 22%;
   text-align: center;
   box-sizing: border-box;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
 }
 
 .team img {
@@ -151,8 +146,8 @@ tbody tr:hover {
 }
 
 .image-gallery img {
-  width: 120px;
-  height: 100px;
+  width: 100px;
+  height: 150px;
   border-radius: 5px;
   border: 2px solid #fff;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -168,7 +163,7 @@ tbody tr:hover {
 .modal {
   display: none;
   position: fixed;
-  z-index: 2;
+  z-index: 1;
   left: 0;
   top: 0;
   width: 100%;
@@ -177,6 +172,7 @@ tbody tr:hover {
   background-color: rgba(0, 0, 0, 0.8);
   justify-content: center;
   align-items: center;
+  transition: opacity 0.3s ease-in-out; /* Smooth fade-in/out for modal */
 }
 
 .modal-content {
@@ -210,8 +206,12 @@ tbody tr:hover {
   }
 
   .image-gallery img {
-    width: 100px;
-    height: 80px;
+    width: 90px;
+    height: 120px;
+  }
+
+  header h2 {
+    font-size: 1.2em; /* Smaller text size for mobile */
   }
 }
 
@@ -221,7 +221,15 @@ tbody tr:hover {
   }
 
   .image-gallery img {
-    width: 90px;
-    height: 70px;
+    width: 80px;
+    height: 100px;
+  }
+
+  header h2 {
+    font-size: 1em; /* Further reduction for smaller screens */
+  }
+
+  table {
+    font-size: 14px; /* Smaller text for the table */
   }
 }
