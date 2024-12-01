@@ -159,7 +159,7 @@ tbody tr:hover {
   box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
 }
 
-/* Modal Styling */
+/* Modal Background Styling */
 .modal {
   display: none;
   position: fixed;
@@ -168,20 +168,24 @@ tbody tr:hover {
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.8); /* Ensures the background covers the entire screen */
   justify-content: center;
   align-items: center;
   transition: opacity 0.3s ease-in-out; /* Smooth fade-in/out for modal */
 }
 
+/* Modal Content */
 .modal-content {
-  max-width: 90%;
-  max-height: 80%;
+  max-width: 80%; /* Adjust width as necessary */
+  max-height: 80%; /* Adjust height as necessary */
   margin: auto;
   display: block;
+  position: relative;
+  top: 10%; /* Moves the modal content 20% down from the top */
+  /* You can adjust the top value to move the modal content further down or up */
 }
 
+/* Close Button */
 .close {
   position: absolute;
   top: 20px;
