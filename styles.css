@@ -5,11 +5,26 @@ body {
   color: #fff;
   text-align: center;
   margin: 0;
+  position: relative;
+  padding-bottom: 40px; /* Prevents overlap with the footer */
 }
 
+/* Background Video */
+#bg-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1; /* Ensure the video stays behind all content */
+}
+
+/* Header Styling */
 header {
   background: #0d3b66;
   padding: 20px 0;
+  z-index: 1;
 }
 
 header h1 {
@@ -22,11 +37,13 @@ header h2 {
   margin: 10px 0;
 }
 
+/* League Table Section */
 .league-table {
   width: 80%;
   margin: 20px auto;
   border-radius: 8px;
   overflow: hidden;
+  z-index: 1;
 }
 
 table {
@@ -72,6 +89,7 @@ tbody tr:hover {
   margin: 40px auto;
   text-align: center;
   color: #fff;
+  z-index: 1;
 }
 
 .team-gallery {
