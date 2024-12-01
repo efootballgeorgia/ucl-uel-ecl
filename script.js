@@ -12,7 +12,8 @@ document.addEventListener('DOMContentLoaded', function () {
       logo: 'images/ac-milan-logo.png',
       images: [
         'images/bacho1.jpg',
-        'images/bacho2.jpg'
+        'images/bacho2.jpg',
+        'images/bacho3.jpg'
       ]
     },
     {
