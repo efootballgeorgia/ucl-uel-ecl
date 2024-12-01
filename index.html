@@ -4,7 +4,314 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nekro League Table</title>
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* General Styling */
+    body {
+      font-family: Arial, sans-serif;
+      background: #1a1a40;
+      color: #fff;
+      text-align: center;
+      margin: 0;
+      padding-bottom: 40px; /* Prevents overlap with the footer */
+      position: relative;
+    }
+
+    /* Background Video */
+    #bg-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1; /* Ensure the video stays behind all content */
+    }
+
+    /* Header Styling */
+    header {
+      position: relative;
+      height: 300px;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    header .header-content {
+      padding-top: 50px;
+    }
+
+    header img.league-logo {
+      max-width: 200px;
+      height: auto;
+      margin-top: 20px;
+      z-index: 1;
+      position: relative;
+    }
+
+    header h2 {
+      font-size: 1.5em;
+      margin: 10px 0;
+      z-index: 1;
+      position: relative;
+      color: #fff;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Add shadow for better readability */
+    }
+
+    /* League Table Section */
+    .league-table {
+      width: 80%;
+      margin: 20px auto;
+      border-radius: 8px;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 16px;
+    }
+
+    thead th {
+      background-color: #222;
+      color: white;
+      padding: 12px;
+      cursor: pointer;
+    }
+
+    thead th:hover {
+      background-color: #333;
+    }
+
+    tbody td {
+      background-color: #292929;
+      padding: 12px;
+      text-align: center;
+    }
+
+    tbody td img {
+      width: 30px;
+      height: 30px;
+      vertical-align: middle;
+      margin-right: 10px;
+    }
+
+    tbody tr:nth-child(even) td {
+      background-color: #333;
+    }
+
+    tbody tr:hover {
+      background-color: #444;
+    }
+
+    /* Team Highlights Section */
+    .team-images {
+      margin: 40px auto;
+      text-align: center;
+      color: #fff;
+      z-index: 1;
+    }
+
+    .team-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      gap: 20px;
+    }
+
+    .team {
+      background: #292929;
+      border-radius: 10px;
+      padding: 10px;
+      width: 22%;
+      text-align: center;
+      box-sizing: border-box;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .team:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+
+    .team img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    .team h3 {
+      margin-top: 0;
+      font-size: 1.5em;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-transform: capitalize;
+    }
+
+    .noteam-images {
+      margin: 40px auto;
+      text-align: center;
+      color: #fff;
+      z-index: 1;
+    }
+
+    .noteam-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      gap: 20px;
+    }
+
+    .noteam {
+      background: #292929;
+      border-radius: 10px;
+      padding: 10px;
+      width: 18%;
+      text-align: center;
+      box-sizing: border-box;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .noteam img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+
+    .noteam h3 {
+      margin-top: 0;
+      font-size: 1.5em;
+      font-weight: bold;
+      margin-bottom: 10px;
+      text-transform: capitalize;
+    }
+    
+    .image-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .image-gallery img {
+      width: 100px;
+      height: 150px;
+      border-radius: 5px;
+      border: 2px solid #fff;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      object-fit: cover;
+      cursor: pointer;
+    }
+
+    .image-gallery img:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+    }
+
+    .screen-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .screen-gallery img {
+      width: 100%;
+      height: 100%;
+      border-radius: 5px;
+      border: 2px solid #000000;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      object-fit: cover;
+      cursor: pointer;
+    }
+
+    .screen-gallery img:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+    }
+
+    /* Modal Background Styling */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8); /* Ensures the background covers the entire screen */
+      justify-content: center;
+      align-items: center;
+      transition: opacity 0.3s ease-in-out; /* Smooth fade-in/out for modal */
+    }
+
+    /* Modal Content */
+    .modal-content {
+      max-width: 80%; /* Adjust width as necessary */
+      max-height: 80%; /* Adjust height as necessary */
+      margin: auto;
+      display: block;
+      position: relative;
+      top: 0%; /* Moves the modal content 20% down from the top */
+      /* You can adjust the top value to move the modal content further down or up */
+    }
+
+    /* Close Button */
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 35px;
+      color: #fff;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: #bbb;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .team {
+        width: 45%;
+      }
+
+      .image-gallery img {
+        width: 90px;
+        height: 120px;
+      }
+
+      header h2 {
+        font-size: 1.2em; /* Smaller text size for mobile */
+      }
+    }
+
+    @media (max-width: 480px) {
+      .team {
+        width: 90%;
+      }
+
+      .image-gallery img {
+        width: 80px;
+        height: 100px;
+      }
+
+      header h2 {
+        font-size: 1em; /* Further reduction for smaller screens */
+      }
+
+      table {
+        font-size: 14px; /* Smaller text for the table */
+      }
+    }
+  </style>
 </head>
 <body>
   <!-- Background Video -->
@@ -17,7 +324,6 @@
   <header>
     <div class="header-content">
       <img src="images/nekro-league-logo.png" alt="Nekro League Logo" class="league-logo">
-      <h2>Season December</h2>
     </div>
   </header>
 
@@ -81,175 +387,132 @@
   <section class="team-images">
     <h2>Team Highlights</h2>
     <div class="team-gallery">
-      <!-- Dynamic Content will be added by JavaScript -->
+      <div class="noteam">
+        <h3>Real Madrid</h3>
+        <div class="screen-gallery">
+          <img src="images/wins/niko1.jpg" alt="Real Madrid Highlight" onclick="openModal(this)">
+        </div>
+      </div>
+      <div class="noteam">
+        <h3>AC Milan</h3>
+        <div class="screen-gallery">
+          <img src="images/wins/bacho1.jpg" alt="AC Milan Highlight" onclick="openModal(this)">
+          <img src="images/wins/bacho2.jpg" alt="AC Milan Highlight" onclick="openModal(this)">
+          <img src="images/wins/bacho3.jpg" alt="AC Milan Highlight" onclick="openModal(this)">
+        </div>
+      </div>
+      <div class="noteam">
+        <h3>Barcelona</h3>
+        <div class="screen-gallery">
+          <img src="images/wins/luksona1.jpg" alt="Barcelona Highlight" onclick="openModal(this)">
+        </div>
+      </div>
+      <div class="noteam">
+        <h3>Napoli</h3>
+        <div class="screen-gallery">
+          <p>No images available for Napoli</p>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- New Team Player Section -->
-  <section class="team-player-section">
+   <!-- Team Player Section -->
+   <section class="team-player-section">
     <h2>Team Players</h2>
     <div class="team-player-gallery">
       <!-- AC Milan Team Players -->
       <div class="team-player">
+        <td><img src="images/ac-milan-logo1.png" alt="Barcelona Logo"></td>
         <h3>AC Milan</h3>
         <div class="image-gallery">
-          <img src="images/playerimages/neymar1.webp" class="team-image">
-          <img src="images/playerimages/davidvilla.webp" class="team-image">
-          <img src="images/playerimages/messi.webp" class="team-image">
-          <img src="images/playerimages/torres.webp" class="team-image">
-          <img src="images/playerimages/beckham.webp" class="team-image">
-          <img src="images/playerimages/guardiola.webp" class="team-image">
-          <img src="images/playerimages/theo1.webp" class="team-image">
-          <img src="images/playerimages/dias.webp" class="team-image">
-          <img src="images/playerimages/tchouameni.webp" class="team-image">
-          <img src="images/playerimages/costacurta.webp" class="team-image">
-          <img src="images/playerimages/kobel.webp" class="team-image">
+          <img src="images/playerimages/neymar1.webp" onclick="openModal(this)">
+          <img src="images/playerimages/davidvilla.webp" onclick="openModal(this)">
+          <img src="images/playerimages/messi.webp" onclick="openModal(this)">
+          <img src="images/playerimages/torres.webp" onclick="openModal(this)">
+          <img src="images/playerimages/beckham.webp" onclick="openModal(this)">
+          <img src="images/playerimages/guardiola.webp" onclick="openModal(this)">
+          <img src="images/playerimages/theo1.webp" onclick="openModal(this)">
+          <img src="images/playerimages/dias.webp" onclick="openModal(this)">
+          <img src="images/playerimages/tchouameni.webp" onclick="openModal(this)">
+          <img src="images/playerimages/costacurta.webp" onclick="openModal(this)">
+          <img src="images/playerimages/kobel.webp" onclick="openModal(this)">
         </div>
       </div>
       <!-- Real Madrid Team Players -->
       <div class="team-player">
+        <td><img src="images/real-madrid-logo1.png" alt="Barcelona Logo"></td>
         <h3>Real Madrid</h3>
         <div class="image-gallery">
-          <img src="images/playerimages/neymar.webp" class="team-image">
-          <img src="images/playerimages/davidvilla.webp" class="team-image">
-          <img src="images/playerimages/messi.webp" class="team-image">
-          <img src="images/playerimages/odegaard.webp" class="team-image">
-          <img src="images/playerimages/beckham.webp" class="team-image">
-          <img src="images/playerimages/guardiola.webp" class="team-image">
-          <img src="images/playerimages/theo.webp" class="team-image">
-          <img src="images/playerimages/dias.webp" class="team-image">
-          <img src="images/playerimages/adams.webp" class="team-image">
-          <img src="images/playerimages/stones.webp" class="team-image">
-          <img src="images/playerimages/oblak.webp" class="team-image">
+          <img src="images/playerimages/neymar.webp" onclick="openModal(this)">
+          <img src="images/playerimages/davidvilla.webp" onclick="openModal(this)">
+          <img src="images/playerimages/messi.webp" onclick="openModal(this)">
+          <img src="images/playerimages/odegaard.webp" onclick="openModal(this)">
+          <img src="images/playerimages/beckham.webp" onclick="openModal(this)">
+          <img src="images/playerimages/guardiola.webp" onclick="openModal(this)">
+          <img src="images/playerimages/theo.webp" onclick="openModal(this)">
+          <img src="images/playerimages/dias.webp" onclick="openModal(this)">
+          <img src="images/playerimages/adams.webp" onclick="openModal(this)">
+          <img src="images/playerimages/stones.webp" onclick="openModal(this)">
+          <img src="images/playerimages/oblak.webp" onclick="openModal(this)">
         </div>
       </div>
       <!-- Barcelona Team Players -->
       <div class="team-player">
+        <td><img src="images/barcelona-logo1.png" alt="Barcelona Logo"></td>
         <h3>Barcelona</h3>
         <div class="image-gallery">
-          <img src="images/playerimages/kaka.webp" class="team-image">
-          <img src="images/playerimages/delpiero.webp" class="team-image">
-          <img src="images/playerimages/haaland.webp" class="team-image">
-          <img src="images/playerimages/rivaldo.webp" class="team-image">
-          <img src="images/playerimages/beckham.webp" class="team-image">
-          <img src="images/playerimages/guardiola.webp" class="team-image">
-          <img src="images/playerimages/davies.webp" class="team-image">
-          <img src="images/playerimages/nesta.webp" class="team-image">
-          <img src="images/playerimages/marquinhos.webp" class="team-image">
-          <img src="images/playerimages/kounde.webp" class="team-image">
-          <img src="images/playerimages/ederson.webp" class="team-image">
+          <img src="images/playerimages/kaka.webp" onclick="openModal(this)">
+          <img src="images/playerimages/delpiero.webp" onclick="openModal(this)">
+          <img src="images/playerimages/haaland.webp" onclick="openModal(this)">
+          <img src="images/playerimages/rivaldo.webp" onclick="openModal(this)">
+          <img src="images/playerimages/beckham.webp" onclick="openModal(this)">
+          <img src="images/playerimages/guardiola.webp" onclick="openModal(this)">
+          <img src="images/playerimages/davies.webp" onclick="openModal(this)">
+          <img src="images/playerimages/nesta.webp" onclick="openModal(this)">
+          <img src="images/playerimages/marquinhos.webp" onclick="openModal(this)">
+          <img src="images/playerimages/kounde.webp" onclick="openModal(this)">
+          <img src="images/playerimages/ederson.webp" onclick="openModal(this)">
         </div>
       </div>
       <!-- Napoli Team Players -->
       <div class="team-player">
+        <td><img src="images/napoli-logo1.png" alt="Barcelona Logo"></td>
         <h3>Napoli</h3>
         <div class="image-gallery">
-          <img src="images/playerimages/neymar.webp" class="team-image">
-          <img src="images/playerimages/davidvilla.webp" class="team-image">
-          <img src="images/playerimages/messi1.webp" class="team-image">
-          <img src="images/playerimages/scholes.webp" class="team-image">
-          <img src="images/playerimages/beckham.webp" class="team-image">
-          <img src="images/playerimages/guardiola.webp" class="team-image">
-          <img src="images/playerimages/carlos.webp" class="team-image">
-          <img src="images/playerimages/dias.webp" class="team-image">
-          <img src="images/playerimages/marquinhos.webp" class="team-image">
-          <img src="images/playerimages/costacurta.webp" class="team-image">
-          <img src="images/playerimages/terstegen.webp" class="team-image">
+          <img src="images/playerimages/neymar.webp" onclick="openModal(this)">
+          <img src="images/playerimages/davidvilla.webp" onclick="openModal(this)">
+          <img src="images/playerimages/messi1.webp" onclick="openModal(this)">
+          <img src="images/playerimages/scholes.webp" onclick="openModal(this)">
+          <img src="images/playerimages/beckham.webp" onclick="openModal(this)">
+          <img src="images/playerimages/guardiola.webp" onclick="openModal(this)">
+          <img src="images/playerimages/carlos.webp" onclick="openModal(this)">
+          <img src="images/playerimages/dias.webp" onclick="openModal(this)">
+          <img src="images/playerimages/marquinhos.webp" onclick="openModal(this)">
+          <img src="images/playerimages/costacurta.webp" onclick="openModal(this)">
+          <img src="images/playerimages/terstegen.webp" onclick="openModal(this)">
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Modal for Viewing Larger Image -->
+  <!-- Modal for Images -->
   <div id="myModal" class="modal">
-    <span class="close">&times;</span>
-    <img class="modal-content" id="modal-image" alt="Enlarged Image">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="img01">
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const teams = [
-        {
-          name: 'Real Madrid',
-          logo: 'images/real-madrid-logo.png',
-          images: [
-            'images/wins/niko1.jpg'
-          ]
-        },
-        {
-          name: 'AC Milan',
-          logo: 'images/ac-milan-logo.png',
-          images: [
-            'images/wins/bacho1.jpg',
-            'images/wins/bacho2.jpg',
-            'images/wins/bacho3.jpg'
-          ]
-        },
-        {
-          name: 'Napoli',
-          logo: 'images/napoli-logo.png',
-          images: []
-        },
-        {
-          name: 'Barcelona',
-          logo: 'images/barcelona-logo.png',
-          images: [
-            'images/wins/luksona1.jpg'
-          ]
-        }
-      ];
+    function openModal(img) {
+      const modal = document.getElementById('myModal');
+      const modalImg = document.getElementById('img01');
+      modal.style.display = "flex";
+      modalImg.src = img.src;
+    }
 
-      const gallery = document.querySelector('.team-gallery');
-      const modal = document.querySelector('.modal');
-      const modalImage = document.getElementById('modal-image');
-      const closeBtn = document.querySelector('.close');
-
-      // Function to create and display team images in the gallery
-      teams.forEach(team => {
-        const teamDiv = document.createElement('div');
-        teamDiv.classList.add('team');
-
-        let imageGallery = '';
-        if (team.images.length > 0) {
-          // Add images if the team has any
-          team.images.forEach(image => {
-            imageGallery += `<img src="${image}" alt="${team.name}" class="team-image" data-team="${team.name}">`;
-          });
-        } else {
-          // Display a message if no images exist for the team
-          imageGallery = `<p>No images available for ${team.name}</p>`;
-        }
-
-        teamDiv.innerHTML = `
-          <h3>${team.name}</h3>
-          <div class="image-gallery">
-            ${imageGallery}
-          </div>
-        `;
-
-        gallery.appendChild(teamDiv);
-      });
-
-      // Open the modal when an image is clicked
-      document.querySelectorAll('.team-image').forEach(image => {
-        image.addEventListener('click', function () {
-          modal.style.display = 'block';
-          modalImage.src = this.src; // Display the clicked image in the modal
-        });
-      });
-
-      // Close the modal when the close button is clicked
-      closeBtn.addEventListener('click', function () {
-        modal.style.display = 'none';
-      });
-
-      // Close the modal if clicked outside of the image
-      window.addEventListener('click', function (event) {
-        if (event.target === modal) {
-          modal.style.display = 'none';
-        }
-      });
-    });
+    function closeModal() {
+      const modal = document.getElementById('myModal');
+      modal.style.display = "none";
+    }
   </script>
 </body>
 </html>
