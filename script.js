@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', function () {
       ]
     },
     {
-      name: 'Georgia',
-      logo: 'images/georgia-logo.png',
+      name: 'napoli',
+      logo: 'images/napoli-logo.png',
       images: [
       ]
     },
