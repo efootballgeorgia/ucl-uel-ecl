@@ -1,1 +1,0 @@
-# nekro-league
