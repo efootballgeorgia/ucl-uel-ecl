@@ -19,12 +19,15 @@ document.addEventListener('DOMContentLoaded', function () {
     {
       name: 'Georgia',
       logo: 'images/georgia-logo.png',
-      images: [] // No images for Georgia
+      images: [
+      ]
     },
     {
       name: 'Barcelona',
       logo: 'images/barcelona-logo.png',
-      images: [] // No images for Barcelona
+      images: [
+        'images/luksona1.jpg'
+      ]
     }
   ];
 
