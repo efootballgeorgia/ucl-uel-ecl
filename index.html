@@ -367,56 +367,39 @@
       </div>
   </section>
  <style>
-    .team-images {
-      margin: 40px auto;
-      text-align: center;
-      color: #fff;
-      z-index: 1;
+    .team-player-section {
+      margin: 20px auto;
     }
 
-    .team-gallery {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-      gap: 20px;
+    .team-player {
+      margin-bottom: 20px;
+      position: relative;
     }
 
-    .team {
-      background: #292929;
-      border-radius: 10px;
-      padding: 10px;
-      width: 22%;
-      text-align: center;
-      box-sizing: border-box;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .team:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-    }
-
-    .team img {
-      width: 80%;
-      height: auto;
-      border-radius: 8px;
-      margin-top: 10px;
+    .team-player img {
       cursor: pointer;
+      transition: transform 0.3s;
     }
 
-    .team h3 {
-      margin-top: 0;
-      font-size: 1.5em;
-      font-weight: bold;
-      margin-bottom: 10px;
-      text-transform: capitalize;
+    .team-player img:hover {
+      transform: scale(1.1);
     }
 
     .image-gallery {
-      display: flex;
+      display: none;
       flex-wrap: wrap;
       gap: 10px;
       justify-content: center;
+      margin-top: 10px;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    }
+
+    .image-gallery.show {
+      display: flex;
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .image-gallery img {
@@ -424,158 +407,139 @@
       height: 160px;
       border-radius: 5px;
       border: 2px solid #000000;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
       object-fit: cover;
-      cursor: pointer;
+      transition: transform 0.3s ease;
     }
 
     .image-gallery img:hover {
       transform: scale(1.1);
-      box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
     }
-</style>
+  </style>
 </head>
 <body>
-    <section class="team-player-section">
-        <div class="team-player-gallery">
-          <div class="team-player">
-            <td><img src="images/logos/ac-milan-logo1.png" alt="AC Milan Logo"></td>
-            <td><img src="images/logos/gameplan.png" alt="Game Plan"></td>
-            <td><img src="images/logos/manager.png" alt="Manager"></td>
-            <h3></h3>
-            <div class="image-gallery">
-              <img src="images/playerimages/neymar1.webp">
-              <img src="images/playerimages/davidvilla.webp">
-              <img src="images/playerimages/messi.webp">
-              <img src="images/playerimages/torres.webp">
-              <img src="images/playerimages/beckham.webp">
-              <img src="images/playerimages/guardiola.webp">
-              <img src="images/playerimages/theo1.webp">
-              <img src="images/playerimages/dias.webp">
-              <img src="images/playerimages/tchouameni.webp">
-              <img src="images/playerimages/costacurta.webp">
-              <img src="images/playerimages/kobel.webp">
-            </div>
-            <h3></h3>
-              <div class="image-gallery">
-            <img src="images/playerimages/haaland1.webp">
-            <img src="images/playerimages/palmer.webp">
-            <img src="images/playerimages/mbappe.webp">
-            <img src="images/playerimages/griezmann.webp">
-            <img src="images/playerimages/vandervaart.webp">
-            <img src="images/playerimages/rodri.webp">
-            <img src="images/playerimages/wilshere.webp">
-            <img src="images/playerimages/vinicius.webp">
-            <img src="images/playerimages/kounde.webp">
-            <img src="images/playerimages/jackson.webp">
-            <img src="images/playerimages/kane.webp">
-            <img src="images/playerimages/arnold.webp">
-          </div>
-          <h3></h3>
-          <div class="team-player">
-          <td><img src="images/logos/real-madrid-logo1.png" alt="Real Madrid Logo"></td>
-          <td><img src="images/logos/gameplan.png" alt="Game Plan"></td>
-          <td><img src="images/logos/manager1.png" alt="Manager"></td>
-          <h3></h3>
-            <div class="image-gallery">
-              <img src="images/playerimages/neymar.webp">
-              <img src="images/playerimages/davidvilla.webp">
-              <img src="images/playerimages/messi.webp">
-              <img src="images/playerimages/odegaard.webp">
-              <img src="images/playerimages/beckham.webp">
-              <img src="images/playerimages/guardiola.webp">
-              <img src="images/playerimages/theo.webp">
-              <img src="images/playerimages/dias.webp">
-              <img src="images/playerimages/adams.webp">
-              <img src="images/playerimages/stones.webp">
-              <img src="images/playerimages/oblak.webp">
-            </div>
-            <h3></h3>
-              <div class="image-gallery">
-            <img src="images/playerimages/maradona.webp">
-            <img src="images/playerimages/rodri1.webp">
-            <img src="images/playerimages/vinicius.webp">
-            <img src="images/playerimages/vanbasten.webp">
-            <img src="images/playerimages/denilson.webp">
-            <img src="images/playerimages/beckenbauer.webp">
-            <img src="images/playerimages/camavinga.webp">
-            <img src="images/playerimages/mbappe1.webp">
-            <img src="images/playerimages/totti1.webp">
-            <img src="images/playerimages/debruyne2.webp">
-            <img src="images/playerimages/kimmich.webp">
-            <img src="images/playerimages/kounde1.webp">
-          </div>
-          <h3></h3>
-          <div class="team-player">
-            <td><img src="images/logos/barcelona-logo1.png" alt="Barcelona Logo"></td>
-            <td><img src="images/logos/gameplan.png" alt="Game Plan"></td>
-            <td><img src="images/logos/manager.png" alt="Manager"></td>
-            <h3></h3>
-            <div class="image-gallery">
-              <img src="images/playerimages/neymar1.webp">
-              <img src="images/playerimages/delpiero.webp">
-              <img src="images/playerimages/messi.webp">
-              <img src="images/playerimages/bergkamp.webp"> 
-              <img src="images/playerimages/kaka.webp">
-              <img src="images/playerimages/guardiola.webp"> 
-              <img src="images/playerimages/xabialonso.webp"> 
-              <img src="images/playerimages/tchouameni.webp"> 
-              <img src="images/playerimages/nesta.webp"> 
-              <img src="images/playerimages/marquinhos.webp">
-              <img src="images/playerimages/ederson.webp">
-            </div>
-            <h3></h3>
-              <div class="image-gallery">
-            <img src="images/playerimages/totti.webp">
-            <img src="images/playerimages/kane.webp">
-            <img src="images/playerimages/rivaldo.webp">
-            <img src="images/playerimages/davidvilla.webp">
-            <img src="images/playerimages/beckenbauer.webp">
-            <img src="images/playerimages/beckham.webp">
-            <img src="images/playerimages/mbappe.webp">
-            <img src="images/playerimages/salah.webp">
-            <img src="images/playerimages/vinicius.webp">
-            <img src="images/playerimages/debruyne.webp">
-            <img src="images/playerimages/maradona.webp">
-            <img src="images/playerimages/white.webp">
-          </div>
-          <h3></h3>
-          <div class="team-player">
-            <td><img src="images/logos/napoli-logo1.png" alt="Napoli Logo"></td>
-            <td><img src="images/logos/gameplan.png" alt="Game Plan"></td>
-            <td><img src="images/logos/manager.png" alt="Manager"></td>
-            <h3></h3>
-            <div class="image-gallery">
-              <img src="images/playerimages/neymar.webp">
-              <img src="images/playerimages/mbappe2.webp">
-              <img src="images/playerimages/messi1.webp">
-              <img src="images/playerimages/scholes.webp">
-              <img src="images/playerimages/guardiola.webp">
-              <img src="images/playerimages/ambrosini.webp">
-              <img src="images/playerimages/carlos.webp">
-              <img src="images/playerimages/dias.webp">
-              <img src="images/playerimages/theo1.webp">
-              <img src="images/playerimages/costacurta.webp">
-              <img src="images/playerimages/terstegen.webp">
-            </div>
-            <h3></h3>
-              <div class="image-gallery">
-            <img src="images/playerimages/kvara.webp">
-            <img src="images/playerimages/alvarez.webp">
-            <img src="images/playerimages/rodrygo.webp">
-            <img src="images/playerimages/debruyne.webp">
-            <img src="images/playerimages/bellingham.webp">
-            <img src="images/playerimages/wilshere.webp">
-            <img src="images/playerimages/beckenbauer.webp">
-            <img src="images/playerimages/valverde.webp">
-            <img src="images/playerimages/beckham.webp">
-            <img src="images/playerimages/denilson.webp">
-            <img src="images/playerimages/vinicius1.webp">
-            <img src="images/playerimages/maradona.webp">
-          </div>
-        </div>
-      </section>
-      <style>
+
+  <section class="team-player-section">
+    <div class="team-player">
+      <img src="images/logos/ac-milan-logo.png" alt="AC Milan Logo" onclick="toggleGallery(this)">
+      <div class="image-gallery">
+        <img src="images/playerimages/neymar1.webp">
+        <img src="images/playerimages/davidvilla.webp">
+        <img src="images/playerimages/messi.webp">
+        <img src="images/playerimages/torres.webp">
+        <img src="images/playerimages/beckham.webp">
+        <img src="images/playerimages/guardiola.webp">
+        <img src="images/playerimages/theo1.webp">
+        <img src="images/playerimages/dias.webp">
+        <img src="images/playerimages/tchouameni.webp">
+        <img src="images/playerimages/costacurta.webp">
+        <img src="images/playerimages/kobel.webp">
+        <ul>
+        <img src="images/playerimages/haaland1.webp">
+        <img src="images/playerimages/palmer.webp">
+        <img src="images/playerimages/mbappe.webp">
+        <img src="images/playerimages/griezmann.webp">
+        <img src="images/playerimages/vandervaart.webp">
+        <img src="images/playerimages/rodri.webp">
+        <img src="images/playerimages/wilshere.webp">
+        <img src="images/playerimages/vinicius.webp">
+        <img src="images/playerimages/kounde.webp">
+        <img src="images/playerimages/jackson.webp">
+        <img src="images/playerimages/kane.webp">
+        <img src="images/playerimages/arnold.webp">
+      </div>
+    </div>
+
+    <div class="team-player">
+      <img src="images/logos/real-madrid-logo.png" alt="Real Madrid Logo" onclick="toggleGallery(this)">
+      <div class="image-gallery">
+        <img src="images/playerimages/neymar.webp">
+        <img src="images/playerimages/davidvilla.webp">
+        <img src="images/playerimages/messi.webp">
+        <img src="images/playerimages/odegaard.webp">
+        <img src="images/playerimages/beckham.webp">
+        <img src="images/playerimages/guardiola.webp">
+        <img src="images/playerimages/theo.webp">
+        <img src="images/playerimages/dias.webp">
+        <img src="images/playerimages/adams.webp">
+        <img src="images/playerimages/stones.webp">
+        <img src="images/playerimages/oblak.webp">
+        <ul>
+        <img src="images/playerimages/maradona.webp">
+        <img src="images/playerimages/rodri1.webp">
+        <img src="images/playerimages/vinicius.webp">
+        <img src="images/playerimages/vanbasten.webp">
+        <img src="images/playerimages/denilson.webp">
+        <img src="images/playerimages/beckenbauer.webp">
+        <img src="images/playerimages/camavinga.webp">
+        <img src="images/playerimages/mbappe1.webp">
+        <img src="images/playerimages/totti1.webp">
+        <img src="images/playerimages/debruyne2.webp">
+        <img src="images/playerimages/kimmich.webp">
+        <img src="images/playerimages/kounde1.webp">
+      </div>
+    </div>
+
+    <div class="team-player">
+      <img src="images/logos/barcelona-logo.png" alt="Barcelona Logo" onclick="toggleGallery(this)">
+      <div class="image-gallery">
+        <img src="images/playerimages/neymar1.webp">
+        <img src="images/playerimages/delpiero.webp">
+        <img src="images/playerimages/messi.webp">
+        <img src="images/playerimages/bergkamp.webp"> 
+        <img src="images/playerimages/kaka.webp">
+        <img src="images/playerimages/guardiola.webp"> 
+        <img src="images/playerimages/xabialonso.webp"> 
+        <img src="images/playerimages/tchouameni.webp"> 
+        <img src="images/playerimages/nesta.webp"> 
+        <img src="images/playerimages/marquinhos.webp">
+        <img src="images/playerimages/ederson.webp">
+        <ul>
+        <img src="images/playerimages/totti.webp">
+        <img src="images/playerimages/kane.webp">
+        <img src="images/playerimages/rivaldo.webp">
+        <img src="images/playerimages/davidvilla.webp">
+        <img src="images/playerimages/beckenbauer.webp">
+        <img src="images/playerimages/beckham.webp">
+        <img src="images/playerimages/mbappe.webp">
+        <img src="images/playerimages/salah.webp">
+        <img src="images/playerimages/vinicius.webp">
+        <img src="images/playerimages/debruyne.webp">
+        <img src="images/playerimages/maradona.webp">
+        <img src="images/playerimages/white.webp">
+      </div>
+    </div>
+
+    <div class="team-player">
+      <img src="images/logos/napoli-logo.png" alt="napoli Logo" onclick="toggleGallery(this)">
+      <div class="image-gallery">
+        <img src="images/playerimages/neymar.webp">
+        <img src="images/playerimages/mbappe2.webp">
+        <img src="images/playerimages/messi1.webp">
+        <img src="images/playerimages/scholes.webp">
+        <img src="images/playerimages/guardiola.webp">
+        <img src="images/playerimages/ambrosini.webp">
+        <img src="images/playerimages/carlos.webp">
+        <img src="images/playerimages/dias.webp">
+        <img src="images/playerimages/theo1.webp">
+        <img src="images/playerimages/costacurta.webp">
+        <img src="images/playerimages/terstegen.webp">
+        <ul>
+        <img src="images/playerimages/kvara.webp">
+        <img src="images/playerimages/alvarez.webp">
+        <img src="images/playerimages/rodrygo.webp">
+        <img src="images/playerimages/debruyne.webp">
+        <img src="images/playerimages/bellingham.webp">
+        <img src="images/playerimages/wilshere.webp">
+        <img src="images/playerimages/beckenbauer.webp">
+        <img src="images/playerimages/valverde.webp">
+        <img src="images/playerimages/beckham.webp">
+        <img src="images/playerimages/denilson.webp">
+        <img src="images/playerimages/vinicius1.webp">
+        <img src="images/playerimages/maradona.webp">
+      </div>
+    </div>
+  </section>
+  <style>
     .modal {
       display: none;
       position: fixed;
@@ -658,7 +622,16 @@
     function closeModal() {
       modal.classList.remove('show');
     }
+    
+    function toggleGallery(logo) {
+      const gallery = logo.nextElementSibling;
+      if (gallery.classList.contains('show')) {
+        gallery.classList.remove('show');
+      } else {
+        gallery.classList.add('show');
+      }
+    }
+  </script>
 
-      </script>
-      </body>
-      </html>
+</body>
+</html>
