@@ -241,7 +241,29 @@
       width: 24%;
       text-align: center;
       box-sizing: border-box;
+      position: relative;
+      overflow: visible;
     }
+
+  .sticker {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #1d187c;
+    box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
+    transform: rotate(15deg);
+    z-index: 2;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: rotate(15deg) translateY(0); }
+    50% { transform: rotate(15deg) translateY(-10px); }
+  }
 
 
     .screen-gallery {
@@ -602,7 +624,34 @@
         gallery.classList.add('show');
       }
     }
-  </script>
+    
+  document.querySelectorAll('.wins').forEach(teamSection => {
+    const teamName = teamSection.querySelector('h3').textContent.trim();
+    const sticker = document.createElement('img');
+    sticker.className = 'sticker';
+    
+    switch(teamName) {
+      case 'AC Milan':
+        sticker.src = 'images/logos/bacho.jpg';
+        break;
+      case 'Barcelona (L)':
+        sticker.src = 'images/logos/luksona.jpg';
+        break;
+      case 'Barcelona (G)':
+        sticker.src = 'images/logos/giga.jpg';
+        break;
+      case 'Real Madrid':
+        sticker.src = 'images/logos/niksona.jpg';
+        break;
+      default:
+        sticker.src = 'images/stickers/default-sticker.png';
+    }
+    
+    teamSection.prepend(sticker);
+  });
+
+  // Keep your existing modal and gallery code below...
+</script>
 
 </body>
 </html>
