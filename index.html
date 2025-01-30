@@ -379,18 +379,20 @@
     }
 
     .image-gallery {
-      display: none;
+      display: flex;
       flex-wrap: wrap;
       gap: 10px;
       justify-content: center;
       margin-top: 10px;
+      max-height: 0;
       opacity: 0;
+      overflow: hidden;
       transform: translateY(-20px);
-      transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .image-gallery.show {
-      display: flex;
+      max-height: 1500px;
       opacity: 1;
       transform: translateY(0);
     }
@@ -402,10 +404,12 @@
       border: 2px solid #000000;
       object-fit: cover;
       transition: transform 0.3s ease;
+      cursor: pointer;
     }
 
     .image-gallery img:hover {
       transform: scale(1.1);
+      z-index: 2;
     }
   </style>
 </head>
