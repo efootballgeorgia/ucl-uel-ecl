@@ -176,19 +176,19 @@
       <thead>
         <tr>
           <th>Position</th>
-          <th>Team</th>
+          <th onclick="sortTable(1, 'string')">Team</th>
           <th>Played</th>
-          <th>Won</th>
-          <th>Lost</th>
-          <th>+/-</th>
-          <th>Points</th>
+          <th onclick="sortTable(3, 'number')">Won</th>
+          <th onclick="sortTable(4, 'number')">Lost</th>
+          <th onclick="sortTable(5, 'goals')">+/-</th>
+          <th onclick="sortTable(6, 'number')">Points</th>
           <th>Form</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>1</td>
-          <td><img src="images/logos/ac-milan-logo1.png" alt="AC Milan Logo"> <b>AC Milan</b></td>
+          <td><img src="images/logos/real-madrid-logo1.png" alt="Real Madrid Logo"> <b>Real Madrid</b></td>
           <td>0</td>
           <td>0</td>
           <td>0</td>
@@ -246,7 +246,7 @@
         </tr>
         <tr>
           <td>4</td>
-          <td><img src="images/logos/real-madrid-logo1.png" alt="Real Madrid Logo"> <b>Real Madrid</b></td>
+          <td><img src="images/logos/ac-milan-logo1.png" alt="AC Milan Logo"> <b>AC Milan</b></td>
           <td>0</td>
           <td>0</td>
           <td>0</td>
@@ -302,7 +302,7 @@
     border: 3px solid #1d187c;
     box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
     transform: rotate(15deg);
-    z-index: 2;
+    z-index: 1;
     animation: float 3s ease-in-out infinite;
   }
 
@@ -465,59 +465,59 @@
     <div class="team-player">
       <img src="images/logos/ac-milan-logo.png" alt="AC Milan Logo" onclick="toggleGallery(this)">
       <div class="image-gallery">
-        <img src="images/playerimages/sneijder.webp">
-        <img src="images/playerimages/davidvilla1.webp">
-        <img src="images/playerimages/torres.webp">
+        <img src="images/playerimages/shevchenko.webp">
+        <img src="images/playerimages/cruyff.webp">
+        <img src="images/playerimages/neymar1.webp">
         <img src="images/playerimages/maradona.webp">
-        <img src="images/playerimages/petit.webp">
-        <img src="images/playerimages/fletcher.webp">
+        <img src="images/playerimages/debruyne3.webp">
+        <img src="images/playerimages/rodri.webp">
         <img src="images/playerimages/carlos.webp">
-        <img src="images/playerimages/adams.webp">
-        <img src="images/playerimages/baresi.webp">
-        <img src="images/playerimages/cafu.webp">
+        <img src="images/playerimages/diaz1.webp">
+        <img src="images/playerimages/daniel.webp">
+        <img src="images/playerimages/costacurta.webp">
         <img src="images/playerimages/seaman.webp">
         <ul>
-        <img src="images/playerimages/stoichkov.webp">
-        <img src="images/playerimages/vandervaart.webp">
-        <img src="images/playerimages/ze.webp">
-        <img src="images/playerimages/neymar.webp">
-        <img src="images/playerimages/belletti.webp">
-        <img src="images/playerimages/jorginho.webp">
-        <img src="images/playerimages/debruyne.webp">
-        <img src="images/playerimages/bellingham.webp">
-        <img src="images/playerimages/mbappe4.webp">
-        <img src="images/playerimages/neuer.webp">
-        <img src="images/playerimages/messi.webp">
-        <img src="images/playerimages/haaland2.webp">
+          <img src="images/playerimages/haaland3.webp">
+          <img src="images/playerimages/yorke.webp">
+          <img src="images/playerimages/denilson.webp">
+          <img src="images/playerimages/bellingham1.webp">
+          <img src="images/playerimages/messi.webp">
+          <img src="images/playerimages/rice.webp">
+          <img src="images/playerimages/denis.webp">
+          <img src="images/playerimages/ronaldo1.webp">
+          <img src="images/playerimages/mbappe.webp">
+          <img src="images/playerimages/warren.webp">
+          <img src="images/playerimages/rodrygo1.webp">
+          <img src="images/playerimages/zico.webp">
       </div>
     </div>
 
     <div class="team-player">
       <img src="images/logos/real-madrid-logo.png" alt="Real Madrid Logo" onclick="toggleGallery(this)">
       <div class="image-gallery">
-        <img src="images/playerimages/vinicius.webp">
+        <img src="images/playerimages/neymar1.webp">
         <img src="images/playerimages/ronaldo.webp">
-        <img src="images/playerimages/nunez.webp">
-        <img src="images/playerimages/beckham.webp">
-        <img src="images/playerimages/totti1.webp">
+        <img src="images/playerimages/messi.webp">
+        <img src="images/playerimages/maradona.webp">
+        <img src="images/playerimages/beckenbauer.webp">
         <img src="images/playerimages/kante.webp">
-        <img src="images/playerimages/theo.webp">
+        <img src="images/playerimages/arnold.webp">
         <img src="images/playerimages/adams.webp">
         <img src="images/playerimages/vandijk.webp">
         <img src="images/playerimages/belletti.webp">
         <img src="images/playerimages/oblak.webp">
         <ul>
         <img src="images/playerimages/davidvilla1.webp">
-        <img src="images/playerimages/beckenbauer.webp">
-        <img src="images/playerimages/mbappe1.webp">
-        <img src="images/playerimages/messi.webp">
-        <img src="images/playerimages/odegaard.webp">
-        <img src="images/playerimages/neymar.webp">
-        <img src="images/playerimages/pedri.webp">
-        <img src="images/playerimages/camavinga.webp">
         <img src="images/playerimages/vanbasten.webp">
-        <img src="images/playerimages/maradona.webp">
+        <img src="images/playerimages/mbappe1.webp">
+        <img src="images/playerimages/beckham.webp">
+        <img src="images/playerimages/odegaard.webp">
         <img src="images/playerimages/denilson.webp">
+        <img src="images/playerimages/diaz.webp">
+        <img src="images/playerimages/camavinga.webp">
+        <img src="images/playerimages/nunez.webp">
+        <img src="images/playerimages/totti1.webp">
+        <img src="images/playerimages/vinicius.webp">
         <img src="images/playerimages/guardiola.webp">
       </div>
     </div>
@@ -529,13 +529,13 @@
         <img src="images/playerimages/delpiero.webp">
         <img src="images/playerimages/mbappe3.webp">
         <img src="images/playerimages/salah.webp"> 
-        <img src="images/playerimages/kaka.webp">
+        <img src="images/playerimages/rivaldo.webp">
         <img src="images/playerimages/busquets.webp"> 
-        <img src="images/playerimages/davies1.webp"> 
+        <img src="images/playerimages/davies.webp"> 
         <img src="images/playerimages/beckenbauer.webp"> 
         <img src="images/playerimages/nesta.webp"> 
-        <img src="images/playerimages/belletti.webp">
-        <img src="images/playerimages/ederson.webp">
+        <img src="images/playerimages/kounde.webp">
+        <img src="images/playerimages/oblak1.webp">
         <ul>
         <img src="images/playerimages/nunez.webp">
         <img src="images/playerimages/xabialonso.webp">
@@ -544,18 +544,18 @@
         <img src="images/playerimages/bergkamp.webp">
         <img src="images/playerimages/messi.webp">
         <img src="images/playerimages/beckham.webp">
-        <img src="images/playerimages/rivaldo.webp">
+        <img src="images/playerimages/kaka.webp">
         <img src="images/playerimages/totti.webp">
         <img src="images/playerimages/davidvilla.webp">
         <img src="images/playerimages/maradona.webp">
-        <img src="images/playerimages/kane.webp">
+        <img src="images/playerimages/belletti.webp">
       </div>
     </div>
 
     <div class="team-player">
       <img src="images/logos/barcelona2-logo.png" alt="Barcelona2 Logo" onclick="toggleGallery(this)">
       <div class="image-gallery">
-        <img src="images/playerimages/kvara.webp">
+        <img src="images/playerimages/kvara1.webp">
         <img src="images/playerimages/davidvilla1.webp">
         <img src="images/playerimages/drogba.webp">
         <img src="images/playerimages/figo.webp">
@@ -563,22 +563,22 @@
         <img src="images/playerimages/scholes.webp">
         <img src="images/playerimages/carlos.webp">
         <img src="images/playerimages/diaz1.webp">
-        <img src="images/playerimages/adams.webp">
+        <img src="images/playerimages/beckenbauer.webp">
         <img src="images/playerimages/costacurta.webp">
         <img src="images/playerimages/terstegen.webp">
         <ul>
+        <img src="images/playerimages/haaland2.webp">
         <img src="images/playerimages/mbappe3.webp">
-        <img src="images/playerimages/nunez.webp">
         <img src="images/playerimages/denilson.webp">
         <img src="images/playerimages/beckham.webp">
-        <img src="images/playerimages/debruyne.webp">
-        <img src="images/playerimages/wilshere.webp">
-        <img src="images/playerimages/beckenbauer.webp">
-        <img src="images/playerimages/neymar.webp">
-        <img src="images/playerimages/belletti.webp">
+        <img src="images/playerimages/valverde.webp">
         <img src="images/playerimages/guardiola.webp">
-        <img src="images/playerimages/rodrygo1.webp">
+        <img src="images/playerimages/adams.webp">
+        <img src="images/playerimages/wilshere.webp">
         <img src="images/playerimages/maradona.webp">
+        <img src="images/playerimages/belletti.webp">
+        <img src="images/playerimages/rodrygo1.webp">
+        <img src="images/playerimages/neymar1.webp">
       </div>
     </div>
   </section>
@@ -700,7 +700,7 @@
     teamSection.prepend(sticker);
   });
 
-  function sortTableByPoints() {
+  function sortTable(columnIndex, dataType) {
       const table = document.getElementById("leagueTable");
       const tbody = table.querySelector("tbody");
       const rows = Array.from(tbody.querySelectorAll("tr"));
@@ -709,28 +709,45 @@
       const separatorRows = rows.filter(row => row.classList.contains("separator"));
 
       teamRows.sort((a, b) => {
-        const aPoints = parseInt(a.querySelector(".points").textContent);
-        const bPoints = parseInt(b.querySelector(".points").textContent);
-        return bPoints - aPoints;
+        const aCell = a.cells[columnIndex];
+        const bCell = b.cells[columnIndex];
+        let aValue, bValue;
+
+        switch(dataType) {
+          case 'number':
+            aValue = parseInt(aCell.textContent);
+            bValue = parseInt(bCell.textContent);
+            return bValue - aValue;
+          case 'string':
+            aValue = aCell.textContent.trim().toLowerCase();
+            bValue = bCell.textContent.trim().toLowerCase();
+            return aValue.localeCompare(bValue);
+          case 'goals':
+            const aGoals = aCell.textContent.split(':').map(Number);
+            const bGoals = bCell.textContent.split(':').map(Number);
+            aValue = aGoals[0] - aGoals[1];
+            bValue = bGoals[0] - bGoals[1];
+            return bValue - aValue;
+          default:
+            return 0;
+        }
       });
 
       tbody.innerHTML = "";
-
       let teamIndex = 0;
-      rows.forEach((row, index) => {
+      rows.forEach((row) => {
         if (row.classList.contains("separator")) {
           tbody.appendChild(row);
         } else {
           const teamRow = teamRows[teamIndex];
-          teamRow.querySelector("td").textContent = teamIndex + 1;
+          teamRow.cells[0].textContent = teamIndex + 1;
           tbody.appendChild(teamRow);
           teamIndex++;
         }
       });
     }
 
-    window.onload = sortTableByPoints;
-  
+    window.onload = () => sortTable(6, 'number');
 </script>
 
 </body>
