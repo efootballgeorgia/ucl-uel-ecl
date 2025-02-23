@@ -364,3 +364,21 @@ tbody tr:hover {
   animation: spin 1s linear infinite;
   margin: 20px auto;
 }
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.team-logo:hover {
+  animation: spin 1s linear infinite;
+}
+
+.team-logo.bounce:hover {
+  animation: bounce 0.5s ease infinite;
+}
