@@ -4,159 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nekro Table</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #1a1a40;
-      color: #fff;
-      text-align: center;
-      margin: 0;
-      padding-bottom: 40px;
-      position: relative;
-    }
-
-    #bg-video {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -1;
-    }
-
-    header {
-      position: relative;
-      height: 300px;
-      overflow: hidden;
-      z-index: 1;
-    }
-
-    header .header-content {
-      padding-top: 50px;
-    }
-
-    header img.league-logo {
-      max-width: 200px;
-      height: auto;
-      margin-top: 20px;
-      z-index: 1;
-      position: relative;
-    }
-
-    header h2 {
-      font-size: 1.5em;
-      margin: 10px 0;
-      z-index: 1;
-      position: relative;
-      color: #fff;
-      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
-    }
-
-    .league-table {
-      width: 70%;
-      margin: 20px auto;
-      border-radius: 8px;
-      overflow: hidden;
-      z-index: 1;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 16px;
-    }
-
-    thead th {
-      background-color: #222;
-      color: white;
-      padding: 12px;
-      cursor: pointer;
-    }
-
-    thead th:hover {
-      background-color: #333;
-    }
-
-    tbody td {
-      background-color: #292929;
-      padding: 12px;
-      text-align: center;
-    }
-
-    tbody td img {
-      width: 35px;
-      height: 35px;
-      vertical-align: middle;
-      margin-right: 10px;
-    }
-
-    tbody tr:nth-child(even) td {
-      background-color: #333;
-    }
-
-    tbody tr:hover {
-      background-color: #444;
-    }
-
-    .form-box {
-      display: inline-block;
-      width: 15px;
-      height: 15px;
-      margin: 0 2px;
-      border-radius: 3px;
-    }
-
-    .form-box.victory {
-      background-color: green;
-    }
-
-    .form-box.loss {
-      background-color: red;
-    }
-
-    .form-box.draw {
-      background-color: gray;
-    }
-
-    .separator td {
-      background-color: #1a1a40 !important;
-      padding: 0 !important;
-      height: 25px;
-      position: relative;
-    }
-
-    .separator .line {
-      display: block;
-      height: 2px;
-      margin: 0 10px;
-    }
-
-    .next-round .line {
-      background-color: #4CAF50;
-    }
-
-    .relegation .line {
-      background-color: #F44336;
-    }
-
-    .separator .label {
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 12px;
-      font-weight: bold;
-    }
-
-    .next-round .label {
-      color: #4CAF50;
-    }
-
-    .relegation .label {
-      color: #F44336;
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <video autoplay muted loop id="bg-video">
@@ -166,7 +14,7 @@
 
   <header>
     <div class="header-content">
-      <td><img src="images/logos/nekro-league-logo.png" alt="Nekro League Logo" class="league-logo">
+      <img src="images/logos/nekro-league-logo.png" alt="Nekro League Logo" class="league-logo">
     </div>
   </header>
 
@@ -177,7 +25,7 @@
         <tr>
           <th>Position</th>
           <th onclick="sortTable(1, 'string')">Team</th>
-          <th>Played</th>
+          <th onclick="sortTable(2, 'number')">Played</th>
           <th onclick="sortTable(3, 'number')">Won</th>
           <th onclick="sortTable(4, 'number')">Lost</th>
           <th onclick="sortTable(5, 'goals')">+/-</th>
@@ -187,279 +35,173 @@
       </thead>
       <tbody>
         <tr>
-          <td>1</td>
-          <td><img src="images/logos/real-madrid-logo1.png" alt="Real Madrid Logo"> <b>Real Madrid</b></td>
-          <td>0</td>
-          <td>0</td>
-          <td>0</td>
-          <td>0:0</td>
-          <td><b class="points">0</b></td>
-          <td>
-            <span class="form-box draw"></span>
-            <span class="form-box draw"></span>
-            <span class="form-box draw"></span>
-            <span class="form-box draw"></span>
-            <span class="form-box draw"></span>
-          </td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td><img src="images/logos/barcelona-logo1.png" alt="Barcelona Logo"> <b>Barcelona (L)</b></td>
-          <td>0</td>
-          <td>0</td>
-          <td>0</td>
-          <td>0:0</td>
-          <td><b class="points">0</b></td>
-          <td>
-            <span class="form-box draw"></span>
-            <span class="form-box draw"></span>
-            <span class="form-box draw"></span>
-            <span class="form-box draw"></span>
-            <span class="form-box draw"></span>
-          </td>
-        </tr>
-        <tr class="separator">
-          <td colspan="8" class="next-round">
-            <span class="line"></span>
-          </td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td><img src="images/logos/barcelona-logo1.png" alt="Barcelona Logo"> <b>Barcelona (G)</b></td>
-          <td>0</td>
-          <td>0</td>
-          <td>0</td>
-          <td>0:0</td>
-          <td><b class="points">0</b></td>
-          <td>
-            <span class="form-box draw"></span>
-            <span class="form-box draw"></span>
-            <span class="form-box draw"></span>
-            <span class="form-box draw"></span>
-            <span class="form-box draw"></span>
-          </td>
-        </tr>
-        <tr class="separator">
-          <td colspan="8" class="relegation">
-            <span class="line"></span>
-          </td>
-        </tr>
-        <tr>
-          <td>4</td>
-          <td><img src="images/logos/ac-milan-logo1.png" alt="AC Milan Logo"> <b>AC Milan</b></td>
-          <td>0</td>
-          <td>0</td>
-          <td>0</td>
-          <td>0:0</td>
-          <td><b class="points">0</b></td>
-          <td>
-            <span class="form-box draw"></span>
-            <span class="form-box draw"></span>
-            <span class="form-box draw"></span>
-            <span class="form-box draw"></span>
-            <span class="form-box draw"></span>
-          </td>
-        </tr>
+            <td>1</td>
+            <td><img src="images/logos/real-madrid-logo1.png" alt="Real Madrid Logo"> <b>Real Madrid</b></td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0:0</td>
+            <td><b class="points">0</b></td>
+            <td>
+              <span class="form-box draw"></span>
+              <span class="form-box draw"></span>
+              <span class="form-box draw"></span>
+              <span class="form-box draw"></span>
+              <span class="form-box draw"></span>
+            </td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td><img src="images/logos/barcelona-logo1.png" alt="Barcelona Logo"> <b>Barcelona (L)</b></td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0:0</td>
+            <td><b class="points">0</b></td>
+            <td>
+              <span class="form-box draw"></span>
+              <span class="form-box draw"></span>
+              <span class="form-box draw"></span>
+              <span class="form-box draw"></span>
+              <span class="form-box draw"></span>
+            </td>
+          </tr>
+          <tr class="separator">
+            <td colspan="8" class="next-round">
+              <span class="line"></span>
+            </td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td><img src="images/logos/barcelona-logo1.png" alt="Barcelona Logo"> <b>Barcelona (G)</b></td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0:0</td>
+            <td><b class="points">0</b></td>
+            <td>
+              <span class="form-box draw"></span>
+              <span class="form-box draw"></span>
+              <span class="form-box draw"></span>
+              <span class="form-box draw"></span>
+              <span class="form-box draw"></span>
+            </td>
+          </tr>
+          <tr class="separator">
+            <td colspan="8" class="relegation">
+              <span class="line"></span>
+            </td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td><img src="images/logos/ac-milan-logo1.png" alt="AC Milan Logo"> <b>AC Milan</b></td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0:0</td>
+            <td><b class="points">0</b></td>
+            <td>
+              <span class="form-box draw"></span>
+              <span class="form-box draw"></span>
+              <span class="form-box draw"></span>
+              <span class="form-box draw"></span>
+              <span class="form-box draw"></span>
+            </td>
+          </tr>
       </tbody>
     </table>
   </section>
-<style>
-    .win-images {
-      margin: 40px auto;
-      text-align: center;
-      color: #fff;
-      z-index: 1;
-    }
 
-    .win-gallery {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-      gap: 20px;
-      overflow-y: auto;
-      max-height: 600px;
-    }
-
-    .wins {
-      background: #292929;
-      border-radius: 10px;
-      padding: 10px;
-      width: 24%;
-      text-align: center;
-      box-sizing: border-box;
-      position: relative;
-      overflow: visible;
-    }
-
-  .sticker {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 60px;
-    height: 60px;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 3px solid #1d187c;
-    box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
-    transform: rotate(15deg);
-    z-index: 1;
-    animation: float 3s ease-in-out infinite;
-  }
-
-  @keyframes float {
-    0%, 100% { transform: rotate(15deg) translateY(0); }
-    50% { transform: rotate(15deg) translateY(-10px); }
-  }
-
-
-    .screen-gallery {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2px;
-      max-height: 200px;
-      overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: #ffcc00 #1a1a40;
-    }
-
-    .screen-gallery img {
-      width: 93%;
-      border-radius: 5px;
-      border: 2px solid #000000;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      object-fit: cover;
-      cursor: pointer;
-    }
-
-    .screen-gallery img:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
-      border: 2px solid #ffcc00;
-    }
-</style>
-</head>
-<body>
- <section class="win-images">
-    <h2>Team Highlights</h2>
+  <section class="win-images">
+    <h2>Recent Team Highlights</h2>
     <div class="win-gallery">
-      <div class="wins">
-        <h3>AC Milan</h3>
-        <div class="screen-gallery">
-          <img src="images/wins/bacho1.jpg" alt="AC Milan Highlight">
-          <img src="images/wins/bacho2.jpg" alt="AC Milan Highlight">
-          <img src="images/wins/bacho3.jpg" alt="AC Milan Highlight">
-          <img src="images/wins/bacho4.jpg" alt="AC Milan Highlight">
-          <img src="images/wins/bacho5.jpg" alt="AC Milan Highlight">
-          <img src="images/wins/bacho6.jpg" alt="AC Milan Highlight">
-          <img src="images/wins/bacho7.jpg" alt="AC Milan Highlight">
-          <img src="images/wins/bacho8.jpg" alt="AC Milan Highlight">
-          <img src="images/wins/bacho9.jpg" alt="AC Milan Highlight">
-          <img src="images/wins/bacho10.jpg" alt="AC Milan Highlight">
-          <img src="images/wins/bacho11.jpg" alt="AC Milan Highlight">
-          <img src="images/wins/bacho12.jpg" alt="AC Milan Highlight">
-          <img src="images/wins/bacho13.jpg" alt="AC Milan Highlight">
-          <img src="images/wins/bacho14.jpg" alt="AC Milan Highlight">
-          <img src="images/wins/bacho15.jpg" alt="AC Milan Highlight">
-          <img src="images/wins/bacho16.jpg" alt="AC Milan Highlight">
-        </div>
-      </div>
-      <div class="wins">
-        <h3>Barcelona (L)</h3>
-        <div class="screen-gallery">
-          <img src="images/wins/luksona1.jpg" alt="Barcelona Highlight">
-          <img src="images/wins/luksona2.jpg" alt="Barcelona Highlight">
-          <img src="images/wins/luksona3.jpg" alt="Barcelona Highlight">
-          <img src="images/wins/luksona4.jpg" alt="Barcelona Highlight">
-          <img src="images/wins/luksona5.jpg" alt="Barcelona Highlight">
-          <img src="images/wins/luksona6.jpg" alt="Barcelona Highlight">
-          <img src="images/wins/luksona7.jpg" alt="Barcelona Highlight">
-          <img src="images/wins/luksona8.jpg" alt="Barcelona Highlight">
-          <img src="images/wins/luksona9.jpg" alt="Barcelona Highlight">
-          <img src="images/wins/luksona10.jpg" alt="Barcelona Highlight">
-          <img src="images/wins/luksona11.jpg" alt="Barcelona Highlight">
-          <img src="images/wins/luksona12.jpg" alt="Barcelona Highlight">
-        </div>
-      </div>
-      <div class="wins">
-        <h3>Barcelona (G)</h3>
-        <div class="screen-gallery">
-          <img src="images/wins/giga1.jpg" alt="Napoli Highlight">
-          <img src="images/wins/giga2.jpg" alt="Napoli Highlight">
-          <img src="images/wins/giga3.jpg" alt="Napoli Highlight">
-          <img src="images/wins/giga4.jpg" alt="Napoli Highlight">
-          <img src="images/wins/giga5.jpg" alt="Napoli Highlight">
-          <img src="images/wins/giga6.jpg" alt="Napoli Highlight">
-          <img src="images/wins/giga7.jpg" alt="Napoli Highlight">
-        </div>
-      </div>
-      <div class="wins">
-        <h3>Real Madrid</h3>
-        <div class="screen-gallery">
-          <img src="images/wins/niko1.jpg" alt="Real Madrid Highlight">
-          <img src="images/wins/niko2.jpg" alt="Real Madrid Highlight">
-          <img src="images/wins/niko3.jpg" alt="Real Madrid Highlight">
-          <img src="images/wins/niko4.jpg" alt="Real Madrid Highlight">
-          <img src="images/wins/niko5.jpg" alt="Real Madrid Highlight">
-          <img src="images/wins/niko6.jpg" alt="Real Madrid Highlight">
-          <img src="images/wins/niko7.jpg" alt="Real Madrid Highlight">
-        </div>
-      </div>
+        <div class="wins">
+            <h3><td><img src="images/logos/ac-milan-logo2.png" alt="AC Milan Logo"> <b>AC Milan</b></td></h3>
+            <div class="screen-gallery">
+            </div>
+          </div>
+          <div class="wins">
+            <h3><td><img src="images/logos/barcelona-logo2.png" alt="Barcelona Logo"> <b>Barcelona (L)</b></td></h3>
+            <div class="screen-gallery">
+            </div>
+          </div>
+          <div class="wins">
+            <h3><td><img src="images/logos/barcelona-logo2.png" alt="Barcelona Logo"> <b>Barcelona (G)</b></td></h3>
+            <div class="screen-gallery">
+            </div>
+          </div>
+          <div class="wins">
+            <h3><td><img src="images/logos/real-madrid-logo2.png" alt="Real Madrid Logo"> <b>Real Madrid</b></td></h3>
+            <div class="screen-gallery">
+            </div>
+          </div>
+    
+        <h2>Last Team Highlights</h2>
+        <div class="win-gallery">
+          <div class="wins">
+            <h3><td><img src="images/logos/ac-milan-logo2.png" alt="AC Milan Logo"> <b>AC Milan</b></td></h3>
+            <div class="screen-gallery">
+              <img src="images/wins/bacho1.jpg" alt="AC Milan Highlight">
+              <img src="images/wins/bacho2.jpg" alt="AC Milan Highlight">
+              <img src="images/wins/bacho3.jpg" alt="AC Milan Highlight">
+              <img src="images/wins/bacho4.jpg" alt="AC Milan Highlight">
+              <img src="images/wins/bacho5.jpg" alt="AC Milan Highlight">
+              <img src="images/wins/bacho6.jpg" alt="AC Milan Highlight">
+              <img src="images/wins/bacho7.jpg" alt="AC Milan Highlight">
+              <img src="images/wins/bacho8.jpg" alt="AC Milan Highlight">
+              <img src="images/wins/bacho9.jpg" alt="AC Milan Highlight">
+              <img src="images/wins/bacho10.jpg" alt="AC Milan Highlight">
+              <img src="images/wins/bacho11.jpg" alt="AC Milan Highlight">
+              <img src="images/wins/bacho12.jpg" alt="AC Milan Highlight">
+              <img src="images/wins/bacho13.jpg" alt="AC Milan Highlight">
+              <img src="images/wins/bacho14.jpg" alt="AC Milan Highlight">
+              <img src="images/wins/bacho15.jpg" alt="AC Milan Highlight">
+              <img src="images/wins/bacho16.jpg" alt="AC Milan Highlight">
+            </div>
+          </div>
+          <div class="wins">
+            <h3><td><img src="images/logos/barcelona-logo2.png" alt="Barcelona Logo"> <b>Barcelona (L)</b></td></h3>
+            <div class="screen-gallery">
+              <img src="images/wins/luksona1.jpg" alt="Barcelona Highlight">
+              <img src="images/wins/luksona2.jpg" alt="Barcelona Highlight">
+              <img src="images/wins/luksona3.jpg" alt="Barcelona Highlight">
+              <img src="images/wins/luksona4.jpg" alt="Barcelona Highlight">
+              <img src="images/wins/luksona5.jpg" alt="Barcelona Highlight">
+              <img src="images/wins/luksona6.jpg" alt="Barcelona Highlight">
+              <img src="images/wins/luksona7.jpg" alt="Barcelona Highlight">
+              <img src="images/wins/luksona8.jpg" alt="Barcelona Highlight">
+              <img src="images/wins/luksona9.jpg" alt="Barcelona Highlight">
+              <img src="images/wins/luksona10.jpg" alt="Barcelona Highlight">
+              <img src="images/wins/luksona11.jpg" alt="Barcelona Highlight">
+              <img src="images/wins/luksona12.jpg" alt="Barcelona Highlight">
+            </div>
+          </div>
+          <div class="wins">
+            <h3><td><img src="images/logos/barcelona-logo2.png" alt="Barcelona Logo"> <b>Barcelona (G)</b></td></h3>
+            <div class="screen-gallery">
+              <img src="images/wins/giga1.jpg" alt="Napoli Highlight">
+              <img src="images/wins/giga2.jpg" alt="Napoli Highlight">
+              <img src="images/wins/giga3.jpg" alt="Napoli Highlight">
+              <img src="images/wins/giga4.jpg" alt="Napoli Highlight">
+              <img src="images/wins/giga5.jpg" alt="Napoli Highlight">
+              <img src="images/wins/giga6.jpg" alt="Napoli Highlight">
+              <img src="images/wins/giga7.jpg" alt="Napoli Highlight">
+            </div>
+          </div>
+          <div class="wins">
+            <h3><td><img src="images/logos/real-madrid-logo2.png" alt="Real Madrid Logo"> <b>Real Madrid</b></td></h3>
+            <div class="screen-gallery">
+              <img src="images/wins/niko1.jpg" alt="Real Madrid Highlight">
+              <img src="images/wins/niko2.jpg" alt="Real Madrid Highlight">
+              <img src="images/wins/niko3.jpg" alt="Real Madrid Highlight">
+              <img src="images/wins/niko4.jpg" alt="Real Madrid Highlight">
+              <img src="images/wins/niko5.jpg" alt="Real Madrid Highlight">
+              <img src="images/wins/niko6.jpg" alt="Real Madrid Highlight">
+              <img src="images/wins/niko7.jpg" alt="Real Madrid Highlight">
+            </div>
+          </div>
+    </div>
   </section>
- <style>
-    .team-player-section {
-      margin: 20px auto;
-    }
-
-    .team-player {
-      margin-bottom: 20px;
-      position: relative;
-    }
-
-    .team-player img {
-      cursor: pointer;
-      transition: transform 0.3s;
-    }
-
-    .team-player img:hover {
-      transform: scale(1.1);
-    }
-
-    .image-gallery {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 10px;
-      max-height: 0;
-      opacity: 0;
-      overflow: hidden;
-      transform: translateY(-20px);
-      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .image-gallery.show {
-      max-height: 1500px;
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .image-gallery img {
-      width: 113px;
-      height: 160px;
-      border-radius: 5px;
-      border: 2px solid #000000;
-      object-fit: cover;
-      transition: transform 0.3s ease;
-      cursor: pointer;
-    }
-
-    .image-gallery img:hover {
-      transform: scale(1.1);
-      z-index: 2;
-    }
-  </style>
-</head>
-<body>
 
   <section class="team-gallery">
     <div class="team-player">
@@ -501,7 +243,7 @@
         <img src="images/playerimages/maradona.webp">
         <img src="images/playerimages/beckenbauer.webp">
         <img src="images/playerimages/kante.webp">
-        <img src="images/playerimages/arnold.webp">
+        <img src="images/playerimages/arnold1.webp">
         <img src="images/playerimages/adams.webp">
         <img src="images/playerimages/vandijk.webp">
         <img src="images/playerimages/belletti.webp">
@@ -582,173 +324,12 @@
       </div>
     </div>
   </section>
-  <style>
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.8);
-      justify-content: center;
-      align-items: center;
-      transition: opacity 0.5s ease-in-out;
-      opacity: 0;
-    }
 
-    .modal.show {
-      display: flex;
-      opacity: 1;
-    }
+  <div class="modal" id="myModal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImage">
+  </div>
 
-    .modal-content {
-      max-width: 80%;
-      max-height: 80%;
-      margin: auto;
-      display: block;
-      position: relative;
-      top: 0%;
-    }
-
-    .close {
-      position: absolute;
-      top: 20px;
-      right: 35px;
-      color: #fff;
-      font-size: 40px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-
-    .close:hover,
-    .close:focus {
-      color: #bbb;
-      text-decoration: none;
-      cursor: pointer;
-    }
-</style>
-</head>
-<body>
-      <div class="modal" id="myModal">
-        <span class="close" onclick="closeModal()">&times;</span>
-        <img class="modal-content" id="modalImage">
-      </div>
-      
-<script>    
-    const images = document.querySelectorAll('.image-gallery img');
-    const screens = document.querySelectorAll('.screen-gallery img');
-    const modal = document.getElementById('myModal');
-    const modalImage = document.getElementById('modalImage');
-
-    images.forEach(image => {
-      image.addEventListener('click', () => {
-        modal.classList.add('show');
-        modalImage.src = image.src;
-      });
-    });
-
-    screens.forEach(screen => {
-      screen.addEventListener('click', () => {
-        modal.classList.add('show');
-        modalImage.src = screen.src;
-      });
-    });
-
-    modal.addEventListener('click', (event) => {
-      if (event.target === modal) {
-        closeModal();
-      }
-    });
-
-    function closeModal() {
-      modal.classList.remove('show');
-    }
-
-    function toggleGallery(logo) {
-      const gallery = logo.nextElementSibling;
-      if (gallery.classList.contains('show')) {
-        gallery.classList.remove('show');
-      } else {
-        gallery.classList.add('show');
-      }
-    }
-    
-  document.querySelectorAll('.wins').forEach(teamSection => {
-    const teamName = teamSection.querySelector('h3').textContent.trim();
-    const sticker = document.createElement('img');
-    sticker.className = 'sticker';
-    
-    switch(teamName) {
-      case 'AC Milan':
-        sticker.src = 'images/logos/bacho.jpg';
-        break;
-      case 'Barcelona (L)':
-        sticker.src = 'images/logos/luksona.jpg';
-        break;
-      case 'Barcelona (G)':
-        sticker.src = 'images/logos/giga.jpg';
-        break;
-      case 'Real Madrid':
-        sticker.src = 'images/logos/niksona.jpg';
-        break;
-      default:
-        sticker.src = 'images/stickers/default-sticker.png';
-    }
-    
-    teamSection.prepend(sticker);
-  });
-
-  function sortTable(columnIndex, dataType) {
-      const table = document.getElementById("leagueTable");
-      const tbody = table.querySelector("tbody");
-      const rows = Array.from(tbody.querySelectorAll("tr"));
-
-      const teamRows = rows.filter(row => !row.classList.contains("separator"));
-      const separatorRows = rows.filter(row => row.classList.contains("separator"));
-
-      teamRows.sort((a, b) => {
-        const aCell = a.cells[columnIndex];
-        const bCell = b.cells[columnIndex];
-        let aValue, bValue;
-
-        switch(dataType) {
-          case 'number':
-            aValue = parseInt(aCell.textContent);
-            bValue = parseInt(bCell.textContent);
-            return bValue - aValue;
-          case 'string':
-            aValue = aCell.textContent.trim().toLowerCase();
-            bValue = bCell.textContent.trim().toLowerCase();
-            return aValue.localeCompare(bValue);
-          case 'goals':
-            const aGoals = aCell.textContent.split(':').map(Number);
-            const bGoals = bCell.textContent.split(':').map(Number);
-            aValue = aGoals[0] - aGoals[1];
-            bValue = bGoals[0] - bGoals[1];
-            return bValue - aValue;
-          default:
-            return 0;
-        }
-      });
-
-      tbody.innerHTML = "";
-      let teamIndex = 0;
-      rows.forEach((row) => {
-        if (row.classList.contains("separator")) {
-          tbody.appendChild(row);
-        } else {
-          const teamRow = teamRows[teamIndex];
-          teamRow.cells[0].textContent = teamIndex + 1;
-          tbody.appendChild(teamRow);
-          teamIndex++;
-        }
-      });
-    }
-
-    window.onload = () => sortTable(6, 'number');
-</script>
-
+  <script src="script.js"></script>
 </body>
 </html>
