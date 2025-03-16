@@ -181,21 +181,19 @@ tbody tr:hover {
 .win-gallery {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: center;
   gap: 20px;
-  overflow-y: auto;
-  max-height: 600px;
 }
 
 .wins {
   background: #292929;
   border-radius: 10px;
   padding: 10px;
-  width: 24%;
+  flex: 1 1 300px;
+  max-width: 350px;
   text-align: center;
   box-sizing: border-box;
   position: relative;
-  overflow: visible;
   animation: fadeIn 0.5s ease-out;
 }
 
@@ -351,11 +349,6 @@ tbody tr:hover {
 }
 
 /* Loading Spinner */
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
 .loading-spinner {
   border: 4px solid rgba(255, 255, 255, 0.3);
   border-top: 4px solid #ffcc00;
@@ -371,11 +364,6 @@ tbody tr:hover {
   100% { transform: rotate(360deg); }
 }
 
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
 .team-logo:hover {
   animation: spin 1s linear infinite;
 }
@@ -384,7 +372,12 @@ tbody tr:hover {
   animation: bounce 0.5s ease infinite;
 }
 
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
 .strength {
-    width: 170px !important;
-    height: 66px !important;
-  }
+  width: 170px !important;
+  height: 66px !important;
+}
