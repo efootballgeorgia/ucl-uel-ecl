@@ -22,7 +22,7 @@ body {
 /* Header Styles */
 header {
   position: relative;
-  height: 300px;
+  height: 320px;
   overflow: hidden;
   z-index: 1;
 }
