@@ -382,45 +382,79 @@ tbody tr:hover {
   height: 66px !important;
 }
 
+/* Modern Score Input Section */
 .score-input {
-  background-color: #292929;
-  padding: 20px;
-  border-radius: 8px;
+  background-color: #1f1f3b;
+  padding: 30px;
+  border-radius: 12px;
   width: 70%;
-  margin: 20px auto;
-  text-align: left;
+  margin: 30px auto;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
 .score-input h2 {
-  text-align: center;
-  margin-bottom: 15px;
+  font-size: 24px;
+  margin-bottom: 20px;
   color: #ffcc00;
+  text-shadow: 0 0 10px rgba(255, 204, 0, 0.7);
 }
 
-.score-input label {
-  display: block;
-  margin-bottom: 5px;
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  gap: 10px;
+}
+
+.form-group input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid #333;
+  background-color: #292949;
   color: #fff;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.score-input input {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 15px;
-  border: none;
-  border-radius: 4px;
+.form-group input:focus {
+  border-color: #ffcc00;
+  box-shadow: 0 0 12px rgba(255, 204, 0, 0.7);
 }
 
-.score-input button {
+.vs-text {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffcc00;
+  margin: 10px 0;
+}
+
+.submit-btn {
   background-color: #4CAF50;
-  color: white;
-  padding: 10px 15px;
+  color: #fff;
+  padding: 12px 20px;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.score-input button:hover {
+.submit-btn:hover {
   background-color: #45a049;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(72, 239, 72, 0.5);
 }
+
+.submit-btn:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
 
