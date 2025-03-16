@@ -224,11 +224,11 @@ const firebaseConfig = {
   storageBucket: "nekro-league.firebasestorage.app",
   messagingSenderId: "961908970420",
   appId: "1:961908970420:web:77c9b841d4f5ba40b9d8e1",
+  measurementId: "G-WDK4DDE6MR"
 };
 
-const app = firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const auth = firebase.auth();
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 
 async function addMatch(homeTeam, awayTeam, homeScore, awayScore) {
   try {
