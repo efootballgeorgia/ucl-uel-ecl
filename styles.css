@@ -279,6 +279,7 @@ tbody tr:hover {
   overflow: hidden;
   transform: translateY(-20px);
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  align-items: flex-start;
 }
 
 .image-gallery.show {
@@ -288,8 +289,8 @@ tbody tr:hover {
 }
 
 .image-gallery img {
-  width: 113px;
-  height: 160px;
+  width: 112px;
+  height: 158.58px;
   border-radius: 5px;
   border: 2px solid #000000;
   object-fit: cover;
@@ -382,3 +383,8 @@ tbody tr:hover {
 .team-logo.bounce:hover {
   animation: bounce 0.5s ease infinite;
 }
+
+.strength {
+    width: 170px !important;
+    height: 66px !important;
+  }
