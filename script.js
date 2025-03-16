@@ -6,6 +6,24 @@ const modalImage = document.getElementById('modalImage');
 let currentSortColumn = null;
 let isAscending = true;
 
+// Firebase Configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyAwmL2pHpqmaAOHXnWffdQ-NRXwmwLLFAE",
+  authDomain: "nekro-league.firebaseapp.com",
+  projectId: "nekro-league",
+  storageBucket: "nekro-league.firebasestorage.app",
+  messagingSenderId: "961908970420",
+  appId: "1:961908970420:web:77c9b841d4f5ba40b9d8e1",
+};
+
+// Initialize Firebase
+const app = firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
+
+// Log Firebase initialization
+console.log("Firebase initialized:", app);
+
 // Modal Functionality
 images.forEach(image => {
   image.addEventListener('click', () => {
@@ -178,9 +196,16 @@ matchForm.addEventListener('submit', function(e) {
     return;
   }
 
-  // Save match
-  matches.push({ homeTeam, awayTeam, homeScore, awayScore });
-  localStorage.setItem('matches', JSON.stringify(matches));
+  // Save match to Firestore
+  addMatch(homeTeam, awayTeam, homeScore, awayScore);
+
+  // Add this function definition to your script.js file.
+function addMatch(homeTeam, awayTeam, homeScore, awayScore) {
+  // Code for saving the match to Firestore should go here.
+  console.log(
+    `Match added: ${homeTeam} ${homeScore} - ${awayTeam} ${awayScore}`
+  );
+}
 
   // Update stats
   const isDraw = homeScore === awayScore;
@@ -216,50 +241,6 @@ matches.forEach(match => {
   document.getElementById('awayScore').value = match.awayScore;
   matchForm.dispatchEvent(new Event('submit'));
 });
-
-const firebaseConfig = {
-  apiKey: "AIzaSyAwmL2pHpqmaAOHXnWffdQ-NRXwmwLLFAE",
-  authDomain: "nekro-league.firebaseapp.com",
-  projectId: "nekro-league",
-  storageBucket: "nekro-league.firebasestorage.app",
-  messagingSenderId: "961908970420",
-  appId: "1:961908970420:web:77c9b841d4f5ba40b9d8e1"
-};
-
-const app = firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const auth = firebase.auth();
-
-async function addMatch(homeTeam, awayTeam, homeScore, awayScore) {
-  try {
-    await db.collection('matches').add({
-      homeTeam,
-      awayTeam,
-      homeScore,
-      awayScore,
-      timestamp: firebase.firestore.FieldValue.serverTimestamp()
-    });
-    console.log('Match added successfully!');
-  } catch (error) {
-    console.error('Error adding match: ', error);
-  }
-}
-
-async function fetchMatches() {
-  try {
-    const snapshot = await db.collection('matches').get();
-    const matches = [];
-    snapshot.forEach(doc => {
-      matches.push({ id: doc.id, ...doc.data() });
-    });
-    return matches;
-  } catch (error) {
-    console.error('Error fetching matches: ', error);
-    return [];
-  }
-}
-
-console.log("Firebase initialized:", app);
 
 // Loading Spinner
 window.onload = () => {
