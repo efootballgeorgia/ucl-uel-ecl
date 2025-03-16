@@ -190,6 +190,13 @@ function updateTeamStats(teamName, goalsFor, goalsAgainst, isWin, isDraw) {
 
       // Update Form
       const formCell = cells[8];
+
+      // Remove the oldest form box if there are already 5 form boxes
+      if (formCell.children.length >= 5) {
+        formCell.removeChild(formCell.lastChild);
+      }
+
+      // Create and add the new form box
       const formBox = document.createElement('span');
       formBox.className = 'form-box';
 
@@ -203,11 +210,6 @@ function updateTeamStats(teamName, goalsFor, goalsAgainst, isWin, isDraw) {
 
       // Add the new form box to the form cell
       formCell.prepend(formBox);
-
-      // Remove the oldest form box if there are more than 5
-      if (formCell.children.length > 5) {
-        formCell.removeChild(formCell.lastChild);
-      }
     }
   });
 }
