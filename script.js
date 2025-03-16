@@ -276,12 +276,30 @@ function addMatchResult(teamA, teamB, scoreA, scoreB) {
   updateLeagueTable();
 }
 
-// Initialize on page load
-window.onload = () => {
-  loadDatabase();
-  document.getElementById('loading').style.display = 'none';
-  sortTable(7, 'number');
-};
+// Handle form submission to add a new match
+document.getElementById('matchForm').addEventListener('submit', function (event) {
+  event.preventDefault();
+
+  const teamA = document.getElementById('teamA').value.trim();
+  const scoreA = parseInt(document.getElementById('scoreA').value);
+  const teamB = document.getElementById('teamB').value.trim();
+  const scoreB = parseInt(document.getElementById('scoreB').value);
+
+  if (!teamA || !teamB || isNaN(scoreA) || isNaN(scoreB)) {
+    alert('Please fill out all fields correctly.');
+    return;
+  }
+
+  // Add the match result
+  addMatchResult(teamA, teamB, scoreA, scoreB);
+
+  // Clear the form fields
+  document.getElementById('teamA').value = '';
+  document.getElementById('scoreA').value = '';
+  document.getElementById('teamB').value = '';
+  document.getElementById('scoreB').value = '';
+});
+
 
 
 // Loading Spinner
