@@ -382,79 +382,45 @@ tbody tr:hover {
   height: 66px !important;
 }
 
-/* Modern Score Input Section */
-.score-input {
-  background-color: #1f1f3b;
-  padding: 30px;
-  border-radius: 12px;
+/* Match Form Styles */
+.match-input {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 20px;
+  margin: 20px auto;
   width: 70%;
-  margin: 30px auto;
-  text-align: center;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  z-index: 1;
+  position: relative;
 }
 
-.score-input h2 {
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #ffcc00;
-  text-shadow: 0 0 10px rgba(255, 204, 0, 0.7);
-}
-
-.form-container {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.form-group {
-  display: flex;
+#matchForm {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 10px;
+  align-items: center;
 }
 
-.form-group input {
-  flex: 1;
-  padding: 12px;
-  border-radius: 8px;
-  border: 2px solid #333;
-  background-color: #292949;
-  color: #fff;
-  font-size: 16px;
-  outline: none;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+#matchForm select, #matchForm input {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #444;
+  background: #292929;
+  color: white;
 }
 
-.form-group input:focus {
-  border-color: #ffcc00;
-  box-shadow: 0 0 12px rgba(255, 204, 0, 0.7);
-}
-
-.vs-text {
-  font-size: 18px;
-  font-weight: bold;
-  color: #ffcc00;
-  margin: 10px 0;
-}
-
-.submit-btn {
-  background-color: #4CAF50;
-  color: #fff;
-  padding: 12px 20px;
+#matchForm button {
+  grid-column: span 4;
+  padding: 10px;
+  background: #4CAF50;
   border: none;
-  border-radius: 8px;
+  border-radius: 5px;
+  color: white;
   cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  transition: background 0.3s;
 }
 
-.submit-btn:hover {
-  background-color: #45a049;
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(72, 239, 72, 0.5);
-}
-
-.submit-btn:active {
-  transform: translateY(0);
-  box-shadow: none;
+#matchForm button:hover {
+  background: #45a049;
 }
 
 
