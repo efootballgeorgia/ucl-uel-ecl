@@ -343,32 +343,36 @@
     <img class="modal-content" id="modalImage">
   </div>
 
-<section class="match-input">
-  <h2>Add Match Result</h2>
-  <form id="matchForm">
-    <select id="homeTeam" required>
-      <option value="">Home Team</option>
-      <option value="Real Madrid">Real Madrid</option>
-      <option value="Barcelona">Barcelona</option>
-      <option value="PSG">PSG</option>
-      <option value="AC Milan">AC Milan</option>
-    </select>
-    <input type="number" id="homeScore" min="0" required>
-    
-    <select id="awayTeam" required>
-      <option value="">Away Team</option>
-      <option value="Real Madrid">Real Madrid</option>
-      <option value="Barcelona">Barcelona</option>
-      <option value="PSG">PSG</option>
-      <option value="AC Milan">AC Milan</option>
-    </select>
-    <input type="number" id="awayScore" min="0" required>
-    
-    <button type="submit">Add Match</button>
-  </form>
-</section>
-
+  <section class="match-form">
+    <h2>Add Match Result</h2>
+    <form id="matchForm">
+      <div class="form-group">
+        <select id="homeTeam" required>
+          <option value="">Home Team</option>
+          <option>Real Madrid</option>
+          <option>Barcelona</option>
+          <option>PSG</option>
+          <option>AC Milan</option>
+        </select>
+        <input type="number" id="homeScore" min="0" required>
+      </div>
+      <div class="form-group">
+        <select id="awayTeam" required>
+          <option value="">Away Team</option>
+          <option>Real Madrid</option>
+          <option>Barcelona</option>
+          <option>PSG</option>
+          <option>AC Milan</option>
+        </select>
+        <input type="number" id="awayScore" min="0" required>
+      </div>
+      <button type="submit">Add Match</button>
+    </form>
+  </section>
 
   <script src="script.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js"></script>
 </body>
 </html>
