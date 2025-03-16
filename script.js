@@ -259,6 +259,7 @@ async function fetchMatches() {
   }
 }
 
+console.log("Firebase initialized:", app);
 
 // Loading Spinner
 window.onload = () => {
