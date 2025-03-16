@@ -276,30 +276,131 @@ function addMatchResult(teamA, teamB, scoreA, scoreB) {
   updateLeagueTable();
 }
 
-// Handle form submission to add a new match
-document.getElementById('matchForm').addEventListener('submit', function (event) {
-  event.preventDefault();
+// Add these at the top with other constants
+let teams = {};
 
-  const teamA = document.getElementById('teamA').value.trim();
-  const scoreA = parseInt(document.getElementById('scoreA').value);
-  const teamB = document.getElementById('teamB').value.trim();
-  const scoreB = parseInt(document.getElementById('scoreB').value);
+// Add these functions
+function initializeTeamsData() {
+  const teamRows = document.querySelectorAll('#leagueTable tbody tr:not(.separator)');
+  teams = {};
 
-  if (!teamA || !teamB || isNaN(scoreA) || isNaN(scoreB)) {
-    alert('Please fill out all fields correctly.');
+  teamRows.forEach(row => {
+    const cells = row.cells;
+    const teamName = cells[1].querySelector('b').textContent.trim();
+    const formBoxes = cells[8].querySelectorAll('.form-box');
+    
+    teams[teamName] = {
+      played: parseInt(cells[2].textContent),
+      won: parseInt(cells[3].textContent),
+      draw: parseInt(cells[4].textContent),
+      lost: parseInt(cells[5].textContent),
+      goalsFor: parseInt(cells[6].textContent.split(':')[0]),
+      goalsAgainst: parseInt(cells[6].textContent.split(':')[1]),
+      points: parseInt(cells[7].querySelector('.points').textContent),
+      form: Array.from(formBoxes).map(box => {
+        if (box.classList.contains('victory')) return 'W';
+        if (box.classList.contains('draw')) return 'D';
+        return 'L';
+      })
+    };
+  });
+}
+
+function updateLeagueTable() {
+  const rows = document.querySelectorAll('#leagueTable tbody tr:not(.separator)');
+
+  rows.forEach(row => {
+    const teamName = row.cells[1].querySelector('b').textContent.trim();
+    const team = teams[teamName];
+
+    // Update basic stats
+    row.cells[2].textContent = team.played;
+    row.cells[3].textContent = team.won;
+    row.cells[4].textContent = team.draw;
+    row.cells[5].textContent = team.lost;
+    row.cells[6].textContent = `${team.goalsFor}:${team.goalsAgainst}`;
+    row.cells[7].querySelector('.points').textContent = team.points;
+
+    // Update form
+    const formBoxes = row.cells[8].querySelectorAll('.form-box');
+    team.form.forEach((result, i) => {
+      formBoxes[i].className = 'form-box';
+      formBoxes[i].classList.add(
+        result === 'W' ? 'victory' : 
+        result === 'D' ? 'draw' : 'loss'
+      );
+    });
+  });
+
+  // Re-sort table
+  if (currentSortColumn !== null) {
+    const dataType = getDataTypeForColumn(currentSortColumn);
+    sortTable(currentSortColumn, dataType);
+  }
+}
+
+function getDataTypeForColumn(columnIndex) {
+  const dataTypes = ['number', 'string', 'number', 'number', 'number', 'number', 'goals', 'number'];
+  return dataTypes[columnIndex] || 'number';
+}
+
+// Add match form handler
+document.getElementById('matchForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  
+  const homeTeam = document.getElementById('homeTeam').value;
+  const awayTeam = document.getElementById('awayTeam').value;
+  const homeScore = parseInt(document.getElementById('homeScore').value);
+  const awayScore = parseInt(document.getElementById('awayScore').value);
+
+  if (!homeTeam || !awayTeam || homeTeam === awayTeam) {
+    alert('Please select valid teams');
     return;
   }
 
-  // Add the match result
-  addMatchResult(teamA, teamB, scoreA, scoreB);
+  // Update team data
+  [homeTeam, awayTeam].forEach(team => {
+    teams[team].played++;
+    teams[team].goalsFor += team === homeTeam ? homeScore : awayScore;
+    teams[team].goalsAgainst += team === homeTeam ? awayScore : homeScore;
+  });
 
-  // Clear the form fields
-  document.getElementById('teamA').value = '';
-  document.getElementById('scoreA').value = '';
-  document.getElementById('teamB').value = '';
-  document.getElementById('scoreB').value = '';
+  // Update results
+  if (homeScore > awayScore) {
+    teams[homeTeam].won++;
+    teams[homeTeam].points += 3;
+    teams[homeTeam].form.unshift('W');
+    teams[awayTeam].lost++;
+    teams[awayTeam].form.unshift('L');
+  } else if (awayScore > homeScore) {
+    teams[awayTeam].won++;
+    teams[awayTeam].points += 3;
+    teams[awayTeam].form.unshift('W');
+    teams[homeTeam].lost++;
+    teams[homeTeam].form.unshift('L');
+  } else {
+    teams[homeTeam].draw++;
+    teams[homeTeam].points++;
+    teams[homeTeam].form.unshift('D');
+    teams[awayTeam].draw++;
+    teams[awayTeam].points++;
+    teams[awayTeam].form.unshift('D');
+  }
+
+  // Keep only last 5 matches in form
+  teams[homeTeam].form = teams[homeTeam].form.slice(0, 5);
+  teams[awayTeam].form = teams[awayTeam].form.slice(0, 5);
+
+  updateLeagueTable();
+  e.target.reset();
 });
 
+// Initialize teams data on load
+window.onload = () => {
+  document.getElementById('loading').style.display = 'none';
+  initializeTeamsData();
+  sortTable(7, 'number');
+};
 
 
 // Loading Spinner
