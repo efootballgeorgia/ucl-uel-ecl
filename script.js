@@ -11,7 +11,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyAQSPphqNP7BHzbRXLYDwrkUsPyIJpcALc",
   authDomain: "nekro-league-9e7bf.firebaseapp.com",
   projectId: "nekro-league-9e7bf",
-  storageBucket: "nekro-league-9e7bf.firebasestorage.app",
+  storageBucket: "nekro-league-9e7bf.appspot.com",
   messagingSenderId: "721371342919",
   appId: "1:721371342919:web:217f325dadb42db4a8e962",
   measurementId: "G-0NCFK58SMN"
@@ -86,7 +86,7 @@ document.querySelectorAll('.wins').forEach(teamSection => {
   teamSection.prepend(sticker);
 });
 
-// Enhanced Sorting Functionality
+// Enhanced Sorting Functionality with Points as Primary Criterion
 function sortTable(columnIndex, dataType) {
   const table = document.getElementById('leagueTable');
   const tbody = table.querySelector('tbody');
@@ -104,6 +104,15 @@ function sortTable(columnIndex, dataType) {
   }
 
   teamRows.sort((a, b) => {
+    const aPoints = parseInt(a.cells[7].querySelector('.points').textContent);
+    const bPoints = parseInt(b.cells[7].querySelector('.points').textContent);
+
+    // First, sort by points (primary criterion)
+    if (aPoints !== bPoints) {
+      return isAscending ? bPoints - aPoints : aPoints - bPoints;
+    }
+
+    // If points are equal, sort by the selected column (secondary criterion)
     const aCell = a.cells[columnIndex];
     const bCell = b.cells[columnIndex];
     let aValue, bValue;
@@ -242,7 +251,7 @@ matchForm.addEventListener('submit', function(e) {
   );
 
   // Update form and sort table
-  sortTable(7, 'number');
+  sortTable(7, 'number'); // Sort by Points (column 7)
   this.reset();
 });
 
@@ -284,7 +293,7 @@ function fetchMatches() {
           match.homeScore === match.awayScore
         );
       });
-      sortTable(7, 'number'); // Sort by Points (column 7)
+      sortTable(7, 'number'); // Sort by Points (column 7) on page load
     })
     .catch((error) => {
       console.error('Error fetching matches: ', error);
