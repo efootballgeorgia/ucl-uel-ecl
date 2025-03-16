@@ -381,3 +381,46 @@ tbody tr:hover {
   width: 170px !important;
   height: 66px !important;
 }
+
+.score-input {
+  background-color: #292929;
+  padding: 20px;
+  border-radius: 8px;
+  width: 70%;
+  margin: 20px auto;
+  text-align: left;
+}
+
+.score-input h2 {
+  text-align: center;
+  margin-bottom: 15px;
+  color: #ffcc00;
+}
+
+.score-input label {
+  display: block;
+  margin-bottom: 5px;
+  color: #fff;
+}
+
+.score-input input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border: none;
+  border-radius: 4px;
+}
+
+.score-input button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.score-input button:hover {
+  background-color: #45a049;
+}
+
