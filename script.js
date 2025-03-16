@@ -49,16 +49,16 @@ document.querySelectorAll('.wins').forEach(teamSection => {
 
   switch (teamName) {
     case 'AC Milan':
-      sticker.src = 'images/logos/bacho.jpg';
+      sticker.src = 'images/bacho/bacho.jpg';
       break;
-    case 'Barcelona (L)':
-      sticker.src = 'images/logos/luksona.jpg';
+    case 'Barcelona':
+      sticker.src = 'images/luksona/luksona.jpg';
       break;
-    case 'Barcelona (G)':
-      sticker.src = 'images/logos/giga.jpg';
+    case 'PSG':
+      sticker.src = 'images/giga/giga.jpg';
       break;
     case 'Real Madrid':
-      sticker.src = 'images/logos/niksona.jpg';
+      sticker.src = 'images/niksona/niksona.jpg';
       break;
     default:
       sticker.src = 'images/stickers/default-sticker.png';
