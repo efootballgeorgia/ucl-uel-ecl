@@ -138,8 +138,154 @@ function sortTable(columnIndex, dataType) {
   });
 }
 
+// --- New Code for Match Database and League Table Updates ---
+
+// In-memory database for matches
+const matchDatabase = [];
+
+/**
+ * Adds a new match result to the database and updates the league table.
+ * @param {string} teamA - Name of the first team.
+ * @param {string} teamB - Name of the second team.
+ * @param {number} scoreA - Goals scored by teamA.
+ * @param {number} scoreB - Goals scored by teamB.
+ */
+function addMatchResult(teamA, teamB, scoreA, scoreB) {
+  // Add the match result to the database
+  matchDatabase.push({ teamA, teamB, scoreA, scoreB });
+  // Update the league table based on the new results
+  updateLeagueTable();
+}
+
+/**
+ * Recalculates the league standings based on match results stored in matchDatabase.
+ * It finds the corresponding table row by matching the team name (inside the <b> tag)
+ * and updates the Played, Won, Draw, Lost, +/-, Points, and Form columns.
+ */
+function updateLeagueTable() {
+  // Create an object to store team statistics keyed by team name.
+  const teams = {};
+
+  // Initialize teams based on the table rows (skipping separator rows)
+  const tableRows = document.querySelectorAll('#leagueTable tbody tr:not(.separator)');
+  tableRows.forEach(row => {
+    const teamNameElement = row.querySelector('td:nth-child(2) b');
+    if (teamNameElement) {
+      const teamName = teamNameElement.textContent.trim();
+      teams[teamName] = {
+        played: 0,
+        wins: 0,
+        draws: 0,
+        losses: 0,
+        gf: 0,
+        ga: 0,
+        points: 0,
+        form: [] // array of 'victory', 'draw', or 'loss'
+      };
+    }
+  });
+
+  // Process each match result and update team stats
+  matchDatabase.forEach(match => {
+    // Update for teamA
+    if (teams[match.teamA]) {
+      teams[match.teamA].played += 1;
+      teams[match.teamA].gf += match.scoreA;
+      teams[match.teamA].ga += match.scoreB;
+      if (match.scoreA > match.scoreB) {
+        teams[match.teamA].wins += 1;
+        teams[match.teamA].points += 3;
+        teams[match.teamA].form.push('victory');
+      } else if (match.scoreA === match.scoreB) {
+        teams[match.teamA].draws += 1;
+        teams[match.teamA].points += 1;
+        teams[match.teamA].form.push('draw');
+      } else {
+        teams[match.teamA].losses += 1;
+        teams[match.teamA].form.push('loss');
+      }
+      // Keep only the last 5 results for form
+      if (teams[match.teamA].form.length > 5) teams[match.teamA].form.shift();
+    }
+    // Update for teamB
+    if (teams[match.teamB]) {
+      teams[match.teamB].played += 1;
+      teams[match.teamB].gf += match.scoreB;
+      teams[match.teamB].ga += match.scoreA;
+      if (match.scoreB > match.scoreA) {
+        teams[match.teamB].wins += 1;
+        teams[match.teamB].points += 3;
+        teams[match.teamB].form.push('victory');
+      } else if (match.scoreA === match.scoreB) {
+        teams[match.teamB].draws += 1;
+        teams[match.teamB].points += 1;
+        teams[match.teamB].form.push('draw');
+      } else {
+        teams[match.teamB].losses += 1;
+        teams[match.teamB].form.push('loss');
+      }
+      if (teams[match.teamB].form.length > 5) teams[match.teamB].form.shift();
+    }
+  });
+
+  // Update the table rows with the new stats
+  tableRows.forEach(row => {
+    const teamNameElement = row.querySelector('td:nth-child(2) b');
+    if (teamNameElement) {
+      const teamName = teamNameElement.textContent.trim();
+      const stats = teams[teamName];
+      if (stats) {
+        row.cells[2].textContent = stats.played;            // Played
+        row.cells[3].textContent = stats.wins;              // Won
+        row.cells[4].textContent = stats.draws;             // Draw
+        row.cells[5].textContent = stats.losses;            // Lost
+        row.cells[6].textContent = `${stats.gf}:${stats.ga}`; // Goals For:Against
+        row.cells[7].innerHTML = `<b class="points">${stats.points}</b>`; // Points
+
+        // Update the Form column: clear existing and add new form boxes
+        const formCell = row.cells[8];
+        formCell.innerHTML = '';
+        stats.form.forEach(result => {
+          const span = document.createElement('span');
+          span.className = 'form-box ' + result;
+          formCell.appendChild(span);
+        });
+      }
+    }
+  });
+}
+
+// Save database to localStorage
+function saveDatabase() {
+  localStorage.setItem('matchDatabase', JSON.stringify(matchDatabase));
+}
+
+// Load database from localStorage
+function loadDatabase() {
+  const savedData = localStorage.getItem('matchDatabase');
+  if (savedData) {
+    matchDatabase.push(...JSON.parse(savedData));
+    updateLeagueTable();
+  }
+}
+
+// Call this when adding a match
+function addMatchResult(teamA, teamB, scoreA, scoreB) {
+  matchDatabase.push({ teamA, teamB, scoreA, scoreB });
+  saveDatabase();
+  updateLeagueTable();
+}
+
+// Initialize on page load
+window.onload = () => {
+  loadDatabase();
+  document.getElementById('loading').style.display = 'none';
+  sortTable(7, 'number');
+};
+
+
 // Loading Spinner
 window.onload = () => {
   document.getElementById('loading').style.display = 'none';
-  sortTable(6, 'number'); // Initial sort by points
+  sortTable(7, 'number'); // Sort by Points (column 7)
 };
