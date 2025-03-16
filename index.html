@@ -119,6 +119,39 @@
     </table>
   </section>
 
+  
+  <section class="match-form">
+    <h2>Add Match Result</h2>
+    <form id="matchForm">
+      <div class="form-group">
+        <select id="homeTeam" required>
+          <option value="">Home Team</option>
+          <option>Real Madrid</option>
+          <option>Barcelona</option>
+          <option>PSG</option>
+          <option>AC Milan</option>
+        </select>
+        <input type="number" id="homeScore" min="0" required>
+      </div>
+      <div class="form-group">
+        <select id="awayTeam" required>
+          <option value="">Away Team</option>
+          <option>Real Madrid</option>
+          <option>Barcelona</option>
+          <option>PSG</option>
+          <option>AC Milan</option>
+        </select>
+        <input type="number" id="awayScore" min="0" required>
+      </div>
+      <button type="submit">Add Match</button>
+    </form>
+  </section>
+
+  <div class="modal" id="myModal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImage">
+  </div>
+
   <section class="win-images">
     <h2>Recent Team Highlights</h2>
     <div class="win-gallery">
@@ -339,38 +372,6 @@
       </div>
     </div>
   </section>
-
-  <section class="match-form">
-    <h2>Add Match Result</h2>
-    <form id="matchForm">
-      <div class="form-group">
-        <select id="homeTeam" required>
-          <option value="">Home Team</option>
-          <option>Real Madrid</option>
-          <option>Barcelona</option>
-          <option>PSG</option>
-          <option>AC Milan</option>
-        </select>
-        <input type="number" id="homeScore" min="0" required>
-      </div>
-      <div class="form-group">
-        <select id="awayTeam" required>
-          <option value="">Away Team</option>
-          <option>Real Madrid</option>
-          <option>Barcelona</option>
-          <option>PSG</option>
-          <option>AC Milan</option>
-        </select>
-        <input type="number" id="awayScore" min="0" required>
-      </div>
-      <button type="submit">Add Match</button>
-    </form>
-  </section>
-
-  <div class="modal" id="myModal">
-    <span class="close" onclick="closeModal()">&times;</span>
-    <img class="modal-content" id="modalImage">
-  </div>
 
 <!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
