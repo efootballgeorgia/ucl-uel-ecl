@@ -138,214 +138,34 @@ function sortTable(columnIndex, dataType) {
   });
 }
 
-// --- New Code for Match Database and League Table Updates ---
+// Add at the top with other constants
+const matchForm = document.getElementById('matchForm');
+let matches = JSON.parse(localStorage.getItem('matches')) || [];
 
-// In-memory database for matches
-const matchDatabase = [];
-
-/**
- * Adds a new match result to the database and updates the league table.
- * @param {string} teamA - Name of the first team.
- * @param {string} teamB - Name of the second team.
- * @param {number} scoreA - Goals scored by teamA.
- * @param {number} scoreB - Goals scored by teamB.
- */
-function addMatchResult(teamA, teamB, scoreA, scoreB) {
-  // Add the match result to the database
-  matchDatabase.push({ teamA, teamB, scoreA, scoreB });
-  // Update the league table based on the new results
-  updateLeagueTable();
-}
-
-/**
- * Recalculates the league standings based on match results stored in matchDatabase.
- * It finds the corresponding table row by matching the team name (inside the <b> tag)
- * and updates the Played, Won, Draw, Lost, +/-, Points, and Form columns.
- */
-function updateLeagueTable() {
-  // Create an object to store team statistics keyed by team name.
-  const teams = {};
-
-  // Initialize teams based on the table rows (skipping separator rows)
-  const tableRows = document.querySelectorAll('#leagueTable tbody tr:not(.separator)');
-  tableRows.forEach(row => {
-    const teamNameElement = row.querySelector('td:nth-child(2) b');
-    if (teamNameElement) {
-      const teamName = teamNameElement.textContent.trim();
-      teams[teamName] = {
-        played: 0,
-        wins: 0,
-        draws: 0,
-        losses: 0,
-        gf: 0,
-        ga: 0,
-        points: 0,
-        form: [] // array of 'victory', 'draw', or 'loss'
-      };
-    }
-  });
-
-  // Process each match result and update team stats
-  matchDatabase.forEach(match => {
-    // Update for teamA
-    if (teams[match.teamA]) {
-      teams[match.teamA].played += 1;
-      teams[match.teamA].gf += match.scoreA;
-      teams[match.teamA].ga += match.scoreB;
-      if (match.scoreA > match.scoreB) {
-        teams[match.teamA].wins += 1;
-        teams[match.teamA].points += 3;
-        teams[match.teamA].form.push('victory');
-      } else if (match.scoreA === match.scoreB) {
-        teams[match.teamA].draws += 1;
-        teams[match.teamA].points += 1;
-        teams[match.teamA].form.push('draw');
-      } else {
-        teams[match.teamA].losses += 1;
-        teams[match.teamA].form.push('loss');
-      }
-      // Keep only the last 5 results for form
-      if (teams[match.teamA].form.length > 5) teams[match.teamA].form.shift();
-    }
-    // Update for teamB
-    if (teams[match.teamB]) {
-      teams[match.teamB].played += 1;
-      teams[match.teamB].gf += match.scoreB;
-      teams[match.teamB].ga += match.scoreA;
-      if (match.scoreB > match.scoreA) {
-        teams[match.teamB].wins += 1;
-        teams[match.teamB].points += 3;
-        teams[match.teamB].form.push('victory');
-      } else if (match.scoreA === match.scoreB) {
-        teams[match.teamB].draws += 1;
-        teams[match.teamB].points += 1;
-        teams[match.teamB].form.push('draw');
-      } else {
-        teams[match.teamB].losses += 1;
-        teams[match.teamB].form.push('loss');
-      }
-      if (teams[match.teamB].form.length > 5) teams[match.teamB].form.shift();
-    }
-  });
-
-  // Update the table rows with the new stats
-  tableRows.forEach(row => {
-    const teamNameElement = row.querySelector('td:nth-child(2) b');
-    if (teamNameElement) {
-      const teamName = teamNameElement.textContent.trim();
-      const stats = teams[teamName];
-      if (stats) {
-        row.cells[2].textContent = stats.played;            // Played
-        row.cells[3].textContent = stats.wins;              // Won
-        row.cells[4].textContent = stats.draws;             // Draw
-        row.cells[5].textContent = stats.losses;            // Lost
-        row.cells[6].textContent = `${stats.gf}:${stats.ga}`; // Goals For:Against
-        row.cells[7].innerHTML = `<b class="points">${stats.points}</b>`; // Points
-
-        // Update the Form column: clear existing and add new form boxes
-        const formCell = row.cells[8];
-        formCell.innerHTML = '';
-        stats.form.forEach(result => {
-          const span = document.createElement('span');
-          span.className = 'form-box ' + result;
-          formCell.appendChild(span);
-        });
-      }
-    }
-  });
-}
-
-// Save database to localStorage
-function saveDatabase() {
-  localStorage.setItem('matchDatabase', JSON.stringify(matchDatabase));
-}
-
-// Load database from localStorage
-function loadDatabase() {
-  const savedData = localStorage.getItem('matchDatabase');
-  if (savedData) {
-    matchDatabase.push(...JSON.parse(savedData));
-    updateLeagueTable();
-  }
-}
-
-// Call this when adding a match
-function addMatchResult(teamA, teamB, scoreA, scoreB) {
-  matchDatabase.push({ teamA, teamB, scoreA, scoreB });
-  saveDatabase();
-  updateLeagueTable();
-}
-
-// Add these at the top with other constants
-let teams = {};
-
-// Add these functions
-function initializeTeamsData() {
-  const teamRows = document.querySelectorAll('#leagueTable tbody tr:not(.separator)');
-  teams = {};
-
-  teamRows.forEach(row => {
-    const cells = row.cells;
-    const teamName = cells[1].querySelector('b').textContent.trim();
-    const formBoxes = cells[8].querySelectorAll('.form-box');
-    
-    teams[teamName] = {
-      played: parseInt(cells[2].textContent),
-      won: parseInt(cells[3].textContent),
-      draw: parseInt(cells[4].textContent),
-      lost: parseInt(cells[5].textContent),
-      goalsFor: parseInt(cells[6].textContent.split(':')[0]),
-      goalsAgainst: parseInt(cells[6].textContent.split(':')[1]),
-      points: parseInt(cells[7].querySelector('.points').textContent),
-      form: Array.from(formBoxes).map(box => {
-        if (box.classList.contains('victory')) return 'W';
-        if (box.classList.contains('draw')) return 'D';
-        return 'L';
-      })
-    };
-  });
-}
-
-function updateLeagueTable() {
+// Add this function to update team statistics
+function updateTeamStats(teamName, goalsFor, goalsAgainst, isWin, isDraw) {
   const rows = document.querySelectorAll('#leagueTable tbody tr:not(.separator)');
-
+  
   rows.forEach(row => {
-    const teamName = row.cells[1].querySelector('b').textContent.trim();
-    const team = teams[teamName];
-
-    // Update basic stats
-    row.cells[2].textContent = team.played;
-    row.cells[3].textContent = team.won;
-    row.cells[4].textContent = team.draw;
-    row.cells[5].textContent = team.lost;
-    row.cells[6].textContent = `${team.goalsFor}:${team.goalsAgainst}`;
-    row.cells[7].querySelector('.points').textContent = team.points;
-
-    // Update form
-    const formBoxes = row.cells[8].querySelectorAll('.form-box');
-    team.form.forEach((result, i) => {
-      formBoxes[i].className = 'form-box';
-      formBoxes[i].classList.add(
-        result === 'W' ? 'victory' : 
-        result === 'D' ? 'draw' : 'loss'
-      );
-    });
+    const teamCell = row.cells[1];
+    if (teamCell.querySelector('b').textContent === teamName) {
+      const cells = row.cells;
+      cells[2].textContent = parseInt(cells[2].textContent) + 1; // Played
+      cells[3].textContent = parseInt(cells[3].textContent) + (isWin ? 1 : 0); // Won
+      cells[4].textContent = parseInt(cells[4].textContent) + (isDraw ? 1 : 0); // Draw
+      cells[5].textContent = parseInt(cells[5].textContent) + (!isWin && !isDraw ? 1 : 0); // Lost
+      
+      const [currentFor, currentAgainst] = cells[6].textContent.split(':').map(Number);
+      cells[6].textContent = `${currentFor + goalsFor}:${currentAgainst + goalsAgainst}`; // +/- 
+      
+      const points = (parseInt(cells[3].textContent) * 3) + parseInt(cells[4].textContent);
+      cells[7].querySelector('.points').textContent = points; // Points
+    }
   });
-
-  // Re-sort table
-  if (currentSortColumn !== null) {
-    const dataType = getDataTypeForColumn(currentSortColumn);
-    sortTable(currentSortColumn, dataType);
-  }
 }
 
-function getDataTypeForColumn(columnIndex) {
-  const dataTypes = ['number', 'string', 'number', 'number', 'number', 'number', 'goals', 'number'];
-  return dataTypes[columnIndex] || 'number';
-}
-
-// Add match form handler
-document.getElementById('matchForm').addEventListener('submit', (e) => {
+// Add match form submission handler
+matchForm.addEventListener('submit', function(e) {
   e.preventDefault();
   
   const homeTeam = document.getElementById('homeTeam').value;
@@ -353,54 +173,91 @@ document.getElementById('matchForm').addEventListener('submit', (e) => {
   const homeScore = parseInt(document.getElementById('homeScore').value);
   const awayScore = parseInt(document.getElementById('awayScore').value);
 
-  if (!homeTeam || !awayTeam || homeTeam === awayTeam) {
-    alert('Please select valid teams');
+  if (homeTeam === awayTeam) {
+    alert('A team cannot play against itself!');
     return;
   }
 
-  // Update team data
-  [homeTeam, awayTeam].forEach(team => {
-    teams[team].played++;
-    teams[team].goalsFor += team === homeTeam ? homeScore : awayScore;
-    teams[team].goalsAgainst += team === homeTeam ? awayScore : homeScore;
-  });
+  // Save match
+  matches.push({ homeTeam, awayTeam, homeScore, awayScore });
+  localStorage.setItem('matches', JSON.stringify(matches));
 
-  // Update results
-  if (homeScore > awayScore) {
-    teams[homeTeam].won++;
-    teams[homeTeam].points += 3;
-    teams[homeTeam].form.unshift('W');
-    teams[awayTeam].lost++;
-    teams[awayTeam].form.unshift('L');
-  } else if (awayScore > homeScore) {
-    teams[awayTeam].won++;
-    teams[awayTeam].points += 3;
-    teams[awayTeam].form.unshift('W');
-    teams[homeTeam].lost++;
-    teams[homeTeam].form.unshift('L');
-  } else {
-    teams[homeTeam].draw++;
-    teams[homeTeam].points++;
-    teams[homeTeam].form.unshift('D');
-    teams[awayTeam].draw++;
-    teams[awayTeam].points++;
-    teams[awayTeam].form.unshift('D');
-  }
+  // Update stats
+  const isDraw = homeScore === awayScore;
+  
+  // Update home team stats
+  updateTeamStats(
+    homeTeam,
+    homeScore,
+    awayScore,
+    homeScore > awayScore,
+    isDraw
+  );
 
-  // Keep only last 5 matches in form
-  teams[homeTeam].form = teams[homeTeam].form.slice(0, 5);
-  teams[awayTeam].form = teams[awayTeam].form.slice(0, 5);
+  // Update away team stats
+  updateTeamStats(
+    awayTeam,
+    awayScore,
+    homeScore,
+    awayScore > homeScore,
+    isDraw
+  );
 
-  updateLeagueTable();
-  e.target.reset();
+  // Update form and sort table
+  sortTable(7, 'number');
+  this.reset();
 });
 
-// Initialize teams data on load
-window.onload = () => {
-  document.getElementById('loading').style.display = 'none';
-  initializeTeamsData();
-  sortTable(7, 'number');
+// Add this at the end of window.onload to process existing matches
+matches.forEach(match => {
+  document.getElementById('homeTeam').value = match.homeTeam;
+  document.getElementById('awayTeam').value = match.awayTeam;
+  document.getElementById('homeScore').value = match.homeScore;
+  document.getElementById('awayScore').value = match.awayScore;
+  matchForm.dispatchEvent(new Event('submit'));
+});
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAwmL2pHpqmaAOHXnWffdQ-NRXwmwLLFAE",
+  authDomain: "nekro-league.firebaseapp.com",
+  projectId: "nekro-league",
+  storageBucket: "nekro-league.firebasestorage.app",
+  messagingSenderId: "961908970420",
+  appId: "1:961908970420:web:77c9b841d4f5ba40b9d8e1",
 };
+
+const app = firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const auth = firebase.auth();
+
+async function addMatch(homeTeam, awayTeam, homeScore, awayScore) {
+  try {
+    await db.collection('matches').add({
+      homeTeam,
+      awayTeam,
+      homeScore,
+      awayScore,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    console.log('Match added successfully!');
+  } catch (error) {
+    console.error('Error adding match: ', error);
+  }
+}
+
+async function fetchMatches() {
+  try {
+    const snapshot = await db.collection('matches').get();
+    const matches = [];
+    snapshot.forEach(doc => {
+      matches.push({ id: doc.id, ...doc.data() });
+    });
+    return matches;
+  } catch (error) {
+    console.error('Error fetching matches: ', error);
+    return [];
+  }
+}
 
 
 // Loading Spinner
