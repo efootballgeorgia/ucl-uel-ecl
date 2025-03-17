@@ -213,7 +213,7 @@ tbody tr:hover {
   border: 3px solid #1d187c;
   box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
   transform: rotate(15deg);
-  z-index: 1;
+  z-index: 0;
   animation: float 3s ease-in-out infinite;
 }
 
