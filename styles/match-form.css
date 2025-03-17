@@ -1,0 +1,50 @@
+/* Match Form Styles */
+.match-form {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px auto;
+    width: 70%;
+    z-index: 1;
+    position: relative;
+  }
+  
+  .match-form h2 {
+    margin-bottom: 15px;
+  }
+  
+  #matchForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .form-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  .form-group select, .form-group input {
+    flex: 1;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #444;
+    background: #333;
+    color: white;
+  }
+  
+  button[type="submit"] {
+    background: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  button[type="submit"]:hover {
+    background: #45a049;
+  }
+  

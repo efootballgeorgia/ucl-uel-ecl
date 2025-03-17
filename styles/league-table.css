@@ -1,0 +1,121 @@
+/* League Table Styles */
+.league-table {
+    width: 70%;
+    margin: 20px auto;
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 1;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 16px;
+  }
+  
+  thead th {
+    background-color: #222;
+    color: white;
+    padding: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  thead th:hover {
+    background-color: #333;
+  }
+  
+  th[data-sort="asc"]::after {
+    content: " ▲";
+    font-size: 12px;
+    color: #4CAF50;
+  }
+  
+  th[data-sort="desc"]::after {
+    content: " ▼";
+    font-size: 12px;
+    color: #F44336;
+  }
+  
+  tbody td {
+    background-color: #292929;
+    padding: 12px;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  tbody td img {
+    width: 35px;
+    height: 35px;
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+  
+  tbody tr:nth-child(even) td {
+    background-color: #333;
+  }
+  
+  tbody tr:hover {
+    background-color: #444;
+    transform: scale(1.02);
+  }
+  
+  /* Form Box Styles */
+  .form-box {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    margin: 0 2px;
+    border-radius: 3px;
+  }
+  
+  .form-box.victory {
+    background-color: green;
+  }
+  
+  .form-box.loss {
+    background-color: red;
+  }
+  
+  .form-box.draw {
+    background-color: gray;
+  }
+  
+  /* Separator Styles */
+  .separator td {
+    background-color: #1a1a40 !important;
+    padding: 0 !important;
+    height: 25px;
+    position: relative;
+  }
+  
+  .separator .line {
+    display: block;
+    height: 2px;
+    margin: 0 10px;
+  }
+  
+  .next-round .line {
+    background-color: #4CAF50;
+  }
+  
+  .relegation .line {
+    background-color: #F44336;
+  }
+  
+  .separator .label {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    font-weight: bold;
+  }
+  
+  .next-round .label {
+    color: #4CAF50;
+  }
+  
+  .relegation .label {
+    color: #F44336;
+  }

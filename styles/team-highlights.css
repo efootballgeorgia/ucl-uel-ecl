@@ -1,0 +1,76 @@
+/* Team Highlights Section */
+.win-images {
+  margin: 40px auto;
+  text-align: center;
+  color: #fff;
+  z-index: 1;
+}
+
+.win-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.wins {
+  background: #292929;
+  border-radius: 10px;
+  padding: 10px;
+  flex: 1 1 300px;
+  max-width: 350px;
+  text-align: center;
+  box-sizing: border-box;
+  position: relative;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.sticker {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #1d187c;
+  box-shadow: 0 0 15px rgba(255, 204, 0, 0.5);
+  transform: rotate(15deg);
+  z-index: 0;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: rotate(15deg) translateY(0); }
+  50% { transform: rotate(15deg) translateY(-10px); }
+}
+
+.screen-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  max-height: 200px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #ffcc00 #1a1a40;
+}
+
+.screen-gallery img {
+  width: 93%;
+  border-radius: 5px;
+  border: 2px solid #000000;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.screen-gallery img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+  border-color: #ffcc00;
+}
