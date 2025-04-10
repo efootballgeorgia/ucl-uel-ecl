@@ -376,10 +376,6 @@ body {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
   }
-
-.match-form {
-  display: none !important;
-}
   
   .strength {
     width: 170px !important;
@@ -435,3 +431,7 @@ body {
   button[type="submit"]:hover {
     background: #45a049;
   }
+
+.match-form {
+  display: none !important;
+}
