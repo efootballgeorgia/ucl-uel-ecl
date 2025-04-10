@@ -255,7 +255,7 @@ document.querySelectorAll('.wins').forEach(teamSection => {
     case 'PSG':
       sticker.src = 'images/giga/giga.jpg';
       break;
-    case 'Real Madrid':
+    case 'Inter Milan':
       sticker.src = 'images/niksona/niksona.jpg';
       break;
     default:
