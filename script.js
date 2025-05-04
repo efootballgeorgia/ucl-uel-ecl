@@ -258,8 +258,6 @@ document.querySelectorAll('.wins').forEach(teamSection => {
     case 'Inter Milan':
       sticker.src = 'images/niksona/niksona.jpg';
       break;
-    default:
-      sticker.src = 'images/stickers/default-sticker.png';
   }
 
   teamSection.prepend(sticker);
