@@ -2,7 +2,12 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /matches/{matchId} {
-      allow read, write: if true; // Allow all access for testing
+      // Allow anyone to read.
+      allow read: if true;
+      // Allow only if the homeTeam exists in the request data.
+      allow create: if request.resource.data.homeTeam != null;
+      // Only allow updating if you are the document owner.
+      allow update: if request.resource.data.userId == request.auth.uid;
     }
   }
 }
