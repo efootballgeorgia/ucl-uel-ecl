@@ -431,7 +431,3 @@ body {
   button[type="submit"]:hover {
     background: #45a049;
   }
-
-.match-form {
-  display: none !important;
-}
