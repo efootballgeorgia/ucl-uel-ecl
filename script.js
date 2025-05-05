@@ -217,16 +217,10 @@ function fetchMatches() {
    4. Event Listeners for Modal & Gallery
 ============================================ */
 // Open modal when any gallery image is clicked
-images.forEach(image => {
-  image.addEventListener('click', () => {
-    modal.classList.add('show');
-    modalImage.src = image.src;
-  });
-});
 screens.forEach(screen => {
-  screen.addEventListener('click', () => {
+  screen.addEventListener('click', (event) => { // Add event parameter
     modal.classList.add('show');
-    modalImage.src = screen.src;
+    modalImage.src = event.target.src; // Use clicked image's src
   });
 });
 
@@ -304,9 +298,60 @@ matchForm.addEventListener('submit', function(e) {
 });
 
 /* ============================================
-   7. Window onload: Hide Spinner and Fetch Matches
+   7. Player Squad Interaction
 ============================================ */
+
+// Initialize player interactions
+function initPlayerInteractions() {
+  // Add click handlers to all player icons
+  document.querySelectorAll('.player-icon').forEach(icon => {
+    icon.addEventListener('click', function() {
+      const playerId = this.getAttribute('data-player');
+      const teamContainer = this.closest('.team-squad');
+      showPlayerDetails(playerId, teamContainer);
+    });
+  });
+  
+  // Close button for player details
+  document.querySelectorAll('.close-details').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const teamContainer = this.closest('.team-squad');
+      closePlayerDetails(teamContainer);
+    });
+  });
+  
+  // Close when clicking outside player details
+  document.querySelectorAll('.player-details-container').forEach(container => {
+    container.addEventListener('click', function(e) {
+      if (e.target === this) {
+        const teamContainer = this.closest('.team-squad');
+        closePlayerDetails(teamContainer);
+      }
+    });
+  });
+}
+
+function showPlayerDetails(playerId, teamContainer) {
+  // Hide all player details in this team first
+  teamContainer.querySelectorAll('.player-details').forEach(detail => {
+    detail.style.display = 'none';
+  });
+  
+  // Show the selected player
+  const playerDetail = teamContainer.querySelector(`.player-details[data-player="${playerId}"]`);
+  if (playerDetail) {
+    playerDetail.style.display = 'flex';
+    teamContainer.querySelector('.player-details-container').classList.add('active');
+  }
+}
+
+function closePlayerDetails(teamContainer) {
+  teamContainer.querySelector('.player-details-container').classList.remove('active');
+}
+
+// Update window.onload to include initPlayerInteractions
 window.onload = () => {
   document.getElementById('loading').style.display = 'none';
   fetchMatches();
+  initPlayerInteractions();
 };
