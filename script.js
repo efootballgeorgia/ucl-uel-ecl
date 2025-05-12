@@ -232,32 +232,6 @@ modal.addEventListener('click', (event) => {
 });
 
 /* ============================================
-   5. Add Stickers to Team Highlights
-============================================ */
-document.querySelectorAll('.wins').forEach(teamSection => {
-  const teamName = teamSection.querySelector('h3').textContent.trim();
-  const sticker = document.createElement('img');
-  sticker.className = 'sticker';
-
-  switch (teamName) {
-    case 'AC Milan':
-      sticker.src = 'images/games/bacho.jpg';
-      break;
-    case 'Barcelona':
-      sticker.src = 'images/games/luksona.jpg';
-      break;
-    case 'PSG':
-      sticker.src = 'images/games/giga.jpg';
-      break;
-    case 'Inter Milan':
-      sticker.src = 'images/games/niksona.jpg';
-      break;
-  }
-
-  teamSection.prepend(sticker);
-});
-
-/* ============================================
    6. Event Listener for Match Form Submission
 ============================================ */
 matchForm.addEventListener('submit', function(e) {
