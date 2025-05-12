@@ -241,16 +241,16 @@ document.querySelectorAll('.wins').forEach(teamSection => {
 
   switch (teamName) {
     case 'AC Milan':
-      sticker.src = 'images/bacho/bacho.jpg';
+      sticker.src = 'images/games/bacho.jpg';
       break;
     case 'Barcelona':
-      sticker.src = 'images/luksona/luksona.jpg';
+      sticker.src = 'images/games/luksona.jpg';
       break;
     case 'PSG':
-      sticker.src = 'images/giga/giga.jpg';
+      sticker.src = 'images/games/giga.jpg';
       break;
     case 'Inter Milan':
-      sticker.src = 'images/niksona/niksona.jpg';
+      sticker.src = 'images/games/niksona.jpg';
       break;
   }
 
