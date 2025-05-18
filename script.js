@@ -357,33 +357,6 @@ function updateAll() {
   updateKnockoutStage();
 }
 
-// Add touch events for sorting
-document.querySelectorAll('th').forEach(header => {
-  header.addEventListener('touchstart', (e) => {
-    if(e.target.tagName === 'TH') {
-      const columnIndex = Array.from(e.target.parentElement.children).indexOf(e.target);
-      const dataType = e.target.getAttribute('onclick').match(/'([^']+)'/)[1];
-      sortTable(columnIndex, dataType);
-    }
-  });
-});
-
-// Prevent zoom on input focus
-document.addEventListener('touchstart', function(e) {
-  if(e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') {
-    document.body.style.zoom = "100%";
-  }
-}, false);
-
-// Update form submission handler
-matchForm.addEventListener('submit', function(e) {
-  e.preventDefault();
-  // ... existing code ...
-  
-  // Dismiss mobile keyboard
-  document.activeElement.blur();
-});
-
 window.onload = () => {
   document.getElementById('loading').style.display = 'none';
   fetchMatches();
