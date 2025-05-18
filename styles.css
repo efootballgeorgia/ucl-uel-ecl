@@ -491,53 +491,100 @@ button[type="submit"]:hover {
   object-fit: cover;
 }
 
-/* ===== Mobile Responsiveness ===== */
-@media (max-width: 768px) {
-  header {
-    height: 200px;
+/* Mobile First Approach */
+/* Base styles for mobile */
+body {
+  font-size: 14px;
+}
+
+table {
+  width: 100%;
+  min-width: unset;
+  font-size: 12px;
+}
+
+tbody td img {
+  width: 25px;
+  height: 25px;
+  margin-right: 5px;
+}
+
+.match-form {
+  width: 95%;
+  padding: 10px;
+}
+
+/* Tablet */
+@media (min-width: 481px) {
+  body {
+    font-size: 15px;
   }
   
-  header img.league-logo {
-    max-width: 120px;
-  }
-
-  .league-table {
-    width: 100%;
-    overflow-x: auto;
-  }
-
   table {
-    min-width: 600px;
     font-size: 14px;
   }
-
-  .match-form {
-    width: 90%;
-    padding: 15px;
-  }
-
-  .form-group {
-    flex-direction: column;
-  }
-
-  .win-gallery {
-    flex-direction: column;
-  }
-
-  .player-icon {
+  
+  tbody td img {
     width: 30px;
     height: 30px;
   }
 }
 
-@media (max-width: 480px) {
-  table {
-    font-size: 12px;
+/* Desktop */
+@media (min-width: 769px) {
+  .league-table {
+    width: 90%;
   }
   
-  .match-form h2 {
-    font-size: 1.2em;
+  table {
+    font-size: 16px;
   }
+  
+  .match-form {
+    width: 600px;
+  }
+}
+
+/* Improved Touch Targets */
+.form-group select, 
+.form-group input,
+button[type="submit"] {
+  min-height: 48px;
+  font-size: 16px;
+}
+
+/* Stack form elements vertically on mobile */
+.form-group {
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Optimize knockout stage for mobile */
+@media (max-width: 768px) {
+  .knockout-stage {
+    display: none;
+  }
+  
+  .knockout-mobile-link {
+    display: block;
+    color: #4CAF50;
+    margin: 20px 0;
+  }
+}
+
+/* Better table scrolling */
+.league-table {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Position fixes for mobile */
+header {
+  height: 200px;
+}
+
+header img.league-logo {
+  max-width: 120px;
 }
 
 /* Knockout Stage Styles */
@@ -593,6 +640,7 @@ button[type="submit"]:hover {
 .playoff-unseeded.pos22 { top: 50%; left: 87%; }
 .playoff-unseeded.pos23 { top: 27.6%; left: 86.5%; }
 .playoff-unseeded.pos24 { top: 27.6%; left: 10.3%; }
+
 
 .match-form {
   display: none !important;
