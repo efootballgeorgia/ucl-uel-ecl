@@ -553,7 +553,6 @@ button[type="submit"]:hover {
 }
 
 .knockout-bg {
-  width: 100%;
   height: auto;
 }
 
@@ -570,14 +569,14 @@ button[type="submit"]:hover {
 
 
 /* Example positions - adjust based on your bracket image */
-.r16-team.pos1 { top: 19.5%; left: 25%; }
-.r16-team.pos2 { top: 19%; left: 71.5%; }
-.r16-team.pos3 { top: 85.5%; left: 25%; }
-.r16-team.pos4 { top: 85.5%; left: 71.5%; }
-.r16-team.pos5 { top: 63.5%; left: 25%; }
-.r16-team.pos6 { top: 63.5%; left: 71.5%; }
-.r16-team.pos7 { top: 39%; left: 25%; }
-.r16-team.pos8 { top: 41%; left: 71.5%; }
+.r16-team.pos1 { top: 19%; left: 26%; }
+.r16-team.pos2 { top: 19%; left: 71%; }
+.r16-team.pos3 { top: 85.5%; left: 26%; }
+.r16-team.pos4 { top: 85.5%; left: 71%; }
+.r16-team.pos5 { top: 63.5%; left: 26%; }
+.r16-team.pos6 { top: 63.5%; left: 71%; }
+.r16-team.pos7 { top: 40.5%; left: 26.5%; }
+.r16-team.pos8 { top: 40.5%; left: 71%; }
 .playoff-seeded.pos9 { top: 37.5%; left: 10.7%; }
 .playoff-seeded.pos10 { top: 36.5%; left: 87%; }
 .playoff-seeded.pos11 { top: 59%; left: 86.5%; }
