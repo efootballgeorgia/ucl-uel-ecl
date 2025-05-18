@@ -232,7 +232,7 @@ modal.addEventListener('click', (event) => {
 });
 
 /* ============================================
-   6. Event Listener for Match Form Submission
+   5. Event Listener for Match Form Submission
 ============================================ */
 matchForm.addEventListener('submit', function(e) {
   e.preventDefault();
@@ -246,6 +246,9 @@ matchForm.addEventListener('submit', function(e) {
     alert('A team cannot play against itself!');
     return;
   }
+
+  this.reset();
+  updateAll(); // Add this line
 
   // Save match to Firestore and update team stats
   addMatch(homeTeam, awayTeam, homeScore, awayScore);
@@ -272,7 +275,7 @@ matchForm.addEventListener('submit', function(e) {
 });
 
 /* ============================================
-   7. Player Squad Interaction
+   6. Player Squad Interaction
 ============================================ */
 
 // Initialize player interactions
@@ -323,9 +326,40 @@ function closePlayerDetails(teamContainer) {
   teamContainer.querySelector('.player-details-container').classList.remove('active');
 }
 
-// Update window.onload to include initPlayerInteractions
+function updateKnockoutStage() {
+  const teams = Array.from(document.querySelectorAll('#leagueTable tbody tr:not(.separator)'));
+  
+  // Clear existing logos
+  document.querySelectorAll('.logos-container div').forEach(div => div.innerHTML = '');
+
+  teams.forEach((team, index) => {
+    const position = index + 1;
+    const logo = team.querySelector('img').cloneNode(true);
+    logo.style.width = '100%';
+    logo.style.height = '100%';
+    logo.style.objectFit = 'cover';
+
+    let targetSelector;
+    if(position <= 8) targetSelector = `.r16-team.pos${position}`;
+    else if(position <= 16) targetSelector = `.playoff-seeded.pos${position}`;
+    else if(position <= 24) targetSelector = `.playoff-unseeded.pos${position}`;
+
+    if(targetSelector) {
+      const container = document.querySelector(targetSelector);
+      if(container) container.appendChild(logo);
+    }
+  });
+}
+
+// Call this after any table update
+function updateAll() {
+  sortTable(7, 'number');
+  updateKnockoutStage();
+}
+
 window.onload = () => {
   document.getElementById('loading').style.display = 'none';
   fetchMatches();
   initPlayerInteractions();
+  updateKnockoutStage(); // Add this line
 };
