@@ -55,6 +55,7 @@ header h2 {
   border-radius: 8px;
   overflow: hidden;
   z-index: 1;
+  overflow-x: auto;
 }
 
 table {
@@ -341,6 +342,7 @@ tbody tr:hover {
   border: 1px solid #444;
   background: #333;
   color: white;
+  min-height: 40px;
 }
 
 button[type="submit"] {
@@ -351,6 +353,7 @@ button[type="submit"] {
   border-radius: 5px;
   cursor: pointer;
   transition: background 0.3s;
+  min-height: 40px;
 }
 
 button[type="submit"]:hover {
@@ -365,6 +368,7 @@ button[type="submit"]:hover {
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  overflow-x: auto;
 }
 
 .formation-screenshot img {
@@ -482,6 +486,51 @@ button[type="submit"]:hover {
   object-fit: cover;
 }
 
-.match-form {
-  display: none !important;
+/* ===== Mobile Responsiveness ===== */
+@media (max-width: 768px) {
+  header {
+    height: 200px;
+  }
+  
+  header img.league-logo {
+    max-width: 120px;
+  }
+
+  .league-table {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 600px;
+    font-size: 14px;
+  }
+
+  .match-form {
+    width: 90%;
+    padding: 15px;
+  }
+
+  .form-group {
+    flex-direction: column;
+  }
+
+  .win-gallery {
+    flex-direction: column;
+  }
+
+  .player-icon {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  table {
+    font-size: 12px;
+  }
+  
+  .match-form h2 {
+    font-size: 1.2em;
+  }
 }
