@@ -559,19 +559,6 @@ button[type="submit"] {
   gap: 8px;
 }
 
-/* Optimize knockout stage for mobile */
-@media (max-width: 768px) {
-  .knockout-stage {
-    display: none;
-  }
-  
-  .knockout-mobile-link {
-    display: block;
-    color: #4CAF50;
-    margin: 20px 0;
-  }
-}
-
 /* Better table scrolling */
 .league-table {
   overflow-x: auto;
@@ -640,6 +627,7 @@ header img.league-logo {
 .playoff-unseeded.pos22 { top: 50%; left: 87%; }
 .playoff-unseeded.pos23 { top: 27.6%; left: 86.5%; }
 .playoff-unseeded.pos24 { top: 27.6%; left: 10.3%; }
+
 
 
 .match-form {
