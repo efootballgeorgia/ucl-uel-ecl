@@ -481,3 +481,7 @@ button[type="submit"]:hover {
   border: 2px solid #000000;
   object-fit: cover;
 }
+
+.match-form {
+  display: none !important;
+}
