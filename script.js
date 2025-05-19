@@ -357,6 +357,31 @@ function updateAll() {
   updateKnockoutStage();
 }
 
+function positionLogos() {
+  const teams = document.querySelectorAll('#leagueTable tbody tr:not(.separator)');
+  
+  teams.forEach((team, index) => {
+    const position = index + 1;
+    const logo = team.querySelector('img').cloneNode(true);
+    const logoSlot = document.querySelector(`.logo-slot[data-position="${position}"]`);
+    
+    if (logoSlot) {
+      logoSlot.innerHTML = '';
+      logo.style.width = '100%';
+      logo.style.height = '100%';
+      logo.style.objectFit = 'cover';
+      logoSlot.appendChild(logo);
+      
+      // Add team name as tooltip
+      logoSlot.setAttribute('title', team.querySelector('b').textContent);
+    }
+  });
+}
+
+// Call this after any table update
+window.addEventListener('resize', positionLogos);
+document.addEventListener('DOMContentLoaded', positionLogos);
+
 window.onload = () => {
   document.getElementById('loading').style.display = 'none';
   fetchMatches();
