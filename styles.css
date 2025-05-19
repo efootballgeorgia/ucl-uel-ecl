@@ -531,17 +531,9 @@ tbody td img {
 }
 
 /* Desktop */
-@media (min-width: 769px) {
-  .league-table {
-    width: 90%;
-  }
-  
-  table {
-    font-size: 16px;
-  }
-  
+@media (min-width: 769px) { 
   .match-form {
-    width: 600px;
+    width: 500px;
   }
 }
 
