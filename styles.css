@@ -308,6 +308,190 @@ button[type="submit"]:hover {
   background: #45a049;
 }
 
+/* Team Highlights Section */
+.win-images {
+  margin: 40px auto;
+  text-align: center;
+  color: #fff;
+  z-index: 1;
+}
+
+.win-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.wins {
+  background: #292929;
+  border-radius: 10px;
+  padding: 20px;
+  flex: 1 1 300px;
+  max-width: 320px;
+  text-align: center;
+  box-sizing: border-box;
+  position: relative;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.screen-gallery {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+  scrollbar-width: 70px;
+  scrollbar-color: #0307c9 #1a1a40;
+}
+
+.screen-gallery img {
+  height: 35px;
+  width: 80.5px;
+  border-radius: 5px;
+  border: 2px solid #000000;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+.screen-gallery img:hover {
+  transform: scale(1.01);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
+  border-color: #ffcc00;
+}
+
+
+/* Player Icons */
+
+.formation-screenshot {
+  position: relative;
+  margin: 10px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  overflow-x: auto;
+}
+
+.formation-screenshot img {
+  width: 100%;
+  display: block;
+  pointer-events: none; /* Prevent image from being interactive */
+}
+
+.player-icon {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border: 2px;
+  border-radius: 50%;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  transition: all 0.3s ease;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.player-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.player-icon:hover {
+  transform: translate(-50%, -50%) scale(1.2);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+}
+
+.player-details-container {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 100;
+  justify-content: center;
+  align-items: center;
+}
+
+.player-details-container.active {
+  display: flex;
+}
+
+.player-details {
+  display: flex;
+  max-width: 800px;
+  background: #292929;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.player-photo {
+  pointer-events: auto; /* Allow interaction with the image */
+  cursor: zoom-in;
+}
+
+.player-info {
+  padding: 20px;
+  width: 300px;
+}
+
+.player-info h4 {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: gold;
+}
+
+.player-info p {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.close-details {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+.team-squad {
+  background: rgba(41, 41, 41, 0.8);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 900px;
+}
+
+.image-gallery {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transform: translateY(-20px);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0 15px; /* Add some padding if needed */
+}
+
+.image-gallery.show {
+  max-height: 1500px; /* Adjust based on your content height */
+  opacity: 1;
+  transform: translateY(0);
+  padding: 15px; /* Match the padding when open */
+}
+
+.image-gallery img {
+  border-radius: 5px;
+  border: 2px solid #000000;
+  object-fit: cover;
+}
 
 /* Mobile First Approach */
 /* Base styles for mobile */
@@ -387,7 +571,7 @@ header img.league-logo {
 /* Knockout Stage Styles */
 .knockout-stage {
   margin: 40px auto;
-  max-width: 1152px;
+  max-width: 1200px;
   padding: 20px;
   position: relative;
 }
@@ -395,7 +579,7 @@ header img.league-logo {
 .knockout-container {
   position: relative;
   width: 100%;
-  max-width: 1152px; /* Match your bracket image width */
+  max-width: 1200px; /* Match your bracket image width */
   margin: 0 auto;
 }
 
@@ -407,9 +591,10 @@ header img.league-logo {
 
 .logos-container div {
   position: absolute;
-  width: 3.5%;
   height: auto;
+  height : 8.5%;
   cursor: pointer;
+  border: 2px solid;
 }
 
 .logos-container div:hover {
@@ -418,31 +603,32 @@ header img.league-logo {
 
 
 /* Example positions - adjust based on your bracket image */
-.r16-team.pos1 { top: 20%; left: 25%; }
-.r16-team.pos2 { top: 20%; left: 72%; }
-.r16-team.pos3 { top: 87%; left: 25%; }
-.r16-team.pos4 { top: 87%; left: 72%; }
-.r16-team.pos5 { top: 64.5%; left: 25%; }
-.r16-team.pos6 { top: 64.5%; left: 72%; }
-.r16-team.pos7 { top: 41%; left: 25%; }
-.r16-team.pos8 { top: 42%; left: 72%; }
-.playoff-seeded.pos9 { top: 36.5%; left: 10%; }
-.playoff-seeded.pos10 { top: 35%; left: 86.5%; }
-.playoff-seeded.pos11 { top: 60%; left: 86.5%; }
+.r16-team.pos1 { top: 18.5%; left: 25%; }
+.r16-team.pos2 { top: 18.5%; left: 72%; }
+.r16-team.pos3 { top: 85%; left: 25%; }
+.r16-team.pos4 { top: 85%; left: 72%; }
+.r16-team.pos5 { top: 63%; left: 25%; }
+.r16-team.pos6 { top: 63%; left: 72%; }
+.r16-team.pos7 { top: 40%; left: 25%; }
+.r16-team.pos8 { top: 40%; left: 72%; }
+.playoff-seeded.pos9 { top: 36%; left: 10%; }
+.playoff-seeded.pos10 { top: 36%; left: 86%; }
+.playoff-seeded.pos11 { top: 60%; left: 86%; }
 .playoff-seeded.pos12 { top: 60%; left: 10%; }
-.playoff-seeded.pos13 { top: 83%; left: 86.5%; }
+.playoff-seeded.pos13 { top: 83%; left: 86%; }
 .playoff-seeded.pos14 { top: 81%; left: 10%; }
-.playoff-seeded.pos15 { top: 15.5%; left: 86.5%; }
-.playoff-seeded.pos16 { top: 13.5%; left: 10%; }
-.playoff-unseeded.pos17 { top: 7%; left: 86.5%; }
-.playoff-unseeded.pos18 { top: 6%; left: 10%; }
-.playoff-unseeded.pos19 { top: 74%; left: 10%; }
-.playoff-unseeded.pos20 { top: 74%; left: 86.5%; }
-.playoff-unseeded.pos21 { top: 47.5%; left: 10%; }
-.playoff-unseeded.pos22 { top: 50%; left: 86.5%; }
-.playoff-unseeded.pos23 { top: 27.6%; left: 86.5%; }
+.playoff-seeded.pos15 { top: 15.5%; left: 86%; }
+.playoff-seeded.pos16 { top: 14.5%; left: 10%; }
+.playoff-unseeded.pos17 { top: 5%; left: 86%; }
+.playoff-unseeded.pos18 { top: 5%; left: 10%; }
+.playoff-unseeded.pos19 { top: 72%; left: 10%; }
+.playoff-unseeded.pos20 { top: 72%; left: 86%; }
+.playoff-unseeded.pos21 { top: 50%; left: 10%; }
+.playoff-unseeded.pos22 { top: 50%; left: 86%; }
+.playoff-unseeded.pos23 { top: 27.6%; left: 86%; }
 .playoff-unseeded.pos24 { top: 27.6%; left: 10%; }
 
+/* Match Day Styles */
 /* Match Day Styles */
 .match-day {
   background: rgba(0, 0, 0, 0.7);
@@ -450,7 +636,7 @@ header img.league-logo {
   border-radius: 10px;
   margin: 20px auto;
   width: 95%; /* Adjust width as needed */
-  max-width: 1200px; /* Increase max-width for horizontal layout */
+  max-width: 1365px; /* Increase max-width for horizontal layout */
   z-index: 1;
   position: relative;
   overflow-x: auto; /* Enable horizontal scrolling if needed */
@@ -494,6 +680,12 @@ header img.league-logo {
 .match-card h3 {
   font-size: 1em;
   margin-bottom: 5px;
+}
+
+.match-result {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-top: 5px;
 }
 
 .match-result {
