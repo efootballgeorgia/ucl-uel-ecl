@@ -597,7 +597,7 @@ header img.league-logo {
 
 .logos-container div {
   position: absolute;
-  width: 4%;
+  width: 3%;
   height: auto;
   cursor: pointer;
   transform: scale(1.1)
@@ -609,31 +609,27 @@ header img.league-logo {
 
 
 /* Example positions - adjust based on your bracket image */
-.r16-team.pos1 { top: 19%; left: 25%; }
-.r16-team.pos2 { top: 19%; left: 71%; }
-.r16-team.pos3 { top: 86%; left: 25%; }
-.r16-team.pos4 { top: 86%; left: 71%; }
-.r16-team.pos5 { top: 63.5%; left: 25%; }
-.r16-team.pos6 { top: 63.5%; left: 71%; }
-.r16-team.pos7 { top: 39%; left: 25%; }
-.r16-team.pos8 { top: 41%; left: 71%; }
+.r16-team.pos1 { top: 20%; left: 25%; }
+.r16-team.pos2 { top: 20%; left: 72%; }
+.r16-team.pos3 { top: 87%; left: 25%; }
+.r16-team.pos4 { top: 87%; left: 72%; }
+.r16-team.pos5 { top: 64.5%; left: 25%; }
+.r16-team.pos6 { top: 64.5%; left: 72%; }
+.r16-team.pos7 { top: 41%; left: 25%; }
+.r16-team.pos8 { top: 42%; left: 72%; }
 .playoff-seeded.pos9 { top: 37.5%; left: 10%; }
 .playoff-seeded.pos10 { top: 35%; left: 86.5%; }
-.playoff-seeded.pos11 { top: 59%; left: 86.5%; }
-.playoff-seeded.pos12 { top: 59%; left: 10%; }
-.playoff-seeded.pos13 { top: 81%; left: 86.5%; }
+.playoff-seeded.pos11 { top: 60%; left: 86.5%; }
+.playoff-seeded.pos12 { top: 60%; left: 10%; }
+.playoff-seeded.pos13 { top: 83%; left: 86.5%; }
 .playoff-seeded.pos14 { top: 81%; left: 10%; }
 .playoff-seeded.pos15 { top: 15.5%; left: 86%; }
 .playoff-seeded.pos16 { top: 14.5%; left: 10%; }
-.playoff-unseeded.pos17 { top: 7%; left: 86.5%; }
-.playoff-unseeded.pos18 { top: 5.5%; left: 10%; }
-.playoff-unseeded.pos19 { top: 72.3%; left: 10%; }
-.playoff-unseeded.pos20 { top: 72.3%; left: 86.5%; }
+.playoff-unseeded.pos17 { top: 8%; left: 86.5%; }
+.playoff-unseeded.pos18 { top: 7%; left: 10%; }
+.playoff-unseeded.pos19 { top: 74%; left: 10%; }
+.playoff-unseeded.pos20 { top: 74%; left: 86.5%; }
 .playoff-unseeded.pos21 { top: 47.5%; left: 10%; }
 .playoff-unseeded.pos22 { top: 50%; left: 86.5%; }
 .playoff-unseeded.pos23 { top: 27.6%; left: 86.5%; }
 .playoff-unseeded.pos24 { top: 27.6%; left: 10%; }
-
-.match-form {
-  display: none !important;
-}
