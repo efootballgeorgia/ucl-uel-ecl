@@ -584,92 +584,52 @@ header img.league-logo {
 
 .knockout-container {
   position: relative;
+  width: 100%;
+  max-width: 1200px; /* Match your bracket image width */
+  margin: 0 auto;
 }
 
 .knockout-bg {
+  width: 100%;
   height: auto;
+  display: block;
 }
 
 .logos-container div {
   position: absolute;
-  overflow: hidden;
-  transition: all 0.3s ease;
+  width: 4%;
+  height: auto;
   cursor: pointer;
+  transform: scale(1.1)
 }
 
 .logos-container div:hover {
   transform: scale(1.1)
 }
 
-.knockout-wrapper {
-  position: relative;
-  width: 100%;
-  padding-top: 56.25%; /* 16:9 aspect ratio (adjust based on your bracket image) */
-  margin: 0 auto;
-  max-width: 1200px; /* Maximum size */
-}
-
-.knockout-bracket-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.bracket-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.team-logos {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.logo-slot {
-  position: absolute;
-  width: 6%; /* Relative to container width */
-  height: 6%; /* Relative to container height */
-  transform: translate(-50%, -50%); /* Centers the logo */
-  border-radius: 50%;
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-
-@media (max-width: 768px) {
-  .logo-slot {
-    width: 8%;
-    height: 8%;
-  }
-}
 
 /* Example positions - adjust based on your bracket image */
-.r16-team.pos1 { top: 19%; left: 26%; }
+.r16-team.pos1 { top: 19%; left: 25%; }
 .r16-team.pos2 { top: 19%; left: 71%; }
-.r16-team.pos3 { top: 85.5%; left: 26%; }
-.r16-team.pos4 { top: 85.5%; left: 71%; }
-.r16-team.pos5 { top: 63.5%; left: 26%; }
+.r16-team.pos3 { top: 86%; left: 25%; }
+.r16-team.pos4 { top: 86%; left: 71%; }
+.r16-team.pos5 { top: 63.5%; left: 25%; }
 .r16-team.pos6 { top: 63.5%; left: 71%; }
-.r16-team.pos7 { top: 40.5%; left: 26.5%; }
-.r16-team.pos8 { top: 40.5%; left: 71%; }
-.playoff-seeded.pos9 { top: 37.5%; left: 10.7%; }
-.playoff-seeded.pos10 { top: 36.5%; left: 87%; }
+.r16-team.pos7 { top: 39%; left: 25%; }
+.r16-team.pos8 { top: 41%; left: 71%; }
+.playoff-seeded.pos9 { top: 37.5%; left: 10%; }
+.playoff-seeded.pos10 { top: 35%; left: 86.5%; }
 .playoff-seeded.pos11 { top: 59%; left: 86.5%; }
-.playoff-seeded.pos12 { top: 59%; left: 10.7%; }
+.playoff-seeded.pos12 { top: 59%; left: 10%; }
 .playoff-seeded.pos13 { top: 81%; left: 86.5%; }
-.playoff-seeded.pos14 { top: 81%; left: 10.7%; }
-.playoff-seeded.pos15 { top: 14.5%; left: 85.5%; }
-.playoff-seeded.pos16 { top: 14.5%; left: 11%; }
-.playoff-unseeded.pos17 { top: 5.5%; left: 85%; }
-.playoff-unseeded.pos18 { top: 5.5%; left: 10.3%; }
-.playoff-unseeded.pos19 { top: 72.3%; left: 10.3%; }
+.playoff-seeded.pos14 { top: 81%; left: 10%; }
+.playoff-seeded.pos15 { top: 15.5%; left: 86%; }
+.playoff-seeded.pos16 { top: 14.5%; left: 10%; }
+.playoff-unseeded.pos17 { top: 7%; left: 86.5%; }
+.playoff-unseeded.pos18 { top: 5.5%; left: 10%; }
+.playoff-unseeded.pos19 { top: 72.3%; left: 10%; }
 .playoff-unseeded.pos20 { top: 72.3%; left: 86.5%; }
-.playoff-unseeded.pos21 { top: 50%; left: 10.8%; }
-.playoff-unseeded.pos22 { top: 50%; left: 87%; }
+.playoff-unseeded.pos21 { top: 47.5%; left: 10%; }
+.playoff-unseeded.pos22 { top: 50%; left: 86.5%; }
 .playoff-unseeded.pos23 { top: 27.6%; left: 86.5%; }
-.playoff-unseeded.pos24 { top: 27.6%; left: 10.3%; }
+.playoff-unseeded.pos24 { top: 27.6%; left: 10%; }
