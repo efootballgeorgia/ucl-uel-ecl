@@ -601,6 +601,52 @@ header img.league-logo {
   transform: scale(1.1)
 }
 
+.knockout-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 aspect ratio (adjust based on your bracket image) */
+  margin: 0 auto;
+  max-width: 1200px; /* Maximum size */
+}
+
+.knockout-bracket-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.bracket-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.team-logos {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.logo-slot {
+  position: absolute;
+  width: 6%; /* Relative to container width */
+  height: 6%; /* Relative to container height */
+  transform: translate(-50%, -50%); /* Centers the logo */
+  border-radius: 50%;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .logo-slot {
+    width: 8%;
+    height: 8%;
+  }
+}
 
 /* Example positions - adjust based on your bracket image */
 .r16-team.pos1 { top: 19%; left: 26%; }
@@ -627,8 +673,3 @@ header img.league-logo {
 .playoff-unseeded.pos22 { top: 50%; left: 87%; }
 .playoff-unseeded.pos23 { top: 27.6%; left: 86.5%; }
 .playoff-unseeded.pos24 { top: 27.6%; left: 10.3%; }
-
-
-.match-form {
-  display: none !important;
-}
