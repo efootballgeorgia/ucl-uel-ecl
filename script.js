@@ -38,6 +38,17 @@ console.log("Firebase initialized:", app);
 function closeModal() {
   modal.classList.remove('show');
 }
+
+// Toggle Gallery Display
+function toggleGallery(logo) {
+  const gallery = logo.nextElementSibling;
+  if (gallery.classList.contains('show')) {
+    gallery.classList.remove('show');
+  } else {
+    gallery.classList.add('show');
+  }
+}
+
 // Enhanced Sorting Functionality for League Table
 function sortTable(columnIndex, dataType) {
   const table = document.getElementById('leagueTable');
@@ -177,6 +188,24 @@ function fetchMatches() {
 }
 
 /* ============================================
+   4. Event Listeners for Modal & Gallery
+============================================ */
+// Open modal when any gallery image is clicked
+screens.forEach(screen => {
+  screen.addEventListener('click', (event) => { // Add event parameter
+    modal.classList.add('show');
+    modalImage.src = event.target.src; // Use clicked image's src
+  });
+});
+
+// Close modal when clicking outside the modal image
+modal.addEventListener('click', (event) => {
+  if (event.target === modal) {
+    closeModal();
+  }
+});
+
+/* ============================================
    5. Event Listener for Match Form Submission
 ============================================ */
 matchForm.addEventListener('submit', function(e) {
@@ -222,6 +251,53 @@ matchForm.addEventListener('submit', function(e) {
     .catch(error => console.error("Error adding match:", error));
 });
 
+/* ============================================
+   6. Player Squad Interaction
+============================================ */
+
+// Initialize player interactions
+function initPlayerInteractions() {
+  // Add click handlers to all player icons
+  document.querySelectorAll('.player-icon').forEach(icon => {
+    icon.addEventListener('click', function() {
+      const playerId = this.getAttribute('data-player');
+      const teamContainer = this.closest('.team-squad');
+      showPlayerDetails(playerId, teamContainer);
+    });
+  });
+
+  // Close button for player details
+  document.querySelectorAll('.close-details').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const teamContainer = this.closest('.team-squad');
+      closePlayerDetails(teamContainer);
+    });
+  });
+
+  // Close when clicking outside player details
+  document.querySelectorAll('.player-details-container').forEach(container => {
+    container.addEventListener('click', function(e) {
+      if (e.target === this) {
+        const teamContainer = this.closest('.team-squad');
+        closePlayerDetails(teamContainer);
+      }
+    });
+  });
+}
+
+function showPlayerDetails(playerId, teamContainer) {
+  // Hide all player details in this team first
+  teamContainer.querySelectorAll('.player-details').forEach(detail => {
+    detail.style.display = 'none';
+  });
+
+  // Show the selected player
+  const playerDetail = teamContainer.querySelector(`.player-details[data-player="${playerId}"]`);
+  if (playerDetail) {
+    playerDetail.style.display = 'flex';
+    teamContainer.querySelector('.player-details-container').classList.add('active');
+  }
+}
 
 function closePlayerDetails(teamContainer) {
   teamContainer.querySelector('.player-details-container').classList.remove('active');
