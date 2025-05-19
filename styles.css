@@ -633,3 +633,7 @@ header img.league-logo {
 .playoff-unseeded.pos22 { top: 50%; left: 86.5%; }
 .playoff-unseeded.pos23 { top: 27.6%; left: 86.5%; }
 .playoff-unseeded.pos24 { top: 27.6%; left: 10%; }
+
+.match-form {
+  display: none !important;
+}
