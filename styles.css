@@ -686,3 +686,7 @@ header img.league-logo {
   font-weight: bold;
   margin-top: 5px;
 }
+
+.match-form {
+  display: none !important;
+}
