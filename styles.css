@@ -597,10 +597,9 @@ header img.league-logo {
 
 .logos-container div {
   position: absolute;
-  width: 3%;
+  width: 3.5%;
   height: auto;
   cursor: pointer;
-  transform: scale(1.1)
 }
 
 .logos-container div:hover {
@@ -633,3 +632,7 @@ header img.league-logo {
 .playoff-unseeded.pos22 { top: 50%; left: 86.5%; }
 .playoff-unseeded.pos23 { top: 27.6%; left: 86.5%; }
 .playoff-unseeded.pos24 { top: 27.6%; left: 10%; }
+
+.match-form {
+  display: none !important;
+}
