@@ -308,6 +308,7 @@ button[type="submit"]:hover {
   background: #45a049;
 }
 
+
 /* Mobile First Approach */
 /* Base styles for mobile */
 body {
@@ -386,7 +387,7 @@ header img.league-logo {
 /* Knockout Stage Styles */
 .knockout-stage {
   margin: 40px auto;
-  max-width: 1200px;
+  max-width: 1152px;
   padding: 20px;
   position: relative;
 }
@@ -394,7 +395,7 @@ header img.league-logo {
 .knockout-container {
   position: relative;
   width: 100%;
-  max-width: 1200px; /* Match your bracket image width */
+  max-width: 1152px; /* Match your bracket image width */
   margin: 0 auto;
 }
 
@@ -425,16 +426,16 @@ header img.league-logo {
 .r16-team.pos6 { top: 64.5%; left: 72%; }
 .r16-team.pos7 { top: 41%; left: 25%; }
 .r16-team.pos8 { top: 42%; left: 72%; }
-.playoff-seeded.pos9 { top: 37.5%; left: 10%; }
+.playoff-seeded.pos9 { top: 36.5%; left: 10%; }
 .playoff-seeded.pos10 { top: 35%; left: 86.5%; }
 .playoff-seeded.pos11 { top: 60%; left: 86.5%; }
 .playoff-seeded.pos12 { top: 60%; left: 10%; }
 .playoff-seeded.pos13 { top: 83%; left: 86.5%; }
 .playoff-seeded.pos14 { top: 81%; left: 10%; }
-.playoff-seeded.pos15 { top: 15.5%; left: 86%; }
-.playoff-seeded.pos16 { top: 14.5%; left: 10%; }
-.playoff-unseeded.pos17 { top: 8%; left: 86.5%; }
-.playoff-unseeded.pos18 { top: 7%; left: 10%; }
+.playoff-seeded.pos15 { top: 15.5%; left: 86.5%; }
+.playoff-seeded.pos16 { top: 13.5%; left: 10%; }
+.playoff-unseeded.pos17 { top: 7%; left: 86.5%; }
+.playoff-unseeded.pos18 { top: 6%; left: 10%; }
 .playoff-unseeded.pos19 { top: 74%; left: 10%; }
 .playoff-unseeded.pos20 { top: 74%; left: 86.5%; }
 .playoff-unseeded.pos21 { top: 47.5%; left: 10%; }
@@ -442,7 +443,6 @@ header img.league-logo {
 .playoff-unseeded.pos23 { top: 27.6%; left: 86.5%; }
 .playoff-unseeded.pos24 { top: 27.6%; left: 10%; }
 
-/* Match Day Styles */
 /* Match Day Styles */
 .match-day {
   background: rgba(0, 0, 0, 0.7);
@@ -500,8 +500,4 @@ header img.league-logo {
   font-size: 1.1em;
   font-weight: bold;
   margin-top: 5px;
-}
-
-.match-form {
-  display: none !important;
 }
