@@ -823,3 +823,8 @@ header img.league-logo {
     font-size: 12px;
   }
 }
+
+
+.match-form {
+  display: none !important;
+}
