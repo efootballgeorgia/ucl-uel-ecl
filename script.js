@@ -449,3 +449,67 @@ function initTeamLogoInteractions() {
     });
   });
 }
+
+/* Add this at the top of your script.js */
+// Navigation functionality
+function setupNavigation() {
+  const navButtons = document.querySelectorAll('.nav-btn');
+  const pageSections = document.querySelectorAll('.page-section');
+
+  navButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      // Remove active class from all buttons and sections
+      navButtons.forEach(btn => btn.classList.remove('active'));
+      pageSections.forEach(section => section.classList.remove('active'));
+      
+      // Add active class to clicked button
+      button.classList.add('active');
+      
+      // Show corresponding section
+      const pageId = button.dataset.page;
+      document.getElementById(`${pageId}-section`).classList.add('active');
+      
+      // Special handling for each page if needed
+      if (pageId === 'matches' && !matchDayGenerated) {
+        generateMatchDay();
+      }
+      if (pageId === 'knockout') {
+        updateKnockoutStage();
+      }
+    });
+  });
+}
+
+// Modify the window.onload function to include setupNavigation
+window.onload = () => {
+  document.getElementById('loading').style.display = 'none';
+  setupNavigation(); // Initialize navigation
+  
+  fetchMatches()
+    .then(querySnapshot => {
+      querySnapshot.forEach(doc => {
+        const match = doc.data();
+        updateTeamStats(
+          match.homeTeam,
+          match.homeScore,
+          match.awayScore,
+          match.homeScore > match.awayScore,
+          match.homeScore === match.awayScore
+        );
+        updateTeamStats(
+          match.awayTeam,
+          match.awayScore,
+          match.homeScore,
+          match.awayScore > match.homeScore,
+          match.homeScore === match.awayScore
+        );
+      });
+      sortTable(7, 'number');
+      generateMatchDay();
+      loadMatchDayResults();
+      initPlayerInteractions();
+      updateKnockoutStage();
+      initTeamLogoInteractions();
+    })
+    .catch(error => console.error("Error fetching initial data:", error));
+};
