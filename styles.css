@@ -631,6 +631,7 @@ header img.league-logo {
   z-index: 1;
   position: relative;
   overflow-x: auto; /* Enable horizontal scrolling if needed */
+  font-family: "Lucida Console"
 }
 
 .match-day h2 {
@@ -679,152 +680,77 @@ header img.league-logo {
   margin-top: 5px;
 }
 
-/* Mobile-specific adjustments */
+/* Mobile-specific adjustments for the League Table */
 @media (max-width: 768px) {
-  header {
-    height: 180px; /* Adjust header height for smaller screens */
-  }
-
-  header img.league-logo {
-    max-width: 100px; /* Smaller logo on mobile */
-  }
-
-  .nav-btn {
-    padding: 10px 15px; /* Smaller padding for navigation buttons */
-    font-size: 14px; /* Smaller font for navigation buttons */
-  }
-
   .league-table {
-    width: 95%; /* Make table wider on mobile */
+    width: 95%; /* Make the table wider on smaller screens */
   }
 
   table {
-    font-size: 10px; /* Smaller font size for table content */
+    display: block; /* Allows table to scroll horizontally */
+    width: 100%;
   }
 
+  thead, tbody, th, td, tr {
+    display: block; /* Stacks table elements */
+  }
+
+  thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+  }
+
+  tbody tr {
+    margin-bottom: 15px;
+    border: 1px solid #444;
+    border-radius: 8px;
+    background-color: #292929;
+  }
+
+  tbody td {
+    border: none;
+    position: relative;
+    padding-left: 50%; /* Make space for the pseudo-element label */
+    text-align: right;
+    font-size: 14px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  tbody td:before {
+    content: attr(data-label); /* Use data-label for column headers */
+    position: absolute;
+    left: 6px;
+    width: 45%;
+    padding-right: 10px;
+    white-space: nowrap;
+    text-align: left;
+    font-weight: bold;
+    color: #ccc;
+  }
+
+  /* Specific styling for the team logo and name to keep them together */
+  tbody td:first-child {
+    text-align: left;
+    padding-left: 12px; /* Adjust as needed */
+  }
+
+  /* Hide form boxes on small screens if they make the table too wide */
+  .form-box {
+    display: none;
+  }
+
+  /* Adjust padding for cells with images to prevent overflow */
   tbody td img {
-    width: 30px; /* Smaller team logos in table */
-    height: 30px;
     margin-right: 5px;
   }
 
-  .match-form {
-    width: 95%; /* Make form wider on mobile */
-  }
-
-  .form-group {
-    flex-direction: column; /* Stack form inputs vertically on mobile */
-    gap: 8px;
-  }
-
-  .form-group select,
-  .form-group input,
-  button[type="submit"] {
-    min-height: 40px; /* Slightly smaller touch targets for mobile */
-    font-size: 14px;
-  }
-
-  .win-gallery {
-    flex-direction: column; /* Stack win cards vertically */
-    align-items: center;
-  }
-
-  .wins {
-    max-width: 95%; /* Make win cards wider on mobile */
-  }
-
-  .screen-gallery {
-    grid-template-columns: repeat(5, 1fr); /* Adjust grid for screen gallery on mobile */
-    max-height: 300px;
-  }
-
-  .screen-gallery img {
-    height: 25px; /* Smaller images in screen gallery */
-    width: auto;
-  }
-
-  .player-details {
-    flex-direction: column; /* Stack player details vertically */
-    max-width: 95%;
-  }
-
-  .player-info {
-    width: auto; /* Allow player info to take full width */
-    padding: 15px;
-  }
-
-  .player-info h4 {
-    font-size: 20px;
-  }
-
-  .player-info p {
-    font-size: 14px;
-  }
-
-  .knockout-container {
-    max-width: 100%; /* Allow knockout bracket to take full width */
-  }
-}
-
-/* Even smaller screens (e.g., old iPhones SE, very small Androids) */
-@media (max-width: 480px) {
-  header {
-    height: 150px;
-  }
-
-  header img.league-logo {
-    max-width: 80px;
-  }
-
-  .nav-btn {
-    padding: 8px 12px;
-    font-size: 12px;
-  }
-
-  .league-table {
-    width: 98%;
-    margin: 10px auto;
-  }
-
-  table {
-    font-size: 9px;
-  }
-
-  tbody td img {
-    width: 25px;
+  /* Ensure the separator lines remain visible and functional */
+  .separator td {
+    display: table-cell; /* Override display: block for separator rows */
+    width: 100%;
+    padding: 0 !important;
     height: 25px;
   }
-
-  .match-form {
-    padding: 15px;
-  }
-
-  .form-group select,
-  .form-group input,
-  button[type="submit"] {
-    min-height: 35px;
-    font-size: 12px;
-  }
-
-  .screen-gallery {
-    grid-template-columns: repeat(4, 1fr); /* Further adjust grid for tiny screens */
-    max-height: 250px;
-  }
-
-  .screen-gallery img {
-    height: 20px;
-  }
-
-  .player-info h4 {
-    font-size: 18px;
-  }
-
-  .player-info p {
-    font-size: 12px;
-  }
-}
-
-
-.match-form {
-  display: none !important;
 }
