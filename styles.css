@@ -682,10 +682,6 @@ header img.league-logo {
 
 /* Mobile-specific adjustments for the League Table */
 @media (max-width: 768px) {
-  .main-nav {
-    margin: 1px 0;
-  }
-  
   .league-table {
     width: 95%; /* Make the table wider on smaller screens */
   }
