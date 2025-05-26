@@ -777,6 +777,8 @@ header img.league-logo {
 @media (max-width: 768px) {
   header {
     height: 180px; /* Adjust header height for smaller screens */
+    padding-top: 15px; /* Adjust as needed for spacing above content */
+    padding-bottom: 20px; /* Adjust as needed for spacing below content */
   }
 
   header img.league-logo {
@@ -864,6 +866,8 @@ header img.league-logo {
 @media (max-width: 480px) {
   header {
     height: 150px;
+    padding-top: 15px; /* Adjust as needed for spacing above content */
+    padding-bottom: 20px; /* Adjust as needed for spacing below content */
   }
 
   header img.league-logo {
