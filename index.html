@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>Champions League</title>
+  <title>Football Leagues</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -16,7 +16,13 @@
 
   <header>
     <div class="header-content">
-      <img src="images/logos/champions-league-logo.png" alt="Champions League Logo" class="league-logo">
+      <nav class="league-selector-nav">
+        <button class="league-btn active" data-league="ucl">Champions League</button>
+        <button class="league-btn" data-league="uel">Europa League</button>
+      </nav>
+      <img src="images/logos/champions-league-logo.png" alt="Champions League Logo" class="league-logo ucl-logo active" data-league-logo="ucl">
+      <img src="images/logos/europa-league-logo.png" alt="Europa League Logo" class="league-logo uel-logo" data-league-logo="uel">
+
       <nav class="main-nav">
         <button class="nav-btn active" data-page="league">League Table</button>
         <button class="nav-btn" data-page="matches">Match Day</button>
@@ -26,177 +32,338 @@
   </header>
 
   <main>
-    <!-- League Table Section -->
-    <section id="league-section" class="page-section active">
+    <section id="ucl-league-section" class="page-section active" data-league="ucl">
       <div class="league-table">
-        <table id="leagueTable">
+        <table id="uclLeagueTable">
           <thead>
             <tr>
               <th>Position</th>
-              <th onclick="sortTable(1, 'string')">Team</th>
-              <th onclick="sortTable(2, 'number')">Played</th>
-              <th onclick="sortTable(3, 'number')">Won</th>
-              <th onclick="sortTable(4, 'number')">Draw</th>
-              <th onclick="sortTable(5, 'number')">Lost</th>
-              <th onclick="sortTable(6, 'goals')">+/-</th>
-              <th onclick="sortTable(7, 'number')">Points</th>
+              <th onclick="sortTable('ucl', 1, 'string')">Team</th>
+              <th onclick="sortTable('ucl', 2, 'number')">Played</th>
+              <th onclick="sortTable('ucl', 3, 'number')">Won</th>
+              <th onclick="sortTable('ucl', 4, 'number')">Draw</th>
+              <th onclick="sortTable('ucl', 5, 'number')">Lost</th>
+              <th onclick="sortTable('ucl', 6, 'goals')">+/-</th>
+              <th onclick="sortTable('ucl', 7, 'number')">Points</th>
               <th>Form</th>
             </tr>
           </thead>
           <tbody>
-            <tr><td>1</td><td><img src="images/logos/inter-milan.png" alt="Inter Milan"> <b>Inter Milan</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>2</td><td><img src="images/logos/barcelona.png" alt="Barcelona"> <b>Barcelona</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>3</td><td><img src="images/logos/psg.png" alt="PSG"> <b>PSG</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>4</td><td><img src="images/logos/ac-milan.png" alt="AC Milan"> <b>AC Milan</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>5</td><td><img src="images/logos/arsenal.png" alt="Arsenal"> <b>Arsenal</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>6</td><td><img src="images/logos/manchester-city.png" alt="Manchester City"> <b>Manchester City</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>7</td><td><img src="images/logos/real-madrid.png" alt="Real Madrid"> <b>Real Madrid</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>8</td><td><img src="images/logos/bayern.png" alt="Bayern Munich"> <b>Bayern Munich</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>1</td><td><img src="images/logos/espanyol.png" alt="Espanyol"> <b>Espanyol</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>2</td><td><img src="images/logos/celta-vigo.png" alt="Celta Vigo"> <b>Celta Vigo</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>3</td><td><img src="images/logos/real-sociedad.png" alt="Real Sociedad"> <b>Real Sociedad</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>4</td><td><img src="images/logos/athletic-bilbao.png" alt="Athletic Bilbao"> <b>Athletic Bilbao</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>5</td><td><img src="images/logos/valencia.png" alt="Valencia"> <b>Valencia</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>6</td><td><img src="images/logos/rayo-vallecano.png" alt="Rayo Vallecano"> <b>Rayo Vallecano</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>7</td><td><img src="images/logos/getafe.png" alt="Getafe"> <b>Getafe</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>8</td><td><img src="images/logos/mallorca.png" alt="Mallorca"> <b>Mallorca</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
             <tr class="separator"><td colspan="10" class="round16"><span class="line"></span></td></tr>
-            <tr><td>9</td><td><img src="images/logos/atletico-madrid.png" alt="Atlético Madrid"> <b>Atlético Madrid</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>10</td><td><img src="images/logos/liverpool.png" alt="Liverpool"> <b>Liverpool</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>11</td><td><img src="images/logos/dortmund.png" alt="Borrusia Dortmund"> <b>Borussia Dortmund</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>12</td><td><img src="images/logos/juventus.png" alt="Juventus"> <b>Juventus</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>13</td><td><img src="images/logos/benfica.png" alt="Benfica"> <b>Benfica</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>14</td><td><img src="images/logos/aston-villa.png" alt="Aston Villa"> <b>Aston Villa</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>15</td><td><img src="images/logos/leverkusen.png" alt="Leverkusen"> <b>Leverkusen</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>16</td><td><img src="images/logos/atalanta.png" alt="Atalanta"> <b>Atalanta</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>9</td><td><img src="images/logos/girona.png" alt="Girona"> <b>Girona</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>10</td><td><img src="images/logos/nantes.png" alt="Nantes"> <b>Nantes</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>11</td><td><img src="images/logos/strasbourg.png" alt="Strasbourg"> <b>Strasbourg</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>12</td><td><img src="images/logos/montpellier.png" alt="Montpellier"> <b>Montpellier</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>13</td><td><img src="images/logos/le-havre.png" alt="Le Havre"> <b>Le Havre</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>14</td><td><img src="images/logos/brest.png" alt="Brest"> <b>Brest</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>15</td><td><img src="images/logos/saint-etienne.png" alt="Saint-Étienne"> <b>Saint-Étienne</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>16</td><td><img src="images/logos/rennes.png" alt="Rennes"> <b>Rennes</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
             <tr class="separator"><td colspan="10" class="knockout-seeded"><span class="line"></span></td></tr>
-            <tr><td>17</td><td><img src="images/logos/leipzig.png" alt="RB Leipzig"> <b>RB Leipzig</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>18</td><td><img src="images/logos/feyenoord.png" alt="Feyenoord"> <b>Feyenoord</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>19</td><td><img src="images/logos/lille.png" alt="Lille"> <b>Lille</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>20</td><td><img src="images/logos/celtic.png" alt="Celtic"> <b>Celtic</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>21</td><td><img src="images/logos/monaco.png" alt="Monaco"> <b>AS Monaco</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>22</td><td><img src="images/logos/sporting.png" alt="Sporting CP"> <b>Sporting CP</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>23</td><td><img src="images/logos/club-brugge.png" alt="Club Brugge"> <b>Club Brugge</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>24</td><td><img src="images/logos/brest.png" alt="Brest"> <b>Brest</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>17</td><td><img src="images/logos/angers.png" alt="Angers"> <b>Angers</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>18</td><td><img src="images/logos/auxerre.png" alt="Auxerre"> <b>Auxerre</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>19</td><td><img src="images/logos/ipswich-town.png" alt="Ipswich Town"> <b>Ipswich Town</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>20</td><td><img src="images/logos/southampton.png" alt="Southampton"> <b>Southampton</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>21</td><td><img src="images/logos/tottenham.png" alt="Tottenham"> <b>Tottenham</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>22</td><td><img src="images/logos/leicester-city.png" alt="Leicester City"> <b>Leicester City</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>23</td><td><img src="images/logos/manchester-united.png" alt="Manchester United"> <b>Manchester United</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>24</td><td><img src="images/logos/west-ham.png" alt="West Ham"> <b>West Ham</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
             <tr class="separator"><td colspan="10" class="knockout-unseeded"><span class="line"></span></td></tr>
-            <tr><td>25</td><td><img src="images/logos/bologna.png" alt="Bologna"> <b>Bologna</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>26</td><td><img src="images/logos/crvena-zvezda.png" alt="Crvena Zvezda"> <b>Crvena Zvezda</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>27</td><td><img src="images/logos/girona.png" alt="Girona"> <b>Girona</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>28</td><td><img src="images/logos/gnk-dinamo.png" alt="Dinamo Zagreb"> <b>Dinamo Zagreb</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>29</td><td><img src="images/logos/bratislava.png" alt="Bratislava"> <b>Bratislava</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>30</td><td><img src="images/logos/salzburg.png" alt="Salzburg"> <b>Red Bull Salzburg</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>31</td><td><img src="images/logos/shakhtar.png" alt="Shakhtar"> <b>Shakhtar Donetsk</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>32</td><td><img src="images/logos/sparta-praha.png" alt="Sparta Praha"> <b>Sparta Praha</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>33</td><td><img src="images/logos/sturm-graz.png" alt="Sturm Graz"> <b>Sturm Graz</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>34</td><td><img src="images/logos/stuttgart.png" alt="Stuttgart"> <b>VfB Stuttgart</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>35</td><td><img src="images/logos/young-boys.png" alt="Young Boys"> <b>Young Boys</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr><td>36</td><td><img src="images/logos/psv.png" alt="PSV"> <b>PSV Eindhoven</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>25</td><td><img src="images/logos/bournemouth.png" alt="Bournemouth"> <b>Bournemouth</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>26</td><td><img src="images/logos/brentford.png" alt="Brentford"> <b>Brentford</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>27</td><td><img src="images/logos/fulham.png" alt="Fulham"> <b>Fulham</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>28</td><td><img src="images/logos/lecce.png" alt="Lecce"> <b>Lecce</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>29</td><td><img src="images/logos/monza.png" alt="Monza"> <b>Monza</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>30</td><td><img src="images/logos/torino.png" alt="Torino"> <b>Torino</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>31</td><td><img src="images/logos/hellas-verona.png" alt="Hellas Verona"> <b>Hellas Verona</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>32</td><td><img src="images/logos/udinese.png" alt="Udinese"> <b>Udinese</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>33</td><td><img src="images/logos/parma.png" alt="Parma"> <b>Parma</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>34</td><td><img src="images/logos/genoa.png" alt="Genoa"> <b>Genoa</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>35</td><td><img src="images/logos/venezia.png" alt="Venezia"> <b>Venezia</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>36</td><td><img src="images/logos/como.png" alt="Como"> <b>Como</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
           </tbody>
         </table>
       </div>
-      
+
       <section class="match-form">
-        <h2>Add Match Result</h2>
-        <form id="matchForm">
+        <h2>Add UCL Match Result</h2>
+        <form id="uclMatchForm">
           <div class="form-group">
-            <select id="homeTeam" required>
+            <select id="uclHomeTeam" required>
               <option value="">Home Team</option>
-              <option>Inter Milan</option>
-              <option>Barcelona</option>
-              <option>PSG</option>
-              <option>AC Milan</option>
-              <option>Arsenal</option>
-              <option>Manchester City</option>
-              <option>Real Madrid</option>
-              <option>Bayern Munich</option>
-              <option>Atlético Madrid</option>
-              <option>Liverpool</option>
-              <option>Borussia Dortmund</option>
-              <option>Juventus</option>
-              <option>Benfica</option>
-              <option>Aston Villa</option>
-              <option>Leverkusen</option>
-              <option>Atalanta</option>
-              <option>RB Leipzig</option>
-              <option>Feyenoord</option>
-              <option>Lille</option>
-              <option>Celtic</option>
-              <option>AS Monaco</option>
-              <option>Sporting CP</option>
-              <option>Club Brugge</option>
-              <option>Brest</option>
-              <option>Bologna</option>
-              <option>Crvena Zvezda</option>
+              <option>Espanyol</option>
+              <option>Celta Vigo</option>
+              <option>Real Sociedad</option>
+              <option>Athletic Club</option>
+              <option>Valencia</option>
+              <option>Rayo Vallecano</option>
+              <option>Getafe</option>
+              <option>Mallorca</option>
               <option>Girona</option>
-              <option>Dinamo Zagreb</option>
-              <option>Bratislava</option>
-              <option>Red Bull Salzburg</option>
-              <option>Shakhtar Donetsk</option>
-              <option>Sparta Praha</option>
-              <option>Sturm Graz</option>
-              <option>VfB Stuttgart</option>
-              <option>Young Boys</option>
-              <option>PSV Eindhoven</option>
+              <option>Nantes</option>
+              <option>Strasbourg</option>
+              <option>Montpellier</option>
+              <option>Le Havre</option>
+              <option>Brest</option>
+              <option>Saint-Étienne</option>
+              <option>Rennes</option>
+              <option>Angers</option>
+              <option>Auxerre</option>
+              <option>Ipswich Town</option>
+              <option>Southampton</option>
+              <option>Tottenham</option>
+              <option>Leicester City</option>
+              <option>Manchester United</option>
+              <option>West Ham</option>
+              <option>Bournemouth</option>
+              <option>Brentford</option>
+              <option>Fulham</option>
+              <option>Lecce</option>
+              <option>Monza</option>
+              <option>Torino</option>
+              <option>Hellas Verona</option>
+              <option>Udinese</option>
+              <option>Parma</option>
+              <option>Genoa</option>
+              <option>Venezia</option>
+              <option>Como</option>
             </select>
-            <input type="number" id="homeScore" min="0" required>
+            <input type="number" id="uclHomeScore" min="0" required>
           </div>
-      
+
           <div class="form-group">
-            <select id="awayTeam" required>
+            <select id="uclAwayTeam" required>
               <option value="">Away Team</option>
-              <option>Inter Milan</option>
-              <option>Barcelona</option>
-              <option>PSG</option>
-              <option>AC Milan</option>
-              <option>Arsenal</option>
-              <option>Manchester City</option>
-              <option>Real Madrid</option>
-              <option>Bayern Munich</option>
-              <option>Atlético Madrid</option>
-              <option>Liverpool</option>
-              <option>Borussia Dortmund</option>
-              <option>Juventus</option>
-              <option>Benfica</option>
-              <option>Aston Villa</option>
-              <option>Leverkusen</option>
-              <option>Atalanta</option>
-              <option>RB Leipzig</option>
-              <option>Feyenoord</option>
-              <option>Lille</option>
-              <option>Celtic</option>
-              <option>AS Monaco</option>
-              <option>Sporting CP</option>
-              <option>Club Brugge</option>
-              <option>Brest</option>
-              <option>Bologna</option>
-              <option>Crvena Zvezda</option>
+              <option>Espanyol</option>
+              <option>Celta Vigo</option>
+              <option>Real Sociedad</option>
+              <option>Athletic Club</option>
+              <option>Valencia</option>
+              <option>Rayo Vallecano</option>
+              <option>Getafe</option>
+              <option>Mallorca</option>
               <option>Girona</option>
-              <option>Dinamo Zagreb</option>
-              <option>Bratislava</option>
-              <option>Red Bull Salzburg</option>
-              <option>Shakhtar Donetsk</option>
-              <option>Sparta Praha</option>
-              <option>Sturm Graz</option>
-              <option>VfB Stuttgart</option>
-              <option>Young Boys</option>
-              <option>PSV Eindhoven</option>
+              <option>Nantes</option>
+              <option>Strasbourg</option>
+              <option>Montpellier</option>
+              <option>Le Havre</option>
+              <option>Brest</option>
+              <option>Saint-Étienne</option>
+              <option>Rennes</option>
+              <option>Angers</option>
+              <option>Auxerre</option>
+              <option>Ipswich Town</option>
+              <option>Southampton</option>
+              <option>Tottenham</option>
+              <option>Leicester City</option>
+              <option>Manchester United</option>
+              <option>West Ham</option>
+              <option>Bournemouth</option>
+              <option>Brentford</option>
+              <option>Fulham</option>
+              <option>Lecce</option>
+              <option>Monza</option>
+              <option>Torino</option>
+              <option>Hellas Verona</option>
+              <option>Udinese</option>
+              <option>Parma</option>
+              <option>Genoa</option>
+              <option>Venezia</option>
+              <option>Como</option>
             </select>
-            <input type="number" id="awayScore" min="0" required>
+            <input type="number" id="uclAwayScore" min="0" required>
           </div>
-      
+
           <button type="submit">Add Match</button>
         </form>
       </section>
     </section>
 
-    <!-- Match Day Section -->
-    <section id="matches-section" class="page-section">
+    <section id="uel-league-section" class="page-section" data-league="uel">
+      <div class="league-table">
+        <table id="uelLeagueTable">
+          <thead>
+            <tr>
+              <th>Position</th>
+              <th onclick="sortTable('uel', 1, 'string')">Team</th>
+              <th onclick="sortTable('uel', 2, 'number')">Played</th>
+              <th onclick="sortTable('uel', 3, 'number')">Won</th>
+              <th onclick="sortTable('uel', 4, 'number')">Draw</th>
+              <th onclick="sortTable('uel', 5, 'number')">Lost</th>
+              <th onclick="sortTable('uel', 6, 'goals')">+/-</th>
+              <th onclick="sortTable('uel', 7, 'number')">Points</th>
+              <th>Form</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td><img src="images/logos/leganes.png" alt="Leganés"> <b>Leganés</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>2</td><td><img src="images/logos/las-palmas.png" alt="Las Palmas"> <b>Las Palmas</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>3</td><td><img src="images/logos/valladolid.png" alt="Valladolid"> <b>Valladolid</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>4</td><td><img src="images/logos/osasuna.png" alt="Osasuna"> <b>Osasuna</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>5</td><td><img src="images/logos/sevilla.png" alt="Sevilla"> <b>Sevilla</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>6</td><td><img src="images/logos/alaves.png" alt="Alavés"> <b>Alavés</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>7</td><td><img src="images/logos/villarreal.png" alt="Villarreal"> <b>Villarreal</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>8</td><td><img src="images/logos/real-betis.png" alt="Real Betis"> <b>Real Betis</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr class="separator"><td colspan="10" class="round16"><span class="line"></span></td></tr>
+            <tr><td>9</td><td><img src="images/logos/barcelona.png" alt="Barcelona"> <b>Barcelona</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>10</td><td><img src="images/logos/nice.png" alt="Nice"> <b>Nice</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>11</td><td><img src="images/logos/toulouse.png" alt="Toulouse"> <b>Toulouse</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>12</td><td><img src="images/logos/stade-de-reims.png" alt="Stade de Reims"> <b>Stade de Reims</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>13</td><td><img src="images/logos/lens.png" alt="Lens"> <b>Lens</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>14</td><td><img src="images/logos/monaco.png" alt="Monaco"> <b>Monaco</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>15</td><td><img src="images/logos/lille.png" alt="Lille"> <b>Lille</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>16</td><td><img src="images/logos/marseille.png" alt="Marseille"> <b>Marseille</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr class="separator"><td colspan="10" class="knockout-seeded"><span class="line"></span></td></tr>
+            <tr><td>17</td><td><img src="images/logos/lyon.png" alt="Lyon"> <b>Lyon</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>18</td><td><img src="images/logos/psg.png" alt="PSG"> <b>PSG</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>19</td><td><img src="images/logos/crystal-palace.png" alt="Crystal Palace"> <b>Crystal Palace</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>20</td><td><img src="images/logos/everton.png" alt="Everton"> <b>Everton</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>21</td><td><img src="images/logos/wolves.png" alt="Wolves"> <b>Wolves</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>22</td><td><img src="images/logos/nottingham-forest.png" alt="Nottingham Forest"> <b>Nottingham Forest</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>23</td><td><img src="images/logos/brighton.png" alt="Brighton"> <b>Brighton</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>24</td><td><img src="images/logos/aston-villa.png" alt="Aston Villa"> <b>Aston Villa</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr class="separator"><td colspan="10" class="knockout-unseeded"><span class="line"></span></td></tr>
+            <tr><td>25</td><td><img src="images/logos/newcastle.png" alt="Newcastle"> <b>Newcastle</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>26</td><td><img src="images/logos/chelsea.png" alt="Chelsea"> <b>Chelsea</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>27</td><td><img src="images/logos/manchester-city.png" alt="Manchester City"> <b>Manchester City</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>28</td><td><img src="images/logos/cagliari.png" alt="Cagliari"> <b>Cagliari</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>29</td><td><img src="images/logos/empoli.png" alt="Empoli"> <b>Empoli</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>30</td><td><img src="images/logos/fiorentina.png" alt="Fiorentina"> <b>Fiorentina</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>31</td><td><img src="images/logos/bologna.png" alt="Bologna"> <b>Bologna</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>32</td><td><img src="images/logos/atalanta.png" alt="Atalanta"> <b>Atalanta</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>33</td><td><img src="images/logos/roma.png" alt="Roma"> <b>Roma</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>34</td><td><img src="images/logos/lazio.png" alt="Lazio"> <b>Lazio</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>35</td><td><img src="images/logos/juventus.png" alt="Juventus"> <b>Juventus</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>36</td><td><img src="images/logos/ac-milan.png" alt="AC Milan"> <b>AC Milan</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <section class="match-form">
+        <h2>Add UEL Match Result</h2>
+        <form id="uelMatchForm">
+          <div class="form-group">
+            <select id="uelHomeTeam" required>
+              <option value="">Home Team</option>
+              <option>Leganés</option>
+              <option>Las Palmas</option>
+              <option>Valladolid</option>
+              <option>Osasuna</option>
+              <option>Sevilla</option>
+              <option>Alavés</option>
+              <option>Villarreal</option>
+              <option>Real Betis</option>
+              <option>Barcelona</option>
+              <option>Nice</option>
+              <option>Toulouse</option>
+              <option>Stade de Reims</option>
+              <option>Lens</option>
+              <option>Monaco</option>
+              <option>Lille</option>
+              <option>Marseille</option>
+              <option>Lyon</option>
+              <option>PSG</option>
+              <option>Crystal Palace</option>
+              <option>Everton</option>
+              <option>Wolves</option>
+              <option>Nottingham Forest</option>
+              <option>Brighton</option>
+              <option>Aston Villa</option>
+              <option>Newcastle</option>
+              <option>Chelsea</option>
+              <option>Manchester City</option>
+              <option>Cagliari</option>
+              <option>Empoli</option>
+              <option>Fiorentina</option>
+              <option>Bologna</option>
+              <option>Atalanta</option>
+              <option>Roma</option>
+              <option>Lazio</option>
+              <option>Juventus</option>
+              <option>AC Milan</option>
+              <option>Inter Milan</option>
+              <option>Napoli</option>
+            </select>
+            <input type="number" id="uelHomeScore" min="0" required>
+          </div>
+
+          <div class="form-group">
+            <select id="uelAwayTeam" required>
+              <option value="">Away Team</option>
+              <option>Leganés</option>
+              <option>Las Palmas</option>
+              <option>Valladolid</option>
+              <option>Osasuna</option>
+              <option>Sevilla</option>
+              <option>Alavés</option>
+              <option>Villarreal</option>
+              <option>Real Betis</option>
+              <option>Barcelona</option>
+              <option>Nice</option>
+              <option>Toulouse</option>
+              <option>Stade de Reims</option>
+              <option>Lens</option>
+              <option>Monaco</option>
+              <option>Lille</option>
+              <option>Marseille</option>
+              <option>Lyon</option>
+              <option>PSG</option>
+              <option>Crystal Palace</option>
+              <option>Everton</option>
+              <option>Wolves</option>
+              <option>Nottingham Forest</option>
+              <option>Brighton</option>
+              <option>Aston Villa</option>
+              <option>Newcastle</option>
+              <option>Chelsea</option>
+              <option>Manchester City</option>
+              <option>Cagliari</option>
+              <option>Empoli</option>
+              <option>Fiorentina</option>
+              <option>Bologna</option>
+              <option>Atalanta</option>
+              <option>Roma</option>
+              <option>Lazio</option>
+              <option>Juventus</option>
+              <option>AC Milan</option>
+              <option>Inter Milan</option>
+              <option>Napoli</option>
+            </select>
+            <input type="number" id="uelAwayScore" min="0" required>
+          </div>
+
+          <button type="submit">Add Match</button>
+        </form>
+      </section>
+    </section>
+
+    <section id="ucl-matches-section" class="page-section" data-league="ucl">
       <div class="match-day">
-        <h2>Match Day</h2>
-        <div class="match-day-container"></div>
+        <h2>UCL Match Day</h2>
+        <div class="ucl-match-day-container"></div>
       </div>
     </section>
 
-    <!-- Knockout Stage Section -->
-    <section id="knockout-section" class="page-section">
+    <section id="uel-matches-section" class="page-section" data-league="uel">
+      <div class="match-day">
+        <h2>UEL Match Day</h2>
+        <div class="uel-match-day-container"></div>
+      </div>
+    </section>
+
+    <section id="ucl-knockout-section" class="page-section" data-league="ucl">
       <div class="knockout-stage">
-        <h2>Knockout Stage</h2>
-        <div class="knockout-container">
-          <img src="images/knockout-bracket.jpg" alt="Knockout Stage" class="knockout-bg">
-          <div class="logos-container">
-            <!-- Round of 16 -->
+        <h2>UCL Knockout Stage</h2>
+        <div class="ucl-knockout-container knockout-container">
+          <img src="images/knockout-bracket.jpg" alt="UCL Knockout Stage" class="knockout-bg">
+          <div class="ucl-logos-container logos-container">
             <div class="r16-team pos1"></div>
             <div class="r16-team pos2"></div>
             <div class="r16-team pos3"></div>
@@ -205,8 +372,7 @@
             <div class="r16-team pos6"></div>
             <div class="r16-team pos7"></div>
             <div class="r16-team pos8"></div>
-            
-            <!-- Playoff Seeded -->
+
             <div class="playoff-seeded pos9"></div>
             <div class="playoff-seeded pos10"></div>
             <div class="playoff-seeded pos11"></div>
@@ -215,8 +381,7 @@
             <div class="playoff-seeded pos14"></div>
             <div class="playoff-seeded pos15"></div>
             <div class="playoff-seeded pos16"></div>
-            
-            <!-- Playoff Unseeded -->
+
             <div class="playoff-unseeded pos17"></div>
             <div class="playoff-unseeded pos18"></div>
             <div class="playoff-unseeded pos19"></div>
@@ -225,6 +390,43 @@
             <div class="playoff-unseeded pos22"></div>
             <div class="playoff-unseeded pos23"></div>
             <div class="playoff-unseeded pos24"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="uel-knockout-section" class="page-section" data-league="uel">
+      <div class="knockout-stage">
+        <h2>UEL Knockout Stage</h2>
+        <div class="uel-knockout-container knockout-container">
+          <img src="images/uel-knockout-bracket.jpg" alt="UEL Knockout Stage" class="knockout-bg">
+          <div class="uel-logos-container logos-container">
+            <div class="uel-r16-team pos1"></div>
+            <div class="uel-r16-team pos2"></div>
+            <div class="uel-r16-team pos3"></div>
+            <div class="uel-r16-team pos4"></div>
+            <div class="uel-r16-team pos5"></div>
+            <div class="uel-r16-team pos6"></div>
+            <div class="uel-r16-team pos7"></div>
+            <div class="uel-r16-team pos8"></div>
+
+            <div class="uel-playoff-seeded pos9"></div>
+            <div class="uel-playoff-seeded pos10"></div>
+            <div class="uel-playoff-seeded pos11"></div>
+            <div class="uel-playoff-seeded pos12"></div>
+            <div class="uel-playoff-seeded pos13"></div>
+            <div class="uel-playoff-seeded pos14"></div>
+            <div class="uel-playoff-seeded pos15"></div>
+            <div class="uel-playoff-seeded pos16"></div>
+
+            <div class="uel-playoff-unseeded pos17"></div>
+            <div class="uel-playoff-unseeded pos18"></div>
+            <div class="uel-playoff-unseeded pos19"></div>
+            <div class="uel-playoff-unseeded pos20"></div>
+            <div class="uel-playoff-unseeded pos21"></div>
+            <div class="uel-playoff-unseeded pos22"></div>
+            <div class="uel-playoff-unseeded pos23"></div>
+            <div class="uel-playoff-unseeded pos24"></div>
           </div>
         </div>
       </div>
