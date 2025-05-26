@@ -7,6 +7,7 @@ body {
   margin: 0;
   padding-bottom: 40px;
   position: relative;
+  box-sizing: border-box; /* Add this for consistent box model */
 }
 
 #bg-video {
@@ -21,22 +22,36 @@ body {
 
 /* Header Styles */
 header {
-  position: relative;
-  height: 320px;
-  overflow: hidden;
-  z-index: 1;
+  position: relative; /* Changed from relative to sticky */
+  top: 0; /* Sticks to the top of the viewport */
+  width: 100%; /* Ensures it spans the full width */
+  z-index: 1000; /* Higher z-index to ensure it stays on top of other content when sticky */
+  padding-top: 15px; /* Adjust as needed for spacing above content */
+  padding-bottom: 20px; /* Adjust as needed for spacing below content */
 }
 
 header .header-content {
-  padding-top: 50px;
+  /* Removed padding-top: 50px; as it's now handled by header's padding */
+  display: flex; /* Use flexbox for better alignment of children */
+  flex-direction: column; /* Stack children vertically */
+  align-items: center; /* Center horizontally */
+  justify-content: center; /* Center vertically */
+  width: 100%;
 }
 
 header img.league-logo {
   max-width: 200px;
   height: auto;
-  margin-top: 20px;
+  margin-top: 0; /* Remove top margin as padding on header now handles spacing */
   z-index: 1;
   position: relative;
+  display: none; /* Hide all by default */
+}
+
+header img.league-logo.active {
+  display: block; /* Show active logo */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 header h2 {
@@ -48,7 +63,38 @@ header h2 {
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
 }
 
-/* Navigation Styles */
+/* Rest of your CSS remains the same */
+
+/* League Selector Navigation */
+.league-selector-nav {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.league-selector-nav .league-btn {
+  padding: 12px 25px;
+  background: rgba(40, 40, 40, 0.8);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.league-selector-nav .league-btn:hover {
+  background: rgba(60, 60, 60, 0.8);
+}
+
+.league-selector-nav .league-btn.active {
+  background: #0056b3; /* A distinct color for active league */
+  box-shadow: 0 0 15px rgba(0, 86, 179, 0.6);
+}
+
+/* Main Navigation Styles */
 .main-nav {
   display: flex;
   justify-content: center;
@@ -198,6 +244,11 @@ tbody tr:hover {
   background-color: #d72811;
 }
 
+.uel-round16 .line { /* New style for UEL separator */
+  background-color: #FFD700; /* Gold color for UEL */
+}
+
+
 .separator .label {
   position: absolute;
   right: 20px;
@@ -261,6 +312,21 @@ tbody tr:hover {
 }
 
 /* Loading Spinner */
+#loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 2em;
+  z-index: 9999;
+}
+
 .loading-spinner {
   border: 4px solid rgba(255, 255, 255, 0.3);
   border-top: 4px solid #ffcc00;
@@ -309,7 +375,7 @@ tbody tr:hover {
   margin-bottom: 15px;
 }
 
-#matchForm {
+#uclMatchForm, #uelMatchForm { /* Apply styles to both forms */
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -582,6 +648,7 @@ header img.league-logo {
   display: block;
 }
 
+/* Shared logo container styles */
 .logos-container div {
   position: absolute;
   height: auto;
@@ -594,31 +661,58 @@ header img.league-logo {
 }
 
 
-/* Example positions - adjust based on your bracket image */
-.r16-team.pos1 { top: 18.5%; left: 25%; }
-.r16-team.pos2 { top: 18.5%; left: 72%; }
-.r16-team.pos3 { top: 85%; left: 25%; }
-.r16-team.pos4 { top: 85%; left: 72%; }
-.r16-team.pos5 { top: 63%; left: 25%; }
-.r16-team.pos6 { top: 63%; left: 72%; }
-.r16-team.pos7 { top: 40%; left: 25%; }
-.r16-team.pos8 { top: 40%; left: 72%; }
-.playoff-seeded.pos9 { top: 36%; left: 10%; }
-.playoff-seeded.pos10 { top: 36%; left: 86%; }
-.playoff-seeded.pos11 { top: 60%; left: 86%; }
-.playoff-seeded.pos12 { top: 60%; left: 10%; }
-.playoff-seeded.pos13 { top: 83%; left: 86%; }
-.playoff-seeded.pos14 { top: 81%; left: 10%; }
-.playoff-seeded.pos15 { top: 15.5%; left: 86%; }
-.playoff-seeded.pos16 { top: 14.5%; left: 10%; }
-.playoff-unseeded.pos17 { top: 5%; left: 86%; }
-.playoff-unseeded.pos18 { top: 5%; left: 10%; }
-.playoff-unseeded.pos19 { top: 72%; left: 10%; }
-.playoff-unseeded.pos20 { top: 72%; left: 86%; }
-.playoff-unseeded.pos21 { top: 50%; left: 10%; }
-.playoff-unseeded.pos22 { top: 50%; left: 86%; }
-.playoff-unseeded.pos23 { top: 27.6%; left: 86%; }
-.playoff-unseeded.pos24 { top: 27.6%; left: 10%; }
+/* UCL Specific Knockout Positions (existing) */
+.ucl-logos-container .r16-team.pos1 { top: 18.5%; left: 25%; }
+.ucl-logos-container .r16-team.pos2 { top: 18.5%; left: 72%; }
+.ucl-logos-container .r16-team.pos3 { top: 85%; left: 25%; }
+.ucl-logos-container .r16-team.pos4 { top: 85%; left: 72%; }
+.ucl-logos-container .r16-team.pos5 { top: 63%; left: 25%; }
+.ucl-logos-container .r16-team.pos6 { top: 63%; left: 72%; }
+.ucl-logos-container .r16-team.pos7 { top: 40%; left: 25%; }
+.ucl-logos-container .r16-team.pos8 { top: 40%; left: 72%; }
+.ucl-logos-container .playoff-seeded.pos9 { top: 36%; left: 10%; }
+.ucl-logos-container .playoff-seeded.pos10 { top: 36%; left: 86%; }
+.ucl-logos-container .playoff-seeded.pos11 { top: 60%; left: 86%; }
+.ucl-logos-container .playoff-seeded.pos12 { top: 60%; left: 10%; }
+.ucl-logos-container .playoff-seeded.pos13 { top: 83%; left: 86%; }
+.ucl-logos-container .playoff-seeded.pos14 { top: 81%; left: 10%; }
+.ucl-logos-container .playoff-seeded.pos15 { top: 15.5%; left: 86%; }
+.ucl-logos-container .playoff-seeded.pos16 { top: 14.5%; left: 10%; }
+.ucl-logos-container .playoff-unseeded.pos17 { top: 5%; left: 86%; }
+.ucl-logos-container .playoff-unseeded.pos18 { top: 5%; left: 10%; }
+.ucl-logos-container .playoff-unseeded.pos19 { top: 72%; left: 10%; }
+.ucl-logos-container .playoff-unseeded.pos20 { top: 72%; left: 86%; }
+.ucl-logos-container .playoff-unseeded.pos21 { top: 50%; left: 10%; }
+.ucl-logos-container .playoff-unseeded.pos22 { top: 50%; left: 86%; }
+.ucl-logos-container .playoff-unseeded.pos23 { top: 27.6%; left: 86%; }
+.ucl-logos-container .playoff-unseeded.pos24 { top: 27.6%; left: 10%; }
+
+/* UEL Specific Knockout Positions (Example - adjust these for your UEL bracket) */
+.uel-logos-container .uel-r16-team.pos1 { top: 23%; left: 27%; }
+.uel-logos-container .uel-r16-team.pos2 { top: 23%; left: 68%; }
+.uel-logos-container .uel-r16-team.pos3 { top: 83%; left: 27%; }
+.uel-logos-container .uel-r16-team.pos4 { top: 83%; left: 68%; }
+.uel-logos-container .uel-r16-team.pos5 { top: 64%; left: 27%; }
+.uel-logos-container .uel-r16-team.pos6 { top: 64%; left: 68%; }
+.uel-logos-container .uel-r16-team.pos7 { top: 43%; left: 27%; }
+.uel-logos-container .uel-r16-team.pos8 { top: 43%; left: 68%; }
+.uel-logos-container .uel-playoff-seeded.pos9 { top: 39%; left: 9%; }
+.uel-logos-container .uel-playoff-seeded.pos10 { top: 39%; left: 86%; }
+.uel-logos-container .uel-playoff-seeded.pos11 { top: 59%; left: 86%; }
+.uel-logos-container .uel-playoff-seeded.pos12 { top: 59%; left: 9%; }
+.uel-logos-container .uel-playoff-seeded.pos13 { top: 79%; left: 86%; }
+.uel-logos-container .uel-playoff-seeded.pos14 { top: 79%; left: 9%; }
+.uel-logos-container .uel-playoff-seeded.pos15 { top: 19%; left: 86%; }
+.uel-logos-container .uel-playoff-seeded.pos16 { top: 19%; left: 9%; }
+.uel-logos-container .uel-playoff-unseeded.pos17 { top: 10%; left: 86%; }
+.uel-logos-container .uel-playoff-unseeded.pos18 { top: 10%; left: 9%; }
+.uel-logos-container .uel-playoff-unseeded.pos19 { top: 70%; left: 9%; }
+.uel-logos-container .uel-playoff-unseeded.pos20 { top: 70%; left: 86%; }
+.uel-logos-container .uel-playoff-unseeded.pos21 { top: 50%; left: 9%; }
+.uel-logos-container .uel-playoff-unseeded.pos22 { top: 50%; left: 86%; }
+.uel-logos-container .uel-playoff-unseeded.pos23 { top: 30%; left: 86%; }
+.uel-logos-container .uel-playoff-unseeded.pos24 { top: 30%; left: 9%; }
+
 
 /* Match Day Styles */
 .match-day {
@@ -639,7 +733,7 @@ header img.league-logo {
   text-align: center;
 }
 
-.match-day-container {
+.ucl-match-day-container, .uel-match-day-container { /* Apply to both containers */
   display: flex; /* Use flexbox for horizontal layout */
   gap: 20px; /* Space between the day cards */
   padding-bottom: 15px; /* Add some padding for potential scrollbar */
