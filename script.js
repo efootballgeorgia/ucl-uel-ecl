@@ -5,12 +5,17 @@ const images = document.querySelectorAll('.image-gallery img');
 const screens = document.querySelectorAll('.screen-gallery img');
 const modal = document.getElementById('myModal');
 const modalImage = document.getElementById('modalImage');
-const matchForm = document.getElementById('matchForm');
-let currentSortColumn = null;
-let isAscending = true;
-const matchDayContainer = document.querySelector('.match-day-container');
-let matchDayGenerated = false; // Flag to prevent re-generation
-let fixtures = []; // Store generated fixtures globally
+
+let currentSortColumn = {}; // Object to store sort column per league
+let isAscending = {}; // Object to store sort order per league
+const matchDayContainers = {
+  ucl: document.querySelector('.ucl-match-day-container'),
+  uel: document.querySelector('.uel-match-day-container')
+};
+let matchDayGenerated = { ucl: false, uel: false }; // Flag per league
+let fixtures = { ucl: [], uel: [] }; // Store generated fixtures per league
+
+let currentLeague = 'ucl'; // Default to UCL
 
 /* ============================================
    2. Firebase Configuration & Initialization
@@ -39,7 +44,7 @@ function closeModal() {
   modal.classList.remove('show');
 }
 
-// Toggle Gallery Display
+// Toggle Gallery Display (if still used)
 function toggleGallery(logo) {
   const gallery = logo.nextElementSibling;
   if (gallery.classList.contains('show')) {
@@ -50,20 +55,26 @@ function toggleGallery(logo) {
 }
 
 // Enhanced Sorting Functionality for League Table
-function sortTable(columnIndex, dataType) {
-  const table = document.getElementById('leagueTable');
+function sortTable(league, columnIndex, dataType) {
+  const table = document.getElementById(`${league}LeagueTable`);
   const tbody = table.querySelector('tbody');
   const rows = Array.from(tbody.querySelectorAll('tr'));
 
   const teamRows = rows.filter(row => !row.classList.contains('separator'));
   const separatorRows = rows.filter(row => row.classList.contains('separator'));
 
+  // Initialize sort state for the league if not present
+  if (currentSortColumn[league] === undefined) {
+    currentSortColumn[league] = null;
+    isAscending[league] = true;
+  }
+
   // Toggle sort order if the same column is clicked again
-  if (currentSortColumn === columnIndex) {
-    isAscending = !isAscending;
+  if (currentSortColumn[league] === columnIndex) {
+    isAscending[league] = !isAscending[league];
   } else {
-    currentSortColumn = columnIndex;
-    isAscending = true;
+    currentSortColumn[league] = columnIndex;
+    isAscending[league] = true;
   }
 
   teamRows.sort((a, b) => {
@@ -72,7 +83,7 @@ function sortTable(columnIndex, dataType) {
 
     // Primary sort: points
     if (aPoints !== bPoints) {
-      return isAscending ? bPoints - aPoints : aPoints - bPoints;
+      return isAscending[league] ? bPoints - aPoints : aPoints - bPoints;
     }
 
     // Secondary sort: selected column based on data type
@@ -99,8 +110,8 @@ function sortTable(columnIndex, dataType) {
         return 0;
     }
 
-    if (aValue < bValue) return isAscending ? -1 : 1;
-    if (aValue > bValue) return isAscending ? 1 : -1;
+    if (aValue < bValue) return isAscending[league] ? -1 : 1;
+    if (aValue > bValue) return isAscending[league] ? 1 : -1;
     return 0;
   });
 
@@ -122,7 +133,7 @@ function sortTable(columnIndex, dataType) {
   const headers = table.querySelectorAll('th');
   headers.forEach((header, index) => {
     if (index === columnIndex) {
-      header.setAttribute('data-sort', isAscending ? 'asc' : 'desc');
+      header.setAttribute('data-sort', isAscending[league] ? 'asc' : 'desc');
     } else {
       header.removeAttribute('data-sort');
     }
@@ -130,8 +141,8 @@ function sortTable(columnIndex, dataType) {
 }
 
 // Update Team Statistics
-function updateTeamStats(teamName, goalsFor, goalsAgainst, isWin, isDraw) {
-  const rows = document.querySelectorAll('#leagueTable tbody tr:not(.separator)');
+function updateTeamStats(league, teamName, goalsFor, goalsAgainst, isWin, isDraw) {
+  const rows = document.querySelectorAll(`#${league}LeagueTable tbody tr:not(.separator)`);
 
   rows.forEach(row => {
     const teamCell = row.cells[1];
@@ -172,8 +183,8 @@ function updateTeamStats(teamName, goalsFor, goalsAgainst, isWin, isDraw) {
 }
 
 // Add Match to Firestore
-function addMatch(homeTeam, awayTeam, homeScore, awayScore) {
-  return db.collection('matches').add({ // Return the Promise
+function addMatch(league, homeTeam, awayTeam, homeScore, awayScore) {
+  return db.collection(`${league}Matches`).add({ // Use league to determine collection
     homeTeam: homeTeam,
     awayTeam: awayTeam,
     homeScore: homeScore,
@@ -183,8 +194,8 @@ function addMatch(homeTeam, awayTeam, homeScore, awayScore) {
 }
 
 // Fetch and Display Existing Matches
-function fetchMatches() {
-  return db.collection('matches').orderBy('timestamp', 'desc').get(); // Return the Promise
+function fetchMatches(league) {
+  return db.collection(`${league}Matches`).orderBy('timestamp', 'desc').get(); // Use league to determine collection
 }
 
 /* ============================================
@@ -208,13 +219,13 @@ modal.addEventListener('click', (event) => {
 /* ============================================
    5. Event Listener for Match Form Submission
 ============================================ */
-matchForm.addEventListener('submit', function(e) {
+document.getElementById('uclMatchForm').addEventListener('submit', function(e) {
   e.preventDefault();
 
-  const homeTeam = document.getElementById('homeTeam').value;
-  const awayTeam = document.getElementById('awayTeam').value;
-  const homeScore = parseInt(document.getElementById('homeScore').value);
-  const awayScore = parseInt(document.getElementById('awayScore').value);
+  const homeTeam = document.getElementById('uclHomeTeam').value;
+  const awayTeam = document.getElementById('uclAwayTeam').value;
+  const homeScore = parseInt(document.getElementById('uclHomeScore').value);
+  const awayScore = parseInt(document.getElementById('uclAwayScore').value);
 
   if (homeTeam === awayTeam) {
     alert('A team cannot play against itself!');
@@ -222,15 +233,16 @@ matchForm.addEventListener('submit', function(e) {
   }
 
   this.reset();
-  updateAll();
+  updateAll('ucl'); // Pass league to updateAll
 
   // Save match to Firestore and update UI
-  addMatch(homeTeam, awayTeam, homeScore, awayScore)
+  addMatch('ucl', homeTeam, awayTeam, homeScore, awayScore)
     .then(() => {
-      console.log('Match added to Firestore');
+      console.log('UCL Match added to Firestore');
       const isDraw = homeScore === awayScore;
 
       updateTeamStats(
+        'ucl',
         homeTeam,
         homeScore,
         awayScore,
@@ -238,6 +250,7 @@ matchForm.addEventListener('submit', function(e) {
         isDraw
       );
       updateTeamStats(
+        'ucl',
         awayTeam,
         awayScore,
         homeScore,
@@ -245,42 +258,75 @@ matchForm.addEventListener('submit', function(e) {
         isDraw
       );
 
-      sortTable(7, 'number');
-      updateMatchDayResults(homeTeam, awayTeam, homeScore, awayScore);
+      sortTable('ucl', 7, 'number');
+      updateMatchDayResults('ucl', homeTeam, awayTeam, homeScore, awayScore);
     })
-    .catch(error => console.error("Error adding match:", error));
+    .catch(error => console.error("Error adding UCL match:", error));
 });
+
+document.getElementById('uelMatchForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const homeTeam = document.getElementById('uelHomeTeam').value;
+  const awayTeam = document.getElementById('uelAwayTeam').value;
+  const homeScore = parseInt(document.getElementById('uelHomeScore').value);
+  const awayScore = parseInt(document.getElementById('uelAwayScore').value);
+
+  if (homeTeam === awayTeam) {
+    alert('A team cannot play against itself!');
+    return;
+  }
+
+  this.reset();
+  updateAll('uel'); // Pass league to updateAll
+
+  // Save match to Firestore and update UI
+  addMatch('uel', homeTeam, awayTeam, homeScore, awayScore)
+    .then(() => {
+      console.log('UEL Match added to Firestore');
+      const isDraw = homeScore === awayScore;
+
+      updateTeamStats(
+        'uel',
+        homeTeam,
+        homeScore,
+        awayScore,
+        homeScore > awayScore,
+        isDraw
+      );
+      updateTeamStats(
+        'uel',
+        awayTeam,
+        awayScore,
+        homeScore,
+        awayScore > homeTeam,
+        isDraw
+      );
+
+      sortTable('uel', 7, 'number');
+      updateMatchDayResults('uel', homeTeam, awayTeam, homeScore, awayScore);
+    })
+    .catch(error => console.error("Error adding UEL match:", error));
+});
+
 
 /* ============================================
    6. Player Squad Interaction
 ============================================ */
 
-// Initialize player interactions
-function initPlayerInteractions() {
-  // Add click handlers to all player icons
-  document.querySelectorAll('.player-icon').forEach(icon => {
-    icon.addEventListener('click', function() {
-      const playerId = this.getAttribute('data-player');
-      const teamContainer = this.closest('.team-squad');
-      showPlayerDetails(playerId, teamContainer);
-    });
-  });
+// Initialize player interactions (if applicable for both leagues)
+function initPlayerInteractions(league) {
+  // Assuming player details are still global or handled elsewhere.
+  // If player data becomes league-specific, this function would need
+  // to be adapted to fetch correct data based on the league.
+  document.querySelectorAll(`#${league}LeagueTable tbody td img`).forEach(logo => {
+    logo.addEventListener('click', function() {
+      const teamName = this.closest('td').querySelector('b').textContent;
+      const formattedName = teamName.toLowerCase().replace(/ /g, '-');
+      const gameplanPath = `images/gameplans/${formattedName}.jpg`;
 
-  // Close button for player details
-  document.querySelectorAll('.close-details').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const teamContainer = this.closest('.team-squad');
-      closePlayerDetails(teamContainer);
-    });
-  });
-
-  // Close when clicking outside player details
-  document.querySelectorAll('.player-details-container').forEach(container => {
-    container.addEventListener('click', function(e) {
-      if (e.target === this) {
-        const teamContainer = this.closest('.team-squad');
-        closePlayerDetails(teamContainer);
-      }
+      modalImage.src = gameplanPath;
+      modal.classList.add('show');
     });
   });
 }
@@ -303,11 +349,11 @@ function closePlayerDetails(teamContainer) {
   teamContainer.querySelector('.player-details-container').classList.remove('active');
 }
 
-function updateKnockoutStage() {
-  const teams = Array.from(document.querySelectorAll('#leagueTable tbody tr:not(.separator)'));
+function updateKnockoutStage(league) {
+  const teams = Array.from(document.querySelectorAll(`#${league}LeagueTable tbody tr:not(.separator)`));
 
-  // Clear existing logos
-  document.querySelectorAll('.logos-container div').forEach(div => div.innerHTML = '');
+  // Clear existing logos for the current league
+  document.querySelector(`.${league}-logos-container`).querySelectorAll('div').forEach(div => div.innerHTML = '');
 
   teams.forEach((team, index) => {
     const position = index + 1;
@@ -317,32 +363,41 @@ function updateKnockoutStage() {
     logo.style.objectFit = 'cover';
 
     let targetSelector;
-    if (position <= 8) targetSelector = `.r16-team.pos${position}`;
-    else if (position <= 16) targetSelector = `.playoff-seeded.pos${position}`;
-    else if (position <= 24) targetSelector = `.playoff-unseeded.pos${position}`;
+    if (league === 'ucl') {
+      if (position <= 8) targetSelector = `.r16-team.pos${position}`;
+      else if (position <= 16) targetSelector = `.playoff-seeded.pos${position}`;
+      else if (position <= 24) targetSelector = `.playoff-unseeded.pos${position}`; 
+    }
+    
+    if (league === 'uel') {
+      if (position <= 8) targetSelector = `.uel-r16-team.pos${position}`;
+      else if (position <= 16) targetSelector = `.uel-playoff-seeded.pos${position}`;
+      else if (position <= 24) targetSelector = `.uel-playoff-unseeded.pos${position}`;
+    }
 
     if (targetSelector) {
-      const container = document.querySelector(targetSelector);
+      const container = document.querySelector(`.${league}-logos-container ${targetSelector}`);
       if (container) container.appendChild(logo);
     }
   });
 }
 
 // Call this after any table update
-function updateAll() {
-  sortTable(7, 'number');
-  updateKnockoutStage();
+function updateAll(league) {
+  sortTable(league, 7, 'number');
+  updateKnockoutStage(league);
 }
 
 // Function to generate and display match day fixtures
-function generateMatchDay() {
-  if (matchDayGenerated) return; // Only generate once
+function generateMatchDay(league) {
+  if (matchDayGenerated[league]) return; // Only generate once per league
 
-  const teams = Array.from(document.querySelectorAll('#leagueTable tbody tr:not(.separator)')).map(row => row.cells[1].querySelector('b').textContent);
-  fixtures = [];
+  const teams = Array.from(document.querySelectorAll(`#${league}LeagueTable tbody tr:not(.separator)`)).map(row => row.cells[1].querySelector('b').textContent);
+  fixtures[league] = [];
 
-  // Basic Round-Robin Scheduling (8 days)
-  for (let day = 1; day <= 8; day++) {
+  // Basic Round-Robin Scheduling (e.g., 8 days for UCL, fewer for UEL if fewer teams)
+  const numDays = league === 'ucl' ? 8 : 8; // Example: fewer match days for UEL if fewer teams
+  for (let day = 1; day <= numDays; day++) {
     const dayFixtures = [];
     let matchIndex = 0;
     for (let i = 0; i < teams.length; i += 2) {
@@ -357,14 +412,14 @@ function generateMatchDay() {
       }
       matchIndex++;
     }
-    fixtures.push(dayFixtures);
+    fixtures[league].push(dayFixtures);
     // Rotate teams for the next day (except the first team)
     teams.splice(1, 0, teams.pop());
   }
 
   // Display fixtures
   let matchDayHTML = '';
-  fixtures.forEach((dayFixtures, index) => {
+  fixtures[league].forEach((dayFixtures, index) => {
     matchDayHTML += `
             <div class="match-day-card">
                 <h3>Day ${index + 1}</h3>
@@ -380,13 +435,13 @@ function generateMatchDay() {
     matchDayHTML += '</div>';
   });
 
-  matchDayContainer.innerHTML = matchDayHTML;
-  matchDayGenerated = true;
+  matchDayContainers[league].innerHTML = matchDayHTML;
+  matchDayGenerated[league] = true;
 }
 
 // Update match results in the Match Day section
-function updateMatchDayResults(homeTeam, awayTeam, homeScore, awayScore) {
-  const matchCards = document.querySelectorAll('.match-card');
+function updateMatchDayResults(league, homeTeam, awayTeam, homeScore, awayScore) {
+  const matchCards = document.querySelectorAll(`#${league}-matches-section .match-card`);
   matchCards.forEach(card => {
     if ((card.dataset.home === homeTeam && card.dataset.away === awayTeam) ||
       (card.dataset.home === awayTeam && card.dataset.away === homeTeam)) { // Handle both home/away scenarios
@@ -395,101 +450,123 @@ function updateMatchDayResults(homeTeam, awayTeam, homeScore, awayScore) {
   });
 }
 
-function loadMatchDayResults() {
-  fetchMatches()
+function loadMatchDayResults(league) {
+  fetchMatches(league)
     .then(querySnapshot => {
       querySnapshot.forEach(doc => {
         const match = doc.data();
-        updateMatchDayResults(match.homeTeam, match.awayTeam, match.homeScore, match.awayScore);
+        updateMatchDayResults(league, match.homeTeam, match.awayTeam, match.homeScore, match.awayScore);
       });
     })
-    .catch(error => console.error("Error fetching matches for Match Day:", error));
+    .catch(error => console.error(`Error fetching matches for ${league} Match Day:`, error));
 }
 
-window.onload = () => {
-  document.getElementById('loading').style.display = 'none';
-  fetchMatches()
-    .then(querySnapshot => {
-      querySnapshot.forEach(doc => {
-        const match = doc.data();
-        updateTeamStats(
-          match.homeTeam,
-          match.homeScore,
-          match.awayScore,
-          match.homeScore > match.awayScore,
-          match.homeScore === match.awayScore
-        );
-        updateTeamStats(
-          match.awayTeam,
-          match.awayScore,
-          match.homeScore,
-          match.awayScore > match.homeScore,
-          match.homeScore === match.awayScore
-        );
-      });
-      sortTable(7, 'number'); // Sort by points on page load
-      generateMatchDay();
-      loadMatchDayResults(); // Load results into Match Day
-      initPlayerInteractions();
-      updateKnockoutStage();
-      initTeamLogoInteractions(); // Add this line
-    })
-    .catch(error => console.error("Error fetching initial data:", error));
-};
-
-function initTeamLogoInteractions() {
-  document.querySelectorAll('#leagueTable tbody td img').forEach(logo => {
+function initTeamLogoInteractions(league) {
+  document.querySelectorAll(`#${league}LeagueTable tbody td img`).forEach(logo => {
     logo.addEventListener('click', function() {
       const teamName = this.closest('td').querySelector('b').textContent;
       const formattedName = teamName.toLowerCase().replace(/ /g, '-');
       const gameplanPath = `images/gameplans/${formattedName}.jpg`;
-      
+
       modalImage.src = gameplanPath;
       modal.classList.add('show');
     });
   });
 }
 
-/* Add this at the top of your script.js */
-// Navigation functionality
+// Navigation functionality (main tabs: League Table, Match Day, Knockout)
 function setupNavigation() {
-  const navButtons = document.querySelectorAll('.nav-btn');
+  const navButtons = document.querySelectorAll('.main-nav .nav-btn');
+  // Sections are now filtered by league
   const pageSections = document.querySelectorAll('.page-section');
 
   navButtons.forEach(button => {
     button.addEventListener('click', () => {
-      // Remove active class from all buttons and sections
+      // Remove active class from all buttons
       navButtons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active'); // Add active class to clicked button
+
+      // Hide all page sections for both leagues
       pageSections.forEach(section => section.classList.remove('active'));
-      
-      // Add active class to clicked button
-      button.classList.add('active');
-      
-      // Show corresponding section
+
+      // Show the corresponding section for the currentLeague
       const pageId = button.dataset.page;
-      document.getElementById(`${pageId}-section`).classList.add('active');
-      
+      document.getElementById(`${currentLeague}-${pageId}-section`).classList.add('active');
+
       // Special handling for each page if needed
-      if (pageId === 'matches' && !matchDayGenerated) {
-        generateMatchDay();
+      if (pageId === 'matches') {
+        generateMatchDay(currentLeague);
+        loadMatchDayResults(currentLeague);
       }
       if (pageId === 'knockout') {
-        updateKnockoutStage();
+        updateKnockoutStage(currentLeague);
       }
     });
   });
 }
 
-// Modify the window.onload function to include setupNavigation
-window.onload = () => {
-  document.getElementById('loading').style.display = 'none';
-  setupNavigation(); // Initialize navigation
-  
-  fetchMatches()
+// League selection functionality (UCL, UEL)
+function setupLeagueNavigation() {
+  const leagueButtons = document.querySelectorAll('.league-selector-nav .league-btn');
+  const leagueLogos = document.querySelectorAll('.league-logo');
+
+  leagueButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const selectedLeague = button.dataset.league;
+
+      // Update active button classes
+      leagueButtons.forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+
+      // Update active league logo
+      leagueLogos.forEach(logo => logo.classList.remove('active'));
+      document.querySelector(`[data-league-logo="${selectedLeague}"]`).classList.add('active');
+
+
+      currentLeague = selectedLeague; // Update global currentLeague
+
+      // Hide all main page sections
+      document.querySelectorAll('.page-section').forEach(section => {
+        section.classList.remove('active');
+      });
+
+      // Activate the default section ('league') for the newly selected league
+      document.getElementById(`${currentLeague}-league-section`).classList.add('active');
+
+      // Reset main navigation active state to 'League Table'
+      document.querySelectorAll('.main-nav .nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.page === 'league') {
+          btn.classList.add('active');
+        }
+      });
+
+      // Load data for the newly selected league
+      loadLeagueData(currentLeague);
+    });
+  });
+}
+
+// New function to load all data for a given league
+function loadLeagueData(league) {
+  // Reset table stats for the current league
+  document.querySelectorAll(`#${league}LeagueTable tbody tr:not(.separator)`).forEach(row => {
+    const cells = row.cells;
+    cells[2].textContent = '0'; // Played
+    cells[3].textContent = '0'; // Won
+    cells[4].textContent = '0'; // Draw
+    cells[5].textContent = '0'; // Lost
+    cells[6].textContent = '0:0'; // Goal difference
+    cells[7].querySelector('.points').textContent = '0'; // Points
+    cells[8].innerHTML = '<span class="form-box draw"></span>'; // Reset form to draw
+  });
+
+  fetchMatches(league)
     .then(querySnapshot => {
       querySnapshot.forEach(doc => {
         const match = doc.data();
         updateTeamStats(
+          league,
           match.homeTeam,
           match.homeScore,
           match.awayScore,
@@ -497,6 +574,7 @@ window.onload = () => {
           match.homeScore === match.awayScore
         );
         updateTeamStats(
+          league,
           match.awayTeam,
           match.awayScore,
           match.homeScore,
@@ -504,12 +582,23 @@ window.onload = () => {
           match.homeScore === match.awayScore
         );
       });
-      sortTable(7, 'number');
-      generateMatchDay();
-      loadMatchDayResults();
-      initPlayerInteractions();
-      updateKnockoutStage();
-      initTeamLogoInteractions();
+      sortTable(league, 7, 'number');
+      // Reset matchDayGenerated flag for the current league if you want it regenerated on switch
+      matchDayGenerated[league] = false;
+      generateMatchDay(league);
+      loadMatchDayResults(league);
+      updateKnockoutStage(league);
+      initTeamLogoInteractions(league);
     })
-    .catch(error => console.error("Error fetching initial data:", error));
+    .catch(error => console.error(`Error fetching initial data for ${league}:`, error));
+}
+
+
+window.onload = () => {
+  document.getElementById('loading').style.display = 'none';
+  setupNavigation(); // Initialize main page navigation
+  setupLeagueNavigation(); // Initialize league selection navigation
+
+  // Initial load for the default league (UCL)
+  loadLeagueData('ucl');
 };
