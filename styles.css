@@ -778,7 +778,7 @@ header img.league-logo {
   header {
     height: 180px; /* Adjust header height for smaller screens */
     padding-top: 15px; /* Adjust as needed for spacing above content */
-    padding-bottom: 20px; /* Adjust as needed for spacing below content */
+    padding-bottom: 30px; /* Adjust as needed for spacing below content */
   }
 
   header img.league-logo {
@@ -867,7 +867,7 @@ header img.league-logo {
   header {
     height: 150px;
     padding-top: 15px; /* Adjust as needed for spacing above content */
-    padding-bottom: 20px; /* Adjust as needed for spacing below content */
+    padding-bottom: 30px; /* Adjust as needed for spacing below content */
   }
 
   header img.league-logo {
@@ -921,7 +921,6 @@ header img.league-logo {
     font-size: 12px;
   }
 }
-
 
 .match-form {
   display: none !important;
