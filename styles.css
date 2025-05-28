@@ -786,7 +786,7 @@ header img.league-logo {
   }
 
   .nav-btn {
-    padding: 10px 15px; /* Smaller padding for navigation buttons */
+    padding: 10px 10px; /* Smaller padding for navigation buttons */
     font-size: 14px; /* Smaller font for navigation buttons */
   }
 
@@ -795,7 +795,7 @@ header img.league-logo {
   }
 
   table {
-    font-size: 10px; /* Smaller font size for table content */
+    font-size: 8px; /* Smaller font size for table content */
   }
 
   tbody td img {
