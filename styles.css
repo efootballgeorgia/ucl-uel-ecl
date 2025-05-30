@@ -894,8 +894,8 @@ header img.league-logo {
 @media (max-width: 480px) {
   header {
     height: 150px;
-    padding-top: 15px; /* Adjust as needed for spacing above content */
-    padding-bottom: 30px; /* Adjust as needed for spacing below content */
+    padding-top: 30px; /* Adjust as needed for spacing above content */
+    padding-bottom: 50px; /* Adjust as needed for spacing below content */
   }
 
   header img.league-logo {
