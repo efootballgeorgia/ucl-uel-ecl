@@ -10,10 +10,11 @@ let currentSortColumn = {}; // Object to store sort column per league
 let isAscending = {}; // Object to store sort order per league
 const matchDayContainers = {
   ucl: document.querySelector('.ucl-match-day-container'),
-  uel: document.querySelector('.uel-match-day-container')
+  uel: document.querySelector('.uel-match-day-container'),
+  ecl: document.querySelector('.ecl-match-day-container') // New: Conference League match day container
 };
-let matchDayGenerated = { ucl: false, uel: false }; // Flag per league
-let fixtures = { ucl: [], uel: [] }; // Store generated fixtures per league
+let matchDayGenerated = { ucl: false, uel: false, ecl: false }; // Flag per league
+let fixtures = { ucl: [], uel: [], ecl: [] }; // Store generated fixtures per league
 
 let currentLeague = 'ucl'; // Default to UCL
 
@@ -254,7 +255,7 @@ document.getElementById('uclMatchForm').addEventListener('submit', function(e) {
         awayTeam,
         awayScore,
         homeScore,
-        awayScore > homeScore,
+        awayScore > homeScore, // Corrected win condition for away team
         isDraw
       );
 
@@ -299,7 +300,7 @@ document.getElementById('uelMatchForm').addEventListener('submit', function(e) {
         awayTeam,
         awayScore,
         homeScore,
-        awayScore > homeTeam,
+        awayScore > homeScore, // Corrected win condition for away team
         isDraw
       );
 
@@ -307,6 +308,52 @@ document.getElementById('uelMatchForm').addEventListener('submit', function(e) {
       updateMatchDayResults('uel', homeTeam, awayTeam, homeScore, awayScore);
     })
     .catch(error => console.error("Error adding UEL match:", error));
+});
+
+// New Event Listener for Conference League Match Form Submission
+document.getElementById('eclMatchForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const homeTeam = document.getElementById('eclHomeTeam').value;
+  const awayTeam = document.getElementById('eclAwayTeam').value;
+  const homeScore = parseInt(document.getElementById('eclHomeScore').value);
+  const awayScore = parseInt(document.getElementById('eclAwayScore').value);
+
+  if (homeTeam === awayTeam) {
+    alert('A team cannot play against itself!');
+    return;
+  }
+
+  this.reset();
+  updateAll('ecl'); // Pass league to updateAll
+
+  // Save match to Firestore and update UI
+  addMatch('ecl', homeTeam, awayTeam, homeScore, awayScore)
+    .then(() => {
+      console.log('ECL Match added to Firestore');
+      const isDraw = homeScore === awayScore;
+
+      updateTeamStats(
+        'ecl',
+        homeTeam,
+        homeScore,
+        awayScore,
+        homeScore > awayScore,
+        isDraw
+      );
+      updateTeamStats(
+        'ecl',
+        awayTeam,
+        awayScore,
+        homeScore,
+        awayScore > homeScore,
+        isDraw
+      );
+
+      sortTable('ecl', 7, 'number');
+      updateMatchDayResults('ecl', homeTeam, awayTeam, homeScore, awayScore);
+    })
+    .catch(error => console.error("Error adding ECL match:", error));
 });
 
 
@@ -367,12 +414,14 @@ function updateKnockoutStage(league) {
       if (position <= 8) targetSelector = `.r16-team.pos${position}`;
       else if (position <= 16) targetSelector = `.playoff-seeded.pos${position}`;
       else if (position <= 24) targetSelector = `.playoff-unseeded.pos${position}`; 
-    }
-    
-    if (league === 'uel') {
+    } else if (league === 'uel') {
       if (position <= 8) targetSelector = `.uel-r16-team.pos${position}`;
       else if (position <= 16) targetSelector = `.uel-playoff-seeded.pos${position}`;
       else if (position <= 24) targetSelector = `.uel-playoff-unseeded.pos${position}`;
+    } else if (league === 'ecl') { // New: Conference League logic
+      if (position <= 8) targetSelector = `.ecl-r16-team.pos${position}`;
+      else if (position <= 16) targetSelector = `.ecl-playoff-seeded.pos${position}`;
+      else if (position <= 24) targetSelector = `.ecl-playoff-unseeded.pos${position}`;
     }
 
     if (targetSelector) {
@@ -395,8 +444,8 @@ function generateMatchDay(league) {
   const teams = Array.from(document.querySelectorAll(`#${league}LeagueTable tbody tr:not(.separator)`)).map(row => row.cells[1].querySelector('b').textContent);
   fixtures[league] = [];
 
-  // Basic Round-Robin Scheduling (e.g., 8 days for UCL, fewer for UEL if fewer teams)
-  const numDays = league === 'ucl' ? 8 : 8; // Example: fewer match days for UEL if fewer teams
+  // Basic Round-Robin Scheduling (e.g., 8 days for UCL/UEL, fewer for ECL if fewer teams)
+  const numDays = 8; // Default to 8 match days for simplicity. Adjust if ECL has fewer.
   for (let day = 1; day <= numDays; day++) {
     const dayFixtures = [];
     let matchIndex = 0;
@@ -486,7 +535,7 @@ function setupNavigation() {
       navButtons.forEach(btn => btn.classList.remove('active'));
       button.classList.add('active'); // Add active class to clicked button
 
-      // Hide all page sections for both leagues
+      // Hide all page sections for all leagues
       pageSections.forEach(section => section.classList.remove('active'));
 
       // Show the corresponding section for the currentLeague
@@ -505,7 +554,7 @@ function setupNavigation() {
   });
 }
 
-// League selection functionality (UCL, UEL)
+// League selection functionality (UCL, UEL, ECL)
 function setupLeagueNavigation() {
   const leagueButtons = document.querySelectorAll('.league-selector-nav .league-btn');
   const leagueLogos = document.querySelectorAll('.league-logo');
@@ -579,7 +628,7 @@ function loadLeagueData(league) {
           match.awayScore,
           match.homeScore,
           match.awayScore > match.homeScore,
-          match.homeScore === match.awayScore
+          match.awayScore === match.homeScore
         );
       });
       sortTable(league, 7, 'number');
