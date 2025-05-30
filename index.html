@@ -19,11 +19,10 @@
       <nav class="league-selector-nav">
         <button class="league-btn active" data-league="ucl">Champions League</button>
         <button class="league-btn" data-league="uel">Europa League</button>
-      </nav>
+        <button class="league-btn" data-league="ecl">Conference League</button> </nav>
       <img src="images/logos/champions-league-logo.png" alt="Champions League Logo" class="league-logo ucl-logo active" data-league-logo="ucl">
       <img src="images/logos/europa-league-logo.png" alt="Europa League Logo" class="league-logo uel-logo" data-league-logo="uel">
-
-      <nav class="main-nav">
+      <img src="images/logos/conference-league-logo.png" alt="Conference League Logo" class="league-logo ecl-logo" data-league-logo="ecl"> <nav class="main-nav">
         <button class="nav-btn active" data-page="league">League Table</button>
         <button class="nav-btn" data-page="matches">Match Day</button>
         <button class="nav-btn" data-page="knockout">Knockout Bracket</button>
@@ -211,7 +210,7 @@
             <tr><td>6</td><td><img src="images/logos/alaves.png" alt="Alavés"> <b>Alavés</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
             <tr><td>7</td><td><img src="images/logos/villarreal.png" alt="Villarreal"> <b>Villarreal</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
             <tr><td>8</td><td><img src="images/logos/real-betis.png" alt="Real Betis"> <b>Real Betis</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
-            <tr class="separator"><td colspan="10" class="round16"><span class="line"></span></td></tr>
+            <tr class="separator"><td colspan="10" class="uel-round16"><span class="line"></span></td></tr>
             <tr><td>9</td><td><img src="images/logos/barcelona.png" alt="Barcelona"> <b>Barcelona</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
             <tr><td>10</td><td><img src="images/logos/nice.png" alt="Nice"> <b>Nice</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
             <tr><td>11</td><td><img src="images/logos/toulouse.png" alt="Toulouse"> <b>Toulouse</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
@@ -344,6 +343,158 @@
       </section>
     </section>
 
+    <section id="ecl-league-section" class="page-section" data-league="ecl"> <div class="league-table">
+        <table id="eclLeagueTable">
+          <thead>
+            <tr>
+              <th>Position</th>
+              <th onclick="sortTable('ecl', 1, 'string')">Team</th>
+              <th onclick="sortTable('ecl', 2, 'number')">Played</th>
+              <th onclick="sortTable('ecl', 3, 'number')">Won</th>
+              <th onclick="sortTable('ecl', 4, 'number')">Draw</th>
+              <th onclick="sortTable('ecl', 5, 'number')">Lost</th>
+              <th onclick="sortTable('ecl', 6, 'goals')">+/-</th>
+              <th onclick="sortTable('ecl', 7, 'number')">Points</th>
+              <th>Form</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td><img src="images/logos/chelsea.png" alt="Chelsea"> <b>Chelsea (ENG)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>2</td><td><img src="images/logos/vitoria-guimaraes.png" alt="Vitória Guimarães"> <b>Vitória Guimarães (POR)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>3</td><td><img src="images/logos/fiorentina.png" alt="Fiorentina"> <b>Fiorentina (ITA)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>4</td><td><img src="images/logos/rapid-vienna.png" alt="Rapid Vienna"> <b>Rapid Vienna (AUT)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>5</td><td><img src="images/logos/djurgardens-if.png" alt="Djurgårdens IF"> <b>Djurgårdens IF (SWE)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>6</td><td><img src="images/logos/fc-lugano.png" alt="FC Lugano"> <b>FC Lugano (SUI)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>7</td><td><img src="images/logos/legia-warszawa.png" alt="Legia Warszawa"> <b>Legia Warszawa (POL)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>8</td><td><img src="images/logos/cercle-brugge.png" alt="Cercle Brugge"> <b>Cercle Brugge (BEL)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr class="separator"><td colspan="10" class="ecl-round16"><span class="line"></span></td></tr>
+            <tr><td>9</td><td><img src="images/logos/jagiellonia-bialystok.png" alt="Jagiellonia Białystok"> <b>Jagiellonia Białystok (POL)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>10</td><td><img src="images/logos/shamrock-rovers.png" alt="Shamrock Rovers"> <b>Shamrock Rovers (IRL)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>11</td><td><img src="images/logos/apoel-nicosia.png" alt="APOEL Nicosia"> <b>APOEL Nicosia (CYP)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>12</td><td><img src="images/logos/pafos-fc.png" alt="Pafos FC"> <b>Pafos FC (CYP)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>13</td><td><img src="images/logos/panathinaikos.png" alt="Panathinaikos"> <b>Panathinaikos (GRE)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>14</td><td><img src="images/logos/nk-olimpija-ljubljana.png" alt="NK Olimpija Ljubljana"> <b>NK Olimpija Ljubljana (SVN)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>15</td><td><img src="images/logos/real-betis.png" alt="Real Betis"> <b>Real Betis (ESP)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>16</td><td><img src="images/logos/fc-heidenheim.png" alt="FC Heidenheim"> <b>FC Heidenheim (GER)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr class="separator"><td colspan="10" class="knockout-seeded"><span class="line"></span></td></tr>
+            <tr><td>17</td><td><img src="images/logos/kaa-gent.png" alt="KAA Gent"> <b>KAA Gent (BEL)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>18</td><td><img src="images/logos/fc-copenhagen.png" alt="FC Copenhagen"> <b>FC Copenhagen (DEN)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>19</td><td><img src="images/logos/vikingur-reykjavik.png" alt="Víkingur Reykjavík"> <b>Víkingur Reykjavík (ISL)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>20</td><td><img src="images/logos/borac-banja-luka.png" alt="Borac Banja Luka"> <b>Borac Banja Luka (BIH)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>21</td><td><img src="images/logos/nk-celje.png" alt="NK Celje"> <b>NK Celje (SVN)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>22</td><td><img src="images/logos/omonia-nicosia.png" alt="Omonia Nicosia"> <b>Omonia Nicosia (CYP)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>23</td><td><img src="images/logos/molde-fk.png" alt="Molde FK"> <b>Molde FK (NOR)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>24</td><td><img src="images/logos/fk-tsc-backa-topola.png" alt="FK TSC Bačka Topola"> <b>FK TSC Bačka Topola (SRB)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr class="separator"><td colspan="10" class="knockout-unseeded"><span class="line"></span></td></tr>
+            <tr><td>25</td><td><img src="images/logos/heart-of-midlothian.png" alt="Heart of Midlothian"> <b>Heart of Midlothian (SCO)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>26</td><td><img src="images/logos/istanbul-basaksehir.png" alt="İstanbul Başakşehir"> <b>İstanbul Başakşehir (TUR)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>27</td><td><img src="images/logos/mlada-boleslav.png" alt="Mladá Boleslav"> <b>Mladá Boleslav (CZE)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>28</td><td><img src="images/logos/fc-astana.png" alt="FC Astana"> <b>FC Astana (KAZ)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>29</td><td><img src="images/logos/fc-st-gallen-1879.png" alt="FC St. Gallen 1879"> <b>FC St. Gallen 1879 (SUI)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>30</td><td><img src="images/logos/hjk-helsinki.png" alt="HJK Helsinki"> <b>HJK Helsinki (FIN)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>31</td><td><img src="images/logos/fc-noah-yerevan.png" alt="FC Noah Yerevan"> <b>FC Noah Yerevan (ARM)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>32</td><td><img src="images/logos/the-new-saints.png" alt="The New Saints"> <b>The New Saints (WAL)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>33</td><td><img src="images/logos/dinamo-minsk.png" alt="Dinamo Minsk"> <b>Dinamo Minsk (BLR)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>34</td><td><img src="images/logos/larne-fc.png" alt="Larne FC"> <b>Larne FC (NIR)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>35</td><td><img src="images/logos/lask.png" alt="LASK"> <b>LASK (AUT)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+            <tr><td>36</td><td><img src="images/logos/fc-petrocub-hincesti.png" alt="FC Petrocub Hîncești"> <b>FC Petrocub Hîncești (MDA)</b></td><td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td><td><b class="points">0</b></td><td><span class="form-box draw"></span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <section class="match-form">
+        <h2>Add ECL Match Result</h2>
+        <form id="eclMatchForm"> <div class="form-group">
+            <select id="eclHomeTeam" required>
+              <option value="">Home Team</option>
+              <option>Chelsea (ENG)</option>
+              <option>Vitória Guimarães (POR)</option>
+              <option>Fiorentina (ITA)</option>
+              <option>Rapid Vienna (AUT)</option>
+              <option>Djurgårdens IF (SWE)</option>
+              <option>FC Lugano (SUI)</option>
+              <option>Legia Warszawa (POL)</option>
+              <option>Cercle Brugge (BEL)</option>
+              <option>Jagiellonia Białystok (POL)</option>
+              <option>Shamrock Rovers (IRL)</option>
+              <option>APOEL Nicosia (CYP)</option>
+              <option>Pafos FC (CYP)</option>
+              <option>Panathinaikos (GRE)</option>
+              <option>NK Olimpija Ljubljana (SVN)</option>
+              <option>Real Betis (ESP)</option>
+              <option>FC Heidenheim (GER)</option>
+              <option>KAA Gent (BEL)</option>
+              <option>FC Copenhagen (DEN)</option>
+              <option>Víkingur Reykjavík (ISL)</option>
+              <option>Borac Banja Luka (BIH)</option>
+              <option>NK Celje (SVN)</option>
+              <option>Omonia Nicosia (CYP)</option>
+              <option>Molde FK (NOR)</option>
+              <option>FK TSC Bačka Topola (SRB)</option>
+              <option>Heart of Midlothian (SCO)</option>
+              <option>İstanbul Başakşehir (TUR)</option>
+              <option>Mladá Boleslav (CZE)</option>
+              <option>FC Astana (KAZ)</option>
+              <option>FC St. Gallen 1879 (SUI)</option>
+              <option>HJK Helsinki (FIN)</option>
+              <option>FC Noah Yerevan (ARM)</option>
+              <option>The New Saints (WAL)</option>
+              <option>Dinamo Minsk (BLR)</option>
+              <option>Larne FC (NIR)</option>
+              <option>LASK (AUT)</option>
+              <option>FC Petrocub Hîncești (MDA)</option>
+            </select>
+            <input type="number" id="eclHomeScore" min="0" required>
+          </div>
+
+          <div class="form-group">
+            <select id="eclAwayTeam" required>
+              <option value="">Away Team</option>
+              <option>Chelsea (ENG)</option>
+              <option>Vitória Guimarães (POR)</option>
+              <option>Fiorentina (ITA)</option>
+              <option>Rapid Vienna (AUT)</option>
+              <option>Djurgårdens IF (SWE)</option>
+              <option>FC Lugano (SUI)</option>
+              <option>Legia Warszawa (POL)</option>
+              <option>Cercle Brugge (BEL)</option>
+              <option>Jagiellonia Białystok (POL)</option>
+              <option>Shamrock Rovers (IRL)</option>
+              <option>APOEL Nicosia (CYP)</option>
+              <option>Pafos FC (CYP)</option>
+              <option>Panathinaikos (GRE)</option>
+              <option>NK Olimpija Ljubljana (SVN)</option>
+              <option>Real Betis (ESP)</option>
+              <option>FC Heidenheim (GER)</option>
+              <option>KAA Gent (BEL)</option>
+              <option>FC Copenhagen (DEN)</option>
+              <option>Víkingur Reykjavík (ISL)</option>
+              <option>Borac Banja Luka (BIH)</option>
+              <option>NK Celje (SVN)</option>
+              <option>Omonia Nicosia (CYP)</option>
+              <option>Molde FK (NOR)</option>
+              <option>FK TSC Bačka Topola (SRB)</option>
+              <option>Heart of Midlothian (SCO)</option>
+              <option>İstanbul Başakşehir (TUR)</option>
+              <option>Mladá Boleslav (CZE)</option>
+              <option>FC Astana (KAZ)</option>
+              <option>FC St. Gallen 1879 (SUI)</option>
+              <option>HJK Helsinki (FIN)</option>
+              <option>FC Noah Yerevan (ARM)</option>
+              <option>The New Saints (WAL)</option>
+              <option>Dinamo Minsk (BLR)</option>
+              <option>Larne FC (NIR)</option>
+              <option>LASK (AUT)</option>
+              <option>FC Petrocub Hîncești (MDA)</option>
+            </select>
+            <input type="number" id="eclAwayScore" min="0" required>
+          </div>
+
+          <button type="submit">Add Match</button>
+        </form>
+      </section>
+    </section>
+
     <section id="ucl-matches-section" class="page-section" data-league="ucl">
       <div class="match-day">
         <h2>UCL Match Day</h2>
@@ -355,6 +506,12 @@
       <div class="match-day">
         <h2>UEL Match Day</h2>
         <div class="uel-match-day-container"></div>
+      </div>
+    </section>
+
+    <section id="ecl-matches-section" class="page-section" data-league="ecl"> <div class="match-day">
+        <h2>ECL Match Day</h2>
+        <div class="ecl-match-day-container"></div>
       </div>
     </section>
 
@@ -427,6 +584,42 @@
             <div class="uel-playoff-unseeded pos22"></div>
             <div class="uel-playoff-unseeded pos23"></div>
             <div class="uel-playoff-unseeded pos24"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ecl-knockout-section" class="page-section" data-league="ecl"> <div class="knockout-stage">
+        <h2>ECL Knockout Stage</h2>
+        <div class="ecl-knockout-container knockout-container">
+          <img src="images/ecl-knockout-bracket.jpg" alt="ECL Knockout Stage" class="knockout-bg">
+          <div class="ecl-logos-container logos-container">
+            <div class="ecl-r16-team pos1"></div>
+            <div class="ecl-r16-team pos2"></div>
+            <div class="ecl-r16-team pos3"></div>
+            <div class="ecl-r16-team pos4"></div>
+            <div class="ecl-r16-team pos5"></div>
+            <div class="ecl-r16-team pos6"></div>
+            <div class="ecl-r16-team pos7"></div>
+            <div class="ecl-r16-team pos8"></div>
+
+            <div class="ecl-playoff-seeded pos9"></div>
+            <div class="ecl-playoff-seeded pos10"></div>
+            <div class="ecl-playoff-seeded pos11"></div>
+            <div class="ecl-playoff-seeded pos12"></div>
+            <div class="ecl-playoff-seeded pos13"></div>
+            <div class="ecl-playoff-seeded pos14"></div>
+            <div class="ecl-playoff-seeded pos15"></div>
+            <div class="ecl-playoff-seeded pos16"></div>
+
+            <div class="ecl-playoff-unseeded pos17"></div>
+            <div class="ecl-playoff-unseeded pos18"></div>
+            <div class="ecl-playoff-unseeded pos19"></div>
+            <div class="ecl-playoff-unseeded pos20"></div>
+            <div class="ecl-playoff-unseeded pos21"></div>
+            <div class="ecl-playoff-unseeded pos22"></div>
+            <div class="ecl-playoff-unseeded pos23"></div>
+            <div class="ecl-playoff-unseeded pos24"></div>
           </div>
         </div>
       </div>
