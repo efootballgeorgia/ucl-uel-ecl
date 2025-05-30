@@ -31,7 +31,6 @@ header {
 }
 
 header .header-content {
-  /* Removed padding-top: 50px; as it's now handled by header's padding */
   display: flex; /* Use flexbox for better alignment of children */
   flex-direction: column; /* Stack children vertically */
   align-items: center; /* Center horizontally */
@@ -248,6 +247,10 @@ tbody tr:hover {
   background-color: #FFD700; /* Gold color for UEL */
 }
 
+.ecl-round16 .line { /* New style for ECL separator */
+  background-color: #FFA500; /* Orange color for ECL */
+}
+
 
 .separator .label {
   position: absolute;
@@ -375,7 +378,7 @@ tbody tr:hover {
   margin-bottom: 15px;
 }
 
-#uclMatchForm, #uelMatchForm { /* Apply styles to both forms */
+#uclMatchForm, #uelMatchForm, #eclMatchForm { /* Apply styles to all forms */
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -713,6 +716,31 @@ header img.league-logo {
 .uel-logos-container .uel-playoff-unseeded.pos23 { top: 30%; left: 86%; }
 .uel-logos-container .uel-playoff-unseeded.pos24 { top: 30%; left: 9%; }
 
+/* ECL Specific Knockout Positions */
+.ecl-logos-container .ecl-r16-team.pos1 { top: 17%; left: 24.5%; }
+.ecl-logos-container .ecl-r16-team.pos2 { top: 17%; left: 70.5%; }
+.ecl-logos-container .ecl-r16-team.pos3 { top: 83%; left: 24.5%; }
+.ecl-logos-container .ecl-r16-team.pos4 { top: 83%; left: 70.5%; }
+.ecl-logos-container .ecl-r16-team.pos5 { top: 61%; left: 24.5%; }
+.ecl-logos-container .ecl-r16-team.pos6 { top: 61%; left: 70.5%; }
+.ecl-logos-container .ecl-r16-team.pos7 { top: 39%; left: 24.5%; }
+.ecl-logos-container .ecl-r16-team.pos8 { top: 39%; left: 70.5%; }
+.ecl-logos-container .ecl-playoff-seeded.pos9 { top: 34%; left: 6.5%; }
+.ecl-logos-container .ecl-playoff-seeded.pos10 { top: 34%; left: 88.5%; }
+.ecl-logos-container .ecl-playoff-seeded.pos11 { top: 57%; left: 88.5%; }
+.ecl-logos-container .ecl-playoff-seeded.pos12 { top: 57%; left: 6.5%; }
+.ecl-logos-container .ecl-playoff-seeded.pos13 { top: 79%; left: 88.5%; }
+.ecl-logos-container .ecl-playoff-seeded.pos14 { top: 79%; left: 6.5%; }
+.ecl-logos-container .ecl-playoff-seeded.pos15 { top: 14%; left: 88.5%; }
+.ecl-logos-container .ecl-playoff-seeded.pos16 { top: 14%; left: 6.5%; }
+.ecl-logos-container .ecl-playoff-unseeded.pos17 { top: 5%; left: 88.5%; }
+.ecl-logos-container .ecl-playoff-unseeded.pos18 { top: 5%; left: 6.5%; }
+.ecl-logos-container .ecl-playoff-unseeded.pos19 { top: 70%; left: 6.5%; }
+.ecl-logos-container .ecl-playoff-unseeded.pos20 { top: 70%; left: 88.5%; }
+.ecl-logos-container .ecl-playoff-unseeded.pos21 { top: 48%; left: 6.5%; }
+.ecl-logos-container .ecl-playoff-unseeded.pos22 { top: 48%; left: 88.5%; }
+.ecl-logos-container .ecl-playoff-unseeded.pos23 { top: 25%; left: 88.5%; }
+.ecl-logos-container .ecl-playoff-unseeded.pos24 { top: 25%; left: 6.5%; }
 
 /* Match Day Styles */
 .match-day {
@@ -733,7 +761,7 @@ header img.league-logo {
   text-align: center;
 }
 
-.ucl-match-day-container, .uel-match-day-container { /* Apply to both containers */
+.ucl-match-day-container, .uel-match-day-container, .ecl-match-day-container { /* Apply to all containers */
   display: flex; /* Use flexbox for horizontal layout */
   gap: 20px; /* Space between the day cards */
   padding-bottom: 15px; /* Add some padding for potential scrollbar */
