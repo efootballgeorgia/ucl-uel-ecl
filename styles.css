@@ -64,14 +64,7 @@ header h2 {
 
 /* Rest of your CSS remains the same */
 
-/* League Selector Navigation */
-.league-selector-nav {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
+/* League Selector Navigation - Existing styles for consistency */
 .league-selector-nav .league-btn {
   padding: 10px 8px;
   background: rgba(40, 40, 40, 0.8);
@@ -93,7 +86,7 @@ header h2 {
   box-shadow: 0 0 15px rgba(0, 86, 179, 0.6);
 }
 
-/* Main Navigation Styles */
+/* Main Navigation Styles - Adjusted for better styling and consistency */
 .main-nav {
   display: flex;
   justify-content: center;
@@ -104,22 +97,24 @@ header h2 {
 
 .nav-btn {
   padding: 15px 30px;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(40, 40, 40, 0.8); /* Changed to match league-btn background */
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px; /* Changed to match league-btn border-radius */
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 16px;
+  font-size: 18px; /* Increased font size to match league-btn */
+  font-weight: bold; /* Added font-weight for consistency */
 }
 
 .nav-btn:hover {
-  background: rgba(70, 70, 70, 0.7);
+  background: rgba(60, 60, 60, 0.8); /* Changed to match league-btn hover background */
 }
 
 .nav-btn.active {
-  background: #4CAF50;
+  background: #0056b3; /* Changed to match league-btn active background */
   font-weight: bold;
+  box-shadow: 0 0 15px rgba(0, 86, 179, 0.6); /* Added box-shadow for consistency */
 }
 
 .page-section {
@@ -898,4 +893,16 @@ header img.league-logo {
   .knockout-container {
     max-width: 100%; /* Allow knockout bracket to take full width */
   }
+
+  .match-form {
+  display: none !important;
 }
+  .form-box {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin: 0 2px;
+  border-radius: 3px;
+  }
+}
+
