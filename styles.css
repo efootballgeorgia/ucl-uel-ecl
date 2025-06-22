@@ -110,15 +110,16 @@ header h2 {
   border-radius: 5px;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 16px;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .nav-btn:hover {
-  background: rgba(70, 70, 70, 0.7);
+  background: rgba(60, 60, 60, 0.8);
 }
 
 .nav-btn.active {
-  background: #4CAF50;
+  background: #0056b3; /* A distinct color for active league */
   font-weight: bold;
 }
 
