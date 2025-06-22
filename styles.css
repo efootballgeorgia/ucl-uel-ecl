@@ -138,8 +138,8 @@ header h2 {
   border-radius: 8px;
   overflow: hidden;
   z-index: 1;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch; /* Improved Touch Targets for scrolling*/
+  overflow-x: auto; /* Enables horizontal scrolling for overflow content */
+  -webkit-overflow-scrolling: touch; /* Improved scrolling performance on iOS */
 }
 
 table {
@@ -155,6 +155,7 @@ thead th {
   padding: 12px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  white-space: nowrap; /* Prevents header text from wrapping by default */
 }
 
 thead th:hover {
@@ -178,6 +179,7 @@ tbody td {
   padding: 12px;
   text-align: center;
   transition: background-color 0.3s ease, transform 0.3s ease;
+  white-space: nowrap; /* Prevents cell content from wrapping by default */
 }
 
 tbody td img {
@@ -819,17 +821,25 @@ header img.league-logo {
   }
 
   .league-table {
-    width: 95%; /* Make table wider on mobile */
+    width: 90%; /* Increased width for better use of space on tablets */
   }
 
   table {
-    font-size: 8px; /* Smaller font size for table content */
+    font-size: 12px; /* Slightly increased font size for better readability on smaller tablets */
+  }
+
+  thead th {
+    padding: 7px; /* Reduced padding for header cells */
+  }
+
+  tbody td {
+    padding: 7px; /* Reduced padding for body cells */
   }
 
   tbody td img {
-    width: 30px; /* Smaller team logos in table */
-    height: 30px;
-    margin-right: 5px;
+    width: 25px; /* Smaller team logos in table */
+    height: 25px;
+    margin-right: 4px;
   }
 
   .match-form {
@@ -908,18 +918,28 @@ header img.league-logo {
   }
 
   .league-table {
-    width: 98%;
+    width: 98%; /* Almost full width for very small screens */
     margin: 10px auto;
   }
 
   table {
-    font-size: 9px;
+    font-size: 10px; /* Further reduced font size for very small screens, aiming for legibility */
+  }
+
+  thead th {
+    padding: 8px; /* Reduced padding */
+  }
+
+  tbody td {
+    padding: 8px; /* Reduced padding */
   }
 
   tbody td img {
-    width: 25px;
+    width: 25px; /* Even smaller team logos */
     height: 25px;
+    margin-right: 3px;
   }
+}
 
   .match-form {
     padding: 15px;
@@ -948,8 +968,3 @@ header img.league-logo {
   .player-info p {
     font-size: 12px;
   }
-}
-
-.match-form {
-  display: none !important;
-}
