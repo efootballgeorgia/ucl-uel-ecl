@@ -64,7 +64,14 @@ header h2 {
 
 /* Rest of your CSS remains the same */
 
-/* League Selector Navigation - Existing styles for consistency */
+/* League Selector Navigation */
+.league-selector-nav {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
 .league-selector-nav .league-btn {
   padding: 10px 8px;
   background: rgba(40, 40, 40, 0.8);
@@ -106,8 +113,12 @@ header h2 {
   font-size: 16px;
 }
 
+.nav-btn:hover {
+  background: rgba(70, 70, 70, 0.7);
+}
+
 .nav-btn.active {
-  background: #0056b3; /* Changed to match league-btn active background */
+  background: #4CAF50;
   font-weight: bold;
 }
 
