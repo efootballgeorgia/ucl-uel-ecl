@@ -114,7 +114,6 @@ header h2 {
 .nav-btn.active {
   background: #0056b3; /* Changed to match league-btn active background */
   font-weight: bold;
-  box-shadow: 0 0 15px rgba(0, 86, 179, 0.6); /* Added box-shadow for consistency */
 }
 
 .page-section {
@@ -901,7 +900,6 @@ header img.league-logo {
   margin: 0 2px;
   border-radius: 3px;
   }
-}
 
 .match-form {
   display: none !important;
