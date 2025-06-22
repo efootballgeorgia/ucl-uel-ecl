@@ -100,10 +100,10 @@ header h2 {
   background: rgba(40, 40, 40, 0.8); /* Changed to match league-btn background */
   color: white;
   border: none;
-  border-radius: 8px; /* Changed to match league-btn border-radius */
+  border-radius: 5px; /* Changed to match league-btn border-radius */
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 18px; /* Increased font size to match league-btn */
+  font-size: 16px; /* Increased font size to match league-btn */
   font-weight: bold; /* Added font-weight for consistency */
 }
 
@@ -894,9 +894,6 @@ header img.league-logo {
     max-width: 100%; /* Allow knockout bracket to take full width */
   }
 
-  .match-form {
-  display: none !important;
-}
   .form-box {
   display: inline-block;
   width: 10px;
@@ -906,3 +903,6 @@ header img.league-logo {
   }
 }
 
+.match-form {
+  display: none !important;
+}
