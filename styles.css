@@ -825,7 +825,7 @@ header img.league-logo {
   }
 
   table {
-    font-size: 12px; /* Slightly increased font size for better readability on smaller tablets */
+    font-size: 10px; /* Slightly increased font size for better readability on smaller tablets */
   }
 
   thead th {
@@ -837,8 +837,8 @@ header img.league-logo {
   }
 
   tbody td img {
-    width: 25px; /* Smaller team logos in table */
-    height: 25px;
+    width: 20px; /* Smaller team logos in table */
+    height: 20px;
     margin-right: 4px;
   }
 
@@ -899,72 +899,3 @@ header img.league-logo {
     max-width: 100%; /* Allow knockout bracket to take full width */
   }
 }
-
-/* Even smaller screens (e.g., old iPhones SE, very small Androids) */
-@media (max-width: 480px) {
-  header {
-    height: 150px;
-    padding-top: 30px; /* Adjust as needed for spacing above content */
-    padding-bottom: 50px; /* Adjust as needed for spacing below content */
-  }
-
-  header img.league-logo {
-    max-width: 80px;
-  }
-
-  .nav-btn {
-    padding: 8px 12px;
-    font-size: 12px;
-  }
-
-  .league-table {
-    width: 98%; /* Almost full width for very small screens */
-    margin: 10px auto;
-  }
-
-  table {
-    font-size: 10px; /* Further reduced font size for very small screens, aiming for legibility */
-  }
-
-  thead th {
-    padding: 8px; /* Reduced padding */
-  }
-
-  tbody td {
-    padding: 8px; /* Reduced padding */
-  }
-
-  tbody td img {
-    width: 25px; /* Even smaller team logos */
-    height: 25px;
-    margin-right: 3px;
-  }
-}
-
-  .match-form {
-    padding: 15px;
-  }
-
-  .form-group select,
-  .form-group input,
-  button[type="submit"] {
-    min-height: 35px;
-    font-size: 12px;
-  }
-
-  .screen-gallery {
-    grid-template-columns: repeat(4, 1fr); /* Further adjust grid for tiny screens */
-    max-height: 250px;
-  }
-
-  .screen-gallery img {
-    height: 20px;
-  }
-
-  .player-info h4 {
-    font-size: 18px;
-  }
-
-  .player-info p {
-    font-size: 12px;
-  }
