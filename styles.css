@@ -1,28 +1,32 @@
 /* General Styles */
+/* These styles apply to the entire body of the HTML document, setting base aesthetics. */
 body {
-  font-family: Arial, sans-serif;
-  background: #1a1a40;
-  color: #fff;
-  text-align: center;
-  margin: 0;
-  padding-bottom: 40px;
-  position: relative;
-  box-sizing: border-box; /* Add this for consistent box model */
+  font-family: Arial, sans-serif; /* Sets the default font for the page */
+  background: #1a1a40; /* Dark blue background color */
+  color: #fff; /* White text color for readability against dark background */
+  text-align: center; /* Centers all inline content within the body */
+  margin: 0; /* Removes default body margin */
+  padding-bottom: 40px; /* Adds space at the bottom of the page */
+  position: relative; /* Allows for absolute positioning of child elements */
+  box-sizing: border-box; /* Ensures padding and border are included in the element's total width and height */
 }
 
+/* Background Video Styles */
+/* Styles for the looping background video that covers the entire viewport. */
 #bg-video {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: -1;
+  position: absolute; /* Positions the video relative to its nearest positioned ancestor (body) */
+  top: 0; /* Aligns the video to the top of the viewport */
+  left: 0; /* Aligns the video to the left of the viewport */
+  width: 100%; /* Makes the video span the full width of the viewport */
+  height: 100%; /* Makes the video span the full height of the viewport */
+  object-fit: cover; /* Ensures the video covers the entire area without distortion, cropping as needed */
+  z-index: -1; /* Places the video behind all other content */
 }
 
 /* Header Styles */
+/* Defines the appearance and positioning of the page header, including navigation and logo. */
 header {
-  position: relative; /* Changed from relative to sticky */
+  position: relative; /* Changed from relative to sticky to keep it visible while scrolling. */
   top: 0; /* Sticks to the top of the viewport */
   width: 100%; /* Ensures it spans the full width */
   z-index: 1000; /* Higher z-index to ensure it stays on top of other content when sticky */
@@ -30,644 +34,790 @@ header {
   padding-bottom: 20px; /* Adjust as needed for spacing below content */
 }
 
+/* Header Content Alignment */
+/* Uses flexbox to arrange elements within the header, typically centering them. */
 header .header-content {
-  display: flex; /* Use flexbox for better alignment of children */
-  flex-direction: column; /* Stack children vertically */
-  align-items: center; /* Center horizontally */
-  justify-content: center; /* Center vertically */
-  width: 100%;
+  display: flex; /* Enables flexbox layout for children */
+  flex-direction: column; /* Stacks children vertically */
+  align-items: center; /* Centers items horizontally within the flex container */
+  justify-content: center; /* Centers items vertically within the flex container */
+  width: 100%; /* Ensures the content spans the full width of the header */
 }
 
+/* League Logo Styles */
+/* Styles for the league logos displayed in the header. */
 header img.league-logo {
-  max-width: 200px;
-  height: auto;
-  margin-top: 0; /* Remove top margin as padding on header now handles spacing */
-  z-index: 1;
-  position: relative;
-  display: none; /* Hide all by default */
+  max-width: 200px; /* Sets a maximum width for the logo */
+  height: auto; /* Maintains the aspect ratio of the logo */
+  margin-top: 0; /* Removes top margin as padding on header now handles spacing */
+  z-index: 1; /* Ensures the logo is above the background video */
+  position: relative; /* Allows for z-index to take effect */
+  display: none; /* Hides all logos by default */
 }
 
+/* Active League Logo */
+/* Displays the currently active league logo. */
 header img.league-logo.active {
-  display: block; /* Show active logo */
-  margin-left: auto;
-  margin-right: auto;
+  display: block; /* Shows the logo when it's active */
+  margin-left: auto; /* Centers the logo horizontally */
+  margin-right: auto; /* Centers the logo horizontally */
 }
 
+/* Header Title Styles */
+/* Styles for the main title or heading within the header. */
 header h2 {
-  font-size: 1.5em;
-  margin: 10px 0;
-  z-index: 1;
-  position: relative;
-  color: #fff;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+  font-size: 1.5em; /* Sets the font size relative to the parent font size */
+  margin: 10px 0; /* Adds vertical margin above and below the heading */
+  z-index: 1; /* Ensures the heading is above the background video */
+  position: relative; /* Allows for z-index to take effect */
+  color: #fff; /* White text color */
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7); /* Adds a subtle shadow for better readability */
 }
-
-/* Rest of your CSS remains the same */
 
 /* League Selector Navigation */
+/* Styles for the navigation buttons used to switch between different leagues. */
 .league-selector-nav {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-bottom: 20px;
+  display: flex; /* Arranges buttons horizontally using flexbox */
+  justify-content: center; /* Centers the buttons horizontally */
+  gap: 15px; /* Adds space between the buttons */
+  margin-bottom: 20px; /* Adds space below the navigation */
 }
 
+/* League Button Styles */
+/* Basic styling for individual league selection buttons. */
 .league-selector-nav .league-btn {
-  padding: 10px 8px;
-  background: rgba(40, 40, 40, 0.8);
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 18px;
-  font-weight: bold;
+  padding: 10px 8px; /* Adds padding inside the button */
+  background: rgba(40, 40, 40, 0.8); /* Dark background with transparency */
+  color: white; /* White text color */
+  border: none; /* Removes default button border */
+  border-radius: 8px; /* Rounds the corners of the button */
+  cursor: pointer; /* Changes cursor to a pointer on hover */
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+  font-size: 18px; /* Sets font size */
+  font-weight: bold; /* Makes text bold */
 }
 
+/* League Button Hover Effect */
+/* Changes background on hover for interactive feedback. */
 .league-selector-nav .league-btn:hover {
-  background: rgba(60, 60, 60, 0.8);
+  background: rgba(60, 60, 60, 0.8); /* Slightly lighter background on hover */
 }
 
+/* Active League Button */
+/* Styles for the currently selected league button. */
 .league-selector-nav .league-btn.active {
-  background: #0056b3; /* A distinct color for active league */
-  box-shadow: 0 0 15px rgba(0, 86, 179, 0.6);
+  background: #0056b3; /* A distinct blue color for the active button */
+  box-shadow: 0 0 15px rgba(0, 86, 179, 0.6); /* Adds a glow effect */
 }
 
 /* Main Navigation Styles */
+/* Styles for the primary navigation buttons that switch between different content sections (e.g., table, match day). */
 .main-nav {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin: 1px 0;
-  flex-wrap: wrap;
+  display: flex; /* Arranges buttons horizontally using flexbox */
+  justify-content: center; /* Centers the buttons horizontally */
+  gap: 10px; /* Adds space between the buttons */
+  margin: 1px 0; /* Adds small vertical margin */
+  flex-wrap: wrap; /* Allows buttons to wrap to the next line if space is limited */
 }
 
+/* Navigation Button Styles */
+/* Basic styling for main navigation buttons. */
 .nav-btn {
-  padding: 15px 30px;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 18px;
-  font-weight: bold;
+  padding: 15px 30px; /* Adds padding inside the button */
+  background: rgba(0, 0, 0, 0.7); /* Dark background with transparency */
+  color: white; /* White text color */
+  border: none; /* Removes default button border */
+  border-radius: 5px; /* Rounds the corners */
+  cursor: pointer; /* Changes cursor to a pointer */
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+  font-size: 18px; /* Sets font size */
+  font-weight: bold; /* Makes text bold */
 }
 
+/* Navigation Button Hover Effect */
+/* Changes background on hover for interactive feedback. */
 .nav-btn:hover {
-  background: rgba(60, 60, 60, 0.8);
+  background: rgba(60, 60, 60, 0.8); /* Slightly lighter background on hover */
 }
 
+/* Active Navigation Button */
+/* Styles for the currently active main navigation button. */
 .nav-btn.active {
-  background: #0056b3; /* A distinct color for active league */
-  font-weight: bold;
+  background: #0056b3; /* A distinct blue color for the active button */
+  font-weight: bold; /* Ensures bold text */
 }
 
+/* Page Section Display */
+/* Manages the visibility of different content sections. */
 .page-section {
-  display: none;
-  animation: fadeIn 0.5s ease-out;
+  display: none; /* Hides sections by default */
+  animation: fadeIn 0.5s ease-out; /* Applies a fade-in animation when displayed */
 }
 
+/* Active Page Section */
+/* Displays the currently active content section. */
 .page-section.active {
-  display: block;
+  display: block; /* Shows the section when it's active */
 }
 
 /* League Table Styles */
+/* Overall container for the league table, managing its width and centering. */
 .league-table {
-  width: 70%;
-  margin: 20px auto;
-  border-radius: 8px;
-  overflow: hidden;
-  z-index: 1;
-  overflow-x: auto; /* Enables horizontal scrolling for overflow content */
-  -webkit-overflow-scrolling: touch; /* Improved scrolling performance on iOS */
+  width: 70%; /* Sets the width of the table container */
+  margin: 20px auto; /* Centers the table horizontally and adds vertical margin */
+  border-radius: 8px; /* Rounds the corners of the table container */
+  overflow: hidden; /* Hides content that overflows the container's rounded corners */
+  z-index: 1; /* Ensures the table is above the background video */
+  overflow-x: auto; /* Enables horizontal scrolling if table content overflows */
+  -webkit-overflow-scrolling: touch; /* Improves scrolling performance on iOS devices */
 }
 
+/* Table Element Styles */
+/* Basic styles for the HTML table element. */
 table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 16px;
-  font-family: "Lucida Console"
+  width: 100%; /* Makes the table span the full width of its container */
+  border-collapse: collapse; /* Collapses cell borders into a single border */
+  font-size: 16px; /* Sets default font size for table content */
+  font-family: "Lucida Console"; /* Sets a monospace font for table content */
 }
 
+/* Table Header Styles */
+/* Styles for the table header cells (<th>). */
 thead th {
-  background-color: #222;
-  color: rgb(149, 131, 131);
-  padding: 12px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  white-space: nowrap; /* Prevents header text from wrapping by default */
+  background-color: #222; /* Dark background color for header cells */
+  color: rgb(149, 131, 131); /* Grey text color */
+  padding: 12px; /* Adds padding inside header cells */
+  cursor: pointer; /* Indicates that header cells are clickable for sorting */
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+  white-space: nowrap; /* Prevents header text from wrapping */
 }
 
+/* Table Header Hover Effect */
+/* Changes background on hover for sortable table headers. */
 thead th:hover {
-  background-color: #333;
+  background-color: #333; /* Slightly lighter background on hover */
 }
 
+/* Sort Ascending Indicator */
+/* Adds an upward triangle icon for ascending sort order. */
 th[data-sort="asc"]::after {
-  content: " ▲";
-  font-size: 12px;
-  color: #4CAF50;
+  content: " ▲"; /* Unicode character for an upward triangle */
+  font-size: 12px; /* Smaller font size for the icon */
+  color: #4CAF50; /* Green color for ascending sort */
 }
 
+/* Sort Descending Indicator */
+/* Adds a downward triangle icon for descending sort order. */
 th[data-sort="desc"]::after {
-  content: " ▼";
-  font-size: 12px;
-  color: #F44336;
+  content: " ▼"; /* Unicode character for a downward triangle */
+  font-size: 12px; /* Smaller font size for the icon */
+  color: #F44336; /* Red color for descending sort */
 }
 
+/* Table Body Cell Styles */
+/* Styles for the regular table data cells (<td>). */
 tbody td {
-  background-color: #292929;
-  padding: 12px;
-  text-align: center;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-  white-space: nowrap; /* Prevents cell content from wrapping by default */
+  background-color: #292929; /* Dark background color for table cells */
+  padding: 12px; /* Adds padding inside table cells */
+  text-align: center; /* Centers text within cells */
+  transition: background-color 0.3s ease, transform 0.3s ease; /* Smooth transitions for hover effects */
+  white-space: nowrap; /* Prevents cell content from wrapping */
 }
 
+/* Table Team Logo Styles */
+/* Styles for team logos displayed within table cells. */
 tbody td img {
-  height: 40px;
-  vertical-align: middle;
-  margin-right: 10px;
-  cursor: pointer;
+  height: 40px; /* Sets fixed height for logos */
+  vertical-align: middle; /* Aligns logos vertically with text */
+  margin-right: 10px; /* Adds space to the right of the logo */
+  cursor: pointer; /* Indicates logos are clickable */
 }
 
+/* Even Row Background */
+/* Alternates background color for even rows for better readability. */
 tbody tr:nth-child(even) td {
-  background-color: #333;
+  background-color: #333; /* Slightly different dark background for even rows */
 }
 
+/* Table Row Hover Effect */
+/* Changes background and scales up row on hover for interactive feedback. */
 tbody tr:hover {
-  background-color: #444;
-  transform: scale(1.02);
+  background-color: #444; /* Lighter background on row hover */
+  transform: scale(1.02); /* Slightly scales up the row on hover */
 }
 
 /* Form Box Styles */
+/* Small colored boxes indicating team form (win, loss, draw). */
 .form-box {
-  display: inline-block;
-  width: 15px;
-  height: 15px;
-  margin: 0 2px;
-  border-radius: 3px;
+  display: inline-block; /* Allows boxes to be side-by-side with text */
+  width: 15px; /* Sets width of the box */
+  height: 15px; /* Sets height of the box */
+  margin: 0 2px; /* Adds small horizontal margin between boxes */
+  border-radius: 3px; /* Slightly rounds the corners of the boxes */
 }
 
+/* Victory Form Box */
 .form-box.victory {
-  background-color: green;
+  background-color: green; /* Green for wins */
 }
 
+/* Loss Form Box */
 .form-box.loss {
-  background-color: red;
+  background-color: red; /* Red for losses */
 }
 
+/* Draw Form Box */
 .form-box.draw {
-  background-color: gray;
+  background-color: gray; /* Gray for draws */
 }
 
-/* Separator Styles */
+/* Separator Styles in Table */
+/* Special rows used to visually separate sections within the table (e.g., different stages). */
 .separator td {
-  background-color: #1a1a40 !important;
-  padding: 0 !important;
-  height: 25px;
-  position: relative;
+  background-color: #1a1a40 !important; /* Forces dark background to hide other table cell styles */
+  padding: 0 !important; /* Removes padding */
+  height: 25px; /* Sets height for the separator row */
+  position: relative; /* Allows for absolute positioning of child elements (line, label) */
 }
 
+/* Separator Line Styles */
+/* Horizontal line within the separator row. */
 .separator .line {
-  display: block;
-  height: 2px;
-  margin: 0 10px;
+  display: block; /* Makes the line a block-level element */
+  height: 2px; /* Sets the thickness of the line */
+  margin: 0 10px; /* Adds horizontal margin to the line */
 }
 
+/* UCL Round 16 Separator Line */
 .round16 .line {
-  background-color: #0de41c;
+  background-color: #0de41c; /* Green color for UCL Round 16 */
 }
 
+/* Knockout Seeded Separator Line */
 .knockout-seeded .line {
-  background-color: #157736;
+  background-color: #157736; /* Darker green for seeded knockout teams */
 }
 
+/* Knockout Unseeded Separator Line */
 .knockout-unseeded .line {
-  background-color: #d72811;
+  background-color: #d72811; /* Red color for unseeded knockout teams */
 }
 
-.uel-round16 .line { /* New style for UEL separator */
-  background-color: #FFD700; /* Gold color for UEL */
+/* UEL Round 16 Separator Line */
+.uel-round16 .line {
+  background-color: #FFD700; /* Gold color for UEL Round 16 */
 }
 
-.ecl-round16 .line { /* New style for ECL separator */
-  background-color: #FFA500; /* Orange color for ECL */
+/* ECL Round 16 Separator Line */
+.ecl-round16 .line {
+  background-color: #FFA500; /* Orange color for ECL Round 16 */
 }
 
-
+/* Separator Label Styles */
+/* Text label positioned within the separator row. */
 .separator .label {
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 12px;
-  font-weight: bold;
+  position: absolute; /* Positions the label absolutely within the separator row */
+  right: 20px; /* Aligns the label to the right */
+  top: 50%; /* Vertically centers the label */
+  transform: translateY(-50%); /* Adjusts vertical centering precisely */
+  font-size: 12px; /* Sets font size */
+  font-weight: bold; /* Makes text bold */
 }
 
+/* Next Round Label */
 .next-round .label {
-  color: #4CAF50;
+  color: #4CAF50; /* Green color for "Next Round" label */
 }
 
+/* Relegation Label */
 .relegation .label {
-  color: #F44336;
+  color: #F44336; /* Red color for "Relegation" label */
 }
 
 /* Modal Styles */
+/* Overlay and content for a modal pop-up, used for displaying larger images. */
 .modal {
-  display: none;
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-  justify-content: center;
-  align-items: center;
-  transition: opacity 0.5s ease-in-out;
-  opacity: 0;
+  display: none; /* Hides the modal by default */
+  position: fixed; /* Fixes the modal to the viewport */
+  z-index: 1; /* Places the modal on top */
+  left: 0; /* Aligns to the left */
+  top: 0; /* Aligns to the top */
+  width: 100%; /* Spans full width */
+  height: 100%; /* Spans full height */
+  background-color: rgba(0, 0, 0, 0.8); /* Dark, transparent background overlay */
+  justify-content: center; /* Centers content horizontally using flexbox */
+  align-items: center; /* Centers content vertically using flexbox */
+  transition: opacity 0.5s ease-in-out; /* Smooth transition for opacity change */
+  opacity: 0; /* Initially fully transparent */
 }
 
+/* Show Modal State */
+/* Displays the modal with a fade-in effect. */
 .modal.show {
-  display: flex;
-  opacity: 1;
+  display: flex; /* Shows the modal using flexbox */
+  opacity: 1; /* Makes the modal fully opaque */
 }
 
+/* Modal Content (Image) Styles */
+/* Styles for the image displayed within the modal. */
 .modal-content {
-  max-width: 95%;
-  max-height: 95%;
-  object-fit: contain;
-  cursor: pointer;
+  max-width: 95%; /* Sets maximum width for the image */
+  max-height: 95%; /* Sets maximum height for the image */
+  object-fit: contain; /* Ensures the image fits within the bounds without cropping */
+  cursor: pointer; /* Changes cursor to a pointer, indicating it's clickable (to close) */
 }
 
+/* Close Button Styles */
+/* Styles for the "X" button to close the modal. */
 .close {
-  position: absolute;
-  top: 20px;
-  right: 35px;
-  color: #fff;
-  font-size: 40px;
-  font-weight: bold;
-  cursor: pointer;
+  position: absolute; /* Positions the button absolutely within the modal */
+  top: 20px; /* Positions 20px from the top */
+  right: 35px; /* Positions 35px from the right */
+  color: #fff; /* White color */
+  font-size: 40px; /* Large font size */
+  font-weight: bold; /* Bold text */
+  cursor: pointer; /* Changes cursor to a pointer */
 }
 
+/* Close Button Hover/Focus */
+/* Changes color on hover/focus for interactive feedback. */
 .close:hover,
 .close:focus {
-  color: #bbb;
-  text-decoration: none;
-  cursor: pointer;
+  color: #bbb; /* Lighter grey on hover/focus */
+  text-decoration: none; /* Removes underline */
+  cursor: pointer; /* Ensures pointer cursor */
 }
 
 /* Loading Spinner */
+/* Styles for a full-screen loading overlay with a spinner. */
 #loading {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.8);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  font-size: 2em;
-  z-index: 9999;
+  position: fixed; /* Fixes the loading screen to the viewport */
+  top: 0; /* Aligns to the top */
+  left: 0; /* Aligns to the left */
+  width: 100%; /* Spans full width */
+  height: 100%; /* Spans full height */
+  background: rgba(0, 0, 0, 0.8); /* Dark, transparent background */
+  display: flex; /* Uses flexbox to center content */
+  justify-content: center; /* Centers content horizontally */
+  align-items: center; /* Centers content vertically */
+  color: white; /* White text color */
+  font-size: 2em; /* Sets font size */
+  z-index: 9999; /* Ensures it's on top of everything else */
 }
 
+/* Loading Spinner Animation */
+/* Styles and animation for the spinning circle. */
 .loading-spinner {
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top: 4px solid #ffcc00;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-  margin: 20px auto;
+  border: 4px solid rgba(255, 255, 255, 0.3); /* Transparent white border */
+  border-top: 4px solid #ffcc00; /* Yellow top border (creates the spinning effect) */
+  border-radius: 50%; /* Makes it a perfect circle */
+  width: 40px; /* Sets width */
+  height: 40px; /* Sets height */
+  animation: spin 1s linear infinite; /* Applies the spin animation */
+  margin: 20px auto; /* Adds vertical margin and centers horizontally */
 }
 
+/* Spin Keyframe Animation */
+/* Defines the rotation animation for the spinner. */
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% { transform: rotate(0deg); } /* Starts at 0 degrees rotation */
+  100% { transform: rotate(360deg); } /* Ends at 360 degrees rotation */
 }
 
+/* Team Logo Hover Spin */
+/* Applies a spin animation to team logos on hover. */
 .team-logo:hover {
-  animation: spin 1s linear infinite;
+  animation: spin 1s linear infinite; /* Applies the spin animation */
 }
 
+/* Team Logo Hover Bounce */
+/* Applies a bounce animation to team logos on hover. */
 .team-logo.bounce:hover {
-  animation: bounce 0.5s ease infinite;
+  animation: bounce 0.5s ease infinite; /* Applies the bounce animation */
 }
 
+/* Bounce Keyframe Animation */
+/* Defines the vertical bounce animation. */
 @keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%, 100% { transform: translateY(0); } /* Starts and ends at original position */
+  50% { transform: translateY(-10px); } /* Bounces up 10px in the middle */
 }
 
+/* Strength Image */
+/* Specific dimensions for images representing "strength". */
 .strength {
-  width: 170px !important;
-  height: 66px !important;
+  width: 170px !important; /* Sets fixed width, overrides other width rules */
+  height: 66px !important; /* Sets fixed height, overrides other height rules */
 }
 
 /* Match Form Styles */
+/* Container for the match input form. */
 .match-form {
-  background: rgba(0, 0, 0, 0.7);
-  padding: 20px;
-  border-radius: 10px;
-  margin: 20px auto;
-  width: 600px;
-  z-index: 1;
-  position: relative;
+  display: none !important; /* Hidden by default and overrides any other display rule */
+  background: rgba(0, 0, 0, 0.7); /* Dark, transparent background */
+  padding: 20px; /* Adds padding inside the form container */
+  border-radius: 10px; /* Rounds the corners */
+  margin: 20px auto; /* Centers horizontally and adds vertical margin */
+  width: 600px; /* Sets a fixed width for the form */
+  z-index: 1; /* Ensures the form is above the background video */
+  position: relative; /* Allows for z-index to take effect */
 }
 
+/* Match Form Heading */
 .match-form h2 {
-  margin-bottom: 15px;
+  margin-bottom: 15px; /* Adds space below the form heading */
 }
 
-#uclMatchForm, #uelMatchForm, #eclMatchForm { /* Apply styles to all forms */
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+/* Match Forms Container */
+/* Styles applied to all match forms (UCL, UEL, ECL). */
+#uclMatchForm, #uelMatchForm, #eclMatchForm {
+  display: flex; /* Uses flexbox to arrange form elements */
+  flex-direction: column; /* Stacks form elements vertically */
+  gap: 10px; /* Adds space between form elements */
 }
 
+/* Form Group Styles */
+/* Styles for groups of form elements (e.g., a select box and an input). */
 .form-group {
-  display: flex;
-  gap: 10px;
-  align-items: center;
+  display: flex; /* Uses flexbox to arrange elements within the group */
+  gap: 10px; /* Adds space between elements in the group */
+  align-items: center; /* Vertically aligns items in the group */
 }
 
+/* Form Select and Input Styles */
+/* Styling for dropdowns and text input fields within the form. */
 .form-group select, .form-group input {
-  flex: 1;
-  padding: 8px;
-  border-radius: 5px;
-  border: 1px solid #444;
-  background: #333;
-  color: white;
-  min-height: 40px;
+  flex: 1; /* Allows elements to grow and shrink to fill available space */
+  padding: 8px; /* Adds padding inside the input/select */
+  border-radius: 5px; /* Rounds the corners */
+  border: 1px solid #444; /* Dark border */
+  background: #333; /* Dark background */
+  color: white; /* White text color */
+  min-height: 40px; /* Ensures a minimum height for touch targets */
 }
 
+/* Submit Button Styles */
+/* Styling for the form submission button. */
 button[type="submit"] {
-  background: #4CAF50;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s;
-  min-height: 40px;
+  background: #4CAF50; /* Green background color */
+  color: white; /* White text color */
+  padding: 10px 20px; /* Adds padding inside the button */
+  border: none; /* Removes default border */
+  border-radius: 5px; /* Rounds the corners */
+  cursor: pointer; /* Changes cursor to a pointer */
+  transition: background 0.3s; /* Smooth transition for background color on hover */
+  min-height: 40px; /* Ensures a minimum height for touch targets */
 }
 
+/* Submit Button Hover Effect */
+/* Changes background on hover for interactive feedback. */
 button[type="submit"]:hover {
-  background: #45a049;
+  background: #45a049; /* Slightly darker green on hover */
 }
 
 /* Team Highlights Section */
+/* Container for sections displaying team highlights (e.g., win images). */
 .win-images {
-  margin: 40px auto;
-  text-align: center;
-  color: #fff;
-  z-index: 1;
+  margin: 40px auto; /* Adds vertical margin and centers horizontally */
+  text-align: center; /* Centers text within the section */
+  color: #fff; /* White text color */
+  z-index: 1; /* Ensures content is above background video */
 }
 
+/* Win Gallery */
+/* Container for a collection of win images, arranged with flexbox. */
 .win-gallery {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
+  display: flex; /* Uses flexbox for arranging images */
+  flex-wrap: wrap; /* Allows images to wrap to the next line */
+  justify-content: center; /* Centers images horizontally */
+  gap: 20px; /* Adds space between images */
 }
 
+/* Individual Win Card */
+/* Styles for each individual card within the win gallery. */
 .wins {
-  background: #292929;
-  border-radius: 10px;
-  padding: 20px;
-  flex: 1 1 300px;
-  max-width: 320px;
-  text-align: center;
-  box-sizing: border-box;
-  position: relative;
-  animation: fadeIn 0.5s ease-out;
+  background: #292929; /* Dark background */
+  border-radius: 10px; /* Rounds the corners */
+  padding: 20px; /* Adds padding inside the card */
+  flex: 1 1 300px; /* Allows cards to grow/shrink, with a base width of 300px */
+  max-width: 320px; /* Sets maximum width for the card */
+  text-align: center; /* Centers text within the card */
+  box-sizing: border-box; /* Ensures padding and border are included in width/height */
+  position: relative; /* Allows for relative positioning of child elements */
+  animation: fadeIn 0.5s ease-out; /* Applies a fade-in animation */
 }
 
+/* Fade-In Animation */
+/* Defines the fade-in and slide-up animation. */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(20px); } /* Starts invisible and slightly below position */
+  to { opacity: 1; transform: translateY(0); } /* Ends fully visible at original position */
 }
 
+/* Screen Gallery */
+/* Grid layout for displaying screenshots or smaller images. */
 .screen-gallery {
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  gap: 10px;
-  max-height: 400px;
-  overflow-y: auto;
-  scrollbar-width: 70px;
-  scrollbar-color: #0307c9 #1a1a40;
+  display: grid; /* Uses CSS Grid for layout */
+  grid-template-columns: repeat(10, 1fr); /* Creates 10 equal-width columns */
+  gap: 10px; /* Adds space between grid items */
+  max-height: 400px; /* Sets maximum height for the gallery */
+  overflow-y: auto; /* Enables vertical scrolling if content overflows */
+  scrollbar-width: 70px; /* Sets width of the scrollbar (Firefox specific) */
+  scrollbar-color: #0307c9 #1a1a40; /* Sets scrollbar thumb and track color (Firefox specific) */
 }
 
+/* Screen Gallery Image Styles */
+/* Styles for individual images within the screen gallery. */
 .screen-gallery img {
-  height: 35px;
-  width: 80.5px;
-  border-radius: 5px;
-  border: 2px solid #000000;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-  object-fit: cover;
-  cursor: pointer;
+  height: 35px; /* Sets fixed height for images */
+  width: 80.5px; /* Sets fixed width for images */
+  border-radius: 5px; /* Rounds the corners */
+  border: 2px solid #000000; /* Black border */
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; /* Smooth transitions for hover effects */
+  object-fit: cover; /* Ensures image covers the area, cropping if necessary */
+  cursor: pointer; /* Changes cursor to a pointer */
 }
 
+/* Screen Gallery Image Hover Effect */
+/* Scales up, adds shadow, and changes border color on hover. */
 .screen-gallery img:hover {
-  transform: scale(1.01);
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
-  border-color: #ffcc00;
+  transform: scale(1.01); /* Slightly scales up the image */
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6); /* Adds a white glow effect */
+  border-color: #ffcc00; /* Changes border color to yellow */
 }
-
 
 /* Player Icons */
-
+/* Container for player icons positioned over a formation screenshot. */
 .formation-screenshot {
-  position: relative;
-  margin: 10px 0;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  overflow-x: auto;
+  position: relative; /* Allows absolute positioning of child elements (player icons) */
+  margin: 10px 0; /* Adds vertical margin */
+  border-radius: 8px; /* Rounds the corners */
+  overflow: hidden; /* Hides overflowing content within rounded corners */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Adds a subtle shadow */
+  overflow-x: auto; /* Enables horizontal scrolling if content overflows */
 }
 
+/* Formation Screenshot Image */
+/* Styles for the background image of the formation. */
 .formation-screenshot img {
-  width: 100%;
-  display: block;
-  pointer-events: none; /* Prevent image from being interactive */
+  width: 100%; /* Spans full width of its container */
+  display: block; /* Removes extra space below the image */
+  pointer-events: none; /* Prevents the image itself from being interactive */
 }
 
+/* Player Icon Styles */
+/* Styles for individual player icons. */
 .player-icon {
-  position: absolute;
-  width: 50px;
-  height: 50px;
-  border: 2px;
-  border-radius: 50%;
-  cursor: pointer;
-  transform: translate(-50%, -50%);
-  transition: all 0.3s ease;
-  z-index: 2;
-  overflow: hidden;
+  position: absolute; /* Positions the icon absolutely within the formation screenshot */
+  width: 50px; /* Sets width */
+  height: 50px; /* Sets height */
+  border: 2px; /* Placeholder for border, actual border defined on hover */
+  border-radius: 50%; /* Makes it a perfect circle */
+  cursor: pointer; /* Changes cursor to a pointer */
+  transform: translate(-50%, -50%); /* Centers the icon precisely based on its own dimensions */
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+  z-index: 2; /* Ensures icons are above the formation background */
+  overflow: hidden; /* Hides overflowing content within the circular icon */
 }
 
+/* Player Icon Image */
+/* Styles for the image inside the player icon (e.g., player's face). */
 .player-icon img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 100%; /* Makes image span full width of icon */
+  height: 100%; /* Makes image span full height of icon */
+  object-fit: cover; /* Ensures image covers the icon area, cropping if necessary */
 }
 
+/* Player Icon Hover Effect */
+/* Scales up and adds a glow effect on hover. */
 .player-icon:hover {
-  transform: translate(-50%, -50%) scale(1.2);
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+  transform: translate(-50%, -50%) scale(1.2); /* Scales up the icon */
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.7); /* Adds a gold glow effect */
 }
 
+/* Player Details Container */
+/* Overlay for displaying detailed player information. */
 .player-details-container {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.9);
-  z-index: 100;
-  justify-content: center;
-  align-items: center;
+  display: none; /* Hidden by default */
+  position: fixed; /* Fixes the modal to the viewport */
+  top: 0; /* Aligns to top */
+  left: 0; /* Aligns to left */
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  background: rgba(0, 0, 0, 0.9); /* Very dark, transparent background */
+  z-index: 100; /* High z-index to be on top */
+  justify-content: center; /* Centers content horizontally */
+  align-items: center; /* Centers content vertically */
 }
 
+/* Active Player Details Container */
+/* Displays the player details container. */
 .player-details-container.active {
-  display: flex;
+  display: flex; /* Shows the container with flexbox */
 }
 
+/* Player Details Card */
+/* Container for the player's photo and information. */
 .player-details {
-  display: flex;
-  max-width: 800px;
-  background: #292929;
-  border-radius: 10px;
-  overflow: hidden;
+  display: flex; /* Uses flexbox to arrange photo and info side-by-side */
+  max-width: 800px; /* Sets maximum width */
+  background: #292929; /* Dark background */
+  border-radius: 10px; /* Rounds the corners */
+  overflow: hidden; /* Hides overflowing content */
 }
 
+/* Player Photo */
+/* Styles for the player's photo within the details card. */
 .player-photo {
-  pointer-events: auto; /* Allow interaction with the image */
-  cursor: zoom-in;
+  pointer-events: auto; /* Allows interaction (e.g., zooming) with the image */
+  cursor: zoom-in; /* Changes cursor to zoom-in */
 }
 
+/* Player Information Section */
+/* Styles for the textual information about the player. */
 .player-info {
-  padding: 20px;
-  width: 300px;
+  padding: 20px; /* Adds padding inside the info section */
+  width: 300px; /* Sets a fixed width for the info section */
 }
 
+/* Player Name/Heading */
 .player-info h4 {
-  font-size: 24px;
-  margin-bottom: 15px;
-  color: gold;
+  font-size: 24px; /* Sets font size */
+  margin-bottom: 15px; /* Adds space below the heading */
+  color: gold; /* Gold text color */
 }
 
+/* Player Info Paragraphs */
 .player-info p {
-  margin: 10px 0;
-  font-size: 16px;
+  margin: 10px 0; /* Adds vertical margin to paragraphs */
+  font-size: 16px; /* Sets font size */
 }
 
+/* Close Player Details Button */
+/* Button to close the player details modal. */
 .close-details {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  color: white;
-  font-size: 30px;
-  cursor: pointer;
+  position: absolute; /* Positions the button absolutely */
+  top: 20px; /* 20px from top */
+  right: 20px; /* 20px from right */
+  color: white; /* White color */
+  font-size: 30px; /* Large font size */
+  cursor: pointer; /* Changes cursor to a pointer */
 }
 
+/* Team Squad Section */
+/* Container for team squad information. */
 .team-squad {
-  background: rgba(41, 41, 41, 0.8);
-  border-radius: 10px;
-  padding: 20px;
-  margin: 20px auto;
-  max-width: 900px;
+  background: rgba(41, 41, 41, 0.8); /* Dark, transparent background */
+  border-radius: 10px; /* Rounds the corners */
+  padding: 20px; /* Adds padding */
+  margin: 20px auto; /* Centers horizontally and adds vertical margin */
+  max-width: 900px; /* Sets maximum width */
 }
 
+/* Image Gallery (for squad/highlights) */
+/* Container for a dynamic image gallery, often initially hidden. */
 .image-gallery {
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
-  transform: translateY(-20px);
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  max-height: 0; /* Initially hidden by setting max-height to 0 */
+  opacity: 0; /* Initially transparent */
+  overflow: hidden; /* Hides overflowing content */
+  transform: translateY(-20px); /* Initially slightly moved up */
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth transition for show/hide animation */
   padding: 0 15px; /* Add some padding if needed */
 }
 
+/* Show Image Gallery State */
+/* Displays the image gallery with a smooth animation. */
 .image-gallery.show {
-  max-height: 1500px; /* Adjust based on your content height */
-  opacity: 1;
-  transform: translateY(0);
+  max-height: 1500px; /* Expands to show content (adjust based on actual content height) */
+  opacity: 1; /* Becomes fully opaque */
+  transform: translateY(0); /* Moves to original position */
   padding: 15px; /* Match the padding when open */
 }
 
+/* Images within Image Gallery */
+/* Styles for individual images inside the gallery. */
 .image-gallery img {
-  border-radius: 5px;
-  border: 2px solid #000000;
-  object-fit: cover;
+  border-radius: 5px; /* Rounds the corners */
+  border: 2px solid #000000; /* Black border */
+  object-fit: cover; /* Ensures image covers the area */
 }
 
-
 /* Improved Touch Targets */
+/* Ensures form elements are large enough for easy tapping on touch devices. */
 .form-group select,
 .form-group input,
 button[type="submit"] {
-  min-height: 48px;
-  font-size: 16px;
+  min-height: 48px; /* Minimum height for better touchability */
+  font-size: 16px; /* Ensures readable font size */
 }
 
 /* Stack form elements vertically on mobile */
+/* Changes flex direction for form groups on smaller screens. */
 .form-group {
-  flex-direction: column;
-  gap: 8px;
+  flex-direction: column; /* Stacks items vertically */
+  gap: 8px; /* Adds space between stacked items */
 }
 
 /* Better table scrolling */
+/* Enhances horizontal scrolling for tables. */
 .league-table {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+  overflow-x: auto; /* Enables horizontal scrolling */
+  -webkit-overflow-scrolling: touch; /* Improves scrolling performance on iOS */
 }
 
 /* Position fixes for mobile */
+/* Adjustments for header height on mobile. */
 header {
-  height: 200px;
+  height: 200px; /* Sets a fixed height for the header */
 }
 
 header img.league-logo {
-  max-width: 120px;
+  max-width: 120px; /* Reduces logo size on mobile */
 }
 
 /* Knockout Stage Styles */
+/* Overall container for knockout stage brackets. */
 .knockout-stage {
-  margin: 40px auto;
-  max-width: 1200px;
-  padding: 20px;
-  position: relative;
+  margin: 40px auto; /* Adds vertical margin and centers horizontally */
+  max-width: 1200px; /* Sets maximum width */
+  padding: 20px; /* Adds padding */
+  position: relative; /* Allows for absolute positioning of child elements */
 }
 
+/* Knockout Bracket Container */
+/* Container for the background image of the bracket and positioned logos. */
 .knockout-container {
-  position: relative;
-  width: 100%;
-  max-width: 1200px; /* Match your bracket image width */
-  margin: 0 auto;
+  position: relative; /* Allows absolute positioning of child elements (logos) */
+  width: 100%; /* Spans full width */
+  max-width: 1200px; /* Matches bracket image width */
+  margin: 0 auto; /* Centers horizontally */
 }
 
+/* Knockout Background Image */
 .knockout-bg {
-  width: 100%;
-  height: auto;
-  display: block;
+  width: 100%; /* Makes image span full width */
+  height: auto; /* Maintains aspect ratio */
+  display: block; /* Removes extra space below the image */
 }
 
 /* Shared logo container styles */
+/* General styles for containers holding team logos in the knockout bracket. */
 .logos-container div {
-  position: absolute;
-  height: auto;
-  height : 8.5%;
-  cursor: pointer;
+  position: absolute; /* Positions logos absolutely over the bracket image */
+  height: auto; /* Maintains aspect ratio */
+  height: 8.5%; /* Sets height as a percentage of parent container */
+  cursor: pointer; /* Changes cursor to a pointer */
 }
 
+/* Logo Container Hover Effect */
+/* Scales up logos on hover. */
 .logos-container div:hover {
-  transform: scale(1.1)
+  transform: scale(1.1); /* Scales up the logo */
 }
 
-
-/* UCL Specific Knockout Positions (existing) */
+/* UCL Specific Knockout Positions */
+/* Precise positioning for team logos within the UCL knockout bracket. */
+/* Each class like .r16-team.pos1 defines the exact top and left position for a specific team in a specific round. */
 .ucl-logos-container .r16-team.pos1 { top: 18.5%; left: 25%; }
 .ucl-logos-container .r16-team.pos2 { top: 18.5%; left: 72%; }
 .ucl-logos-container .r16-team.pos3 { top: 85%; left: 25%; }
@@ -693,7 +843,8 @@ header img.league-logo {
 .ucl-logos-container .playoff-unseeded.pos23 { top: 27.6%; left: 86%; }
 .ucl-logos-container .playoff-unseeded.pos24 { top: 27.6%; left: 10%; }
 
-/* UEL Specific Knockout Positions (Example - adjust these for your UEL bracket) */
+/* UEL Specific Knockout Positions */
+/* Precise positioning for team logos within the UEL knockout bracket. */
 .uel-logos-container .uel-r16-team.pos1 { top: 23%; left: 27%; }
 .uel-logos-container .uel-r16-team.pos2 { top: 23%; left: 68%; }
 .uel-logos-container .uel-r16-team.pos3 { top: 83%; left: 27%; }
@@ -720,6 +871,7 @@ header img.league-logo {
 .uel-logos-container .uel-playoff-unseeded.pos24 { top: 30%; left: 9%; }
 
 /* ECL Specific Knockout Positions */
+/* Precise positioning for team logos within the ECL knockout bracket. */
 .ecl-logos-container .ecl-r16-team.pos1 { top: 17%; left: 24.5%; }
 .ecl-logos-container .ecl-r16-team.pos2 { top: 17%; left: 70.5%; }
 .ecl-logos-container .ecl-r16-team.pos3 { top: 83%; left: 24.5%; }
@@ -746,65 +898,77 @@ header img.league-logo {
 .ecl-logos-container .ecl-playoff-unseeded.pos24 { top: 25%; left: 6.5%; }
 
 /* Match Day Styles */
+/* Overall container for match day information, including individual match cards. */
 .match-day {
-  background: rgba(0, 0, 0, 0.7);
-  padding: 20px;
-  border-radius: 10px;
-  margin: 20px auto;
-  width: 95%; /* Adjust width as needed */
-  max-width: 1165px; /* Increase max-width for horizontal layout */
-  z-index: 1;
-  position: relative;
+  background: rgba(0, 0, 0, 0.7); /* Dark, transparent background */
+  padding: 15px; /* Reduced padding from 20px */
+  border-radius: 10px; /* Rounds the corners */
+  margin: 15px auto; /* Reduced margin from 20px auto, centers horizontally */
+  width: 98%; /* Slightly increased to make use of available space, or keep as 95% */
+  max-width: 1000px; /* Reduced from 1165px to fit more on screen or make it generally smaller */
+  z-index: 1; /* Ensures content is above background video */
+  position: relative; /* Allows for z-index to take effect */
   overflow-x: auto; /* Enable horizontal scrolling if needed */
 }
 
+/* Match Day Heading */
 .match-day h2 {
-  margin-bottom: 15px;
-  color: #fff;
-  text-align: center;
+  margin-bottom: 15px; /* Adds space below the heading */
+  color: #fff; /* White text color */
+  text-align: center; /* Centers the text */
 }
 
-.ucl-match-day-container, .uel-match-day-container, .ecl-match-day-container { /* Apply to all containers */
-  display: flex; /* Use flexbox for horizontal layout */
-  gap: 20px; /* Space between the day cards */
-  padding-bottom: 15px; /* Add some padding for potential scrollbar */
+/* Match Day Containers (UCL, UEL, ECL) */
+/* Flex containers for arranging match day cards horizontally. */
+.ucl-match-day-container, .uel-match-day-container, .ecl-match-day-container {
+  display: flex; /* Uses flexbox for horizontal layout */
+  gap: 10px; /* Reduced gap from 20px, adds space between cards */
+  padding-bottom: 15px; /* Adds some padding for potential scrollbar */
 }
 
+/* Individual Match Day Card */
+/* Styles for each card representing a specific match day. */
 .match-day-card {
-  background: #333;
-  border-radius: 8px;
-  padding: 15px;
-  text-align: center;
-  color: #fff;
-  font-size: 14px;
-  min-width: 200px; /* Minimum width for each day card */
-  flex-shrink: 0; /* Prevent cards from shrinking */
+  background: #333; /* Dark background */
+  border-radius: 8px; /* Rounds the corners */
+  padding: 10px; /* Reduced padding from 15px */
+  text-align: center; /* Centers text within the card */
+  color: #fff; /* White text color */
+  font-size: 14px; /* Sets font size */
+  min-width: 150px; /* Reduced min-width from 200px, prevents cards from shrinking too much */
+  flex-shrink: 0; /* Prevents cards from shrinking when there's not enough space */
 }
 
+/* Match Day Card Heading */
 .match-day-card h3 {
-  margin: 5px 0 10px;
-  font-size: 1.1em;
+  margin: 5px 0 8px; /* Adjusted vertical margins */
+  font-size: 1em; /* Reduced font size from 1.1em */
 }
 
+/* Individual Match Card */
+/* Styles for each match entry within a match day card. */
 .match-card {
-  background: #444;
-  border-radius: 6px;
-  padding: 8px;
-  margin-bottom: 8px;
+  background: #444; /* Slightly lighter dark background */
+  border-radius: 6px; /* Rounds the corners */
+  padding: 5px; /* Reduced padding from 8px */
+  margin-bottom: 5px; /* Reduced margin from 8px */
 }
 
+/* Match Card Heading */
 .match-card h3 {
-  font-size: 1em;
-  margin-bottom: 5px;
+  font-size: 0.9em; /* Reduced font size from 1em */
+  margin-bottom: 3px; /* Adjusted margin */
 }
 
+/* Match Result Text */
 .match-result {
-  font-size: 1.1em;
-  font-weight: bold;
-  margin-top: 5px;
+  font-size: 1em; /* Reduced font size from 1.1em */
+  font-weight: bold; /* Bold text */
+  margin-top: 3px; /* Adjusted margin */
 }
 
 /* Mobile-specific adjustments */
+/* These styles apply when the screen width is 768px or less. */
 @media (max-width: 768px) {
   header {
     height: 180px; /* Adjust header height for smaller screens */
@@ -814,6 +978,10 @@ header img.league-logo {
 
   header img.league-logo {
     max-width: 100px; /* Smaller logo on mobile */
+  }
+
+  .main-nav {
+    gap: 5px; /* Optimized gap for navigation buttons on mobile */
   }
 
   .nav-btn {
@@ -901,13 +1069,29 @@ header img.league-logo {
   }
 
   .form-box {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  margin: 0 2px;
-  border-radius: 3px;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin: 0 2px;
+    border-radius: 3px;
   }
 
-.match-form {
-  display: none !important;
+  /* Specific mobile adjustments for match day boxes */
+  .match-day-card {
+    min-width: 120px; /* Further reduced min-width for very small screens */
+    padding: 8px; /* Reduced padding */
+  }
+  .match-day-card h3 {
+    font-size: 0.9em; /* Smaller font size */
+  }
+  .match-card {
+    padding: 4px; /* Reduced padding */
+    margin-bottom: 4px; /* Reduced margin */
+  }
+  .match-card h3, .match-result {
+    font-size: 0.8em; /* Smaller font size for match details */
+  }
+  .ucl-match-day-container, .uel-match-day-container, .ecl-match-day-container {
+    gap: 8px; /* Reduced gap between match day cards */
+  }
 }
