@@ -982,13 +982,13 @@ header img.league-logo {
   }
 
   .main-nav {
-    gap: 5px; /* Optimized gap for navigation buttons on mobile */
-    margin-bottom: 5px; /* Increased gap below navigation buttons */
-    margin-top: 5px
+    gap: 10px; /* Optimized gap for navigation buttons on mobile */
+    margin-bottom: 10px; /* Increased gap below navigation buttons */
+    margin-top: 10px
   }
 
   .nav-btn {
-    padding: 10px 10px; /* Smaller padding for navigation buttons */
+    padding: 7px 5px; /* Smaller padding for navigation buttons */
     font-size: 14px; /* Smaller font for navigation buttons */
   }
 
