@@ -113,11 +113,12 @@ header h2 {
 /* Main Navigation Styles */
 /* Styles for the primary navigation buttons that switch between different content sections (e.g., table, match day). */
 .main-nav {
-  display: flex; /* Arranges buttons horizontally using flexbox */
-  justify-content: center; /* Centers the buttons horizontally */
-  gap: 10px; /* Adds space between the buttons */
-  margin: 1px 0; /* Adds small vertical margin */
-  flex-wrap: wrap; /* Allows buttons to wrap to the next line if space is limited */
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 5px; /* Increased gap below navigation buttons */
+  margin-top: 5px;
+  flex-wrap: wrap;
 }
 
 /* Navigation Button Styles */
@@ -982,6 +983,8 @@ header img.league-logo {
 
   .main-nav {
     gap: 5px; /* Optimized gap for navigation buttons on mobile */
+    margin-bottom: 5px; /* Increased gap below navigation buttons */
+    margin-top: 5px
   }
 
   .nav-btn {
