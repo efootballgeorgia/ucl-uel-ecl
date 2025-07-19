@@ -116,7 +116,7 @@ header h2 {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 5px; /* Increased gap below navigation buttons */
+  margin-bottom: 50px; /* Increased gap below navigation buttons */
   margin-top: 5px;
   flex-wrap: wrap;
 }
@@ -124,14 +124,14 @@ header h2 {
 /* Navigation Button Styles */
 /* Basic styling for main navigation buttons. */
 .nav-btn {
-  padding: 15px 30px; /* Adds padding inside the button */
+  padding: 8px 20px; /* Adds padding inside the button */
   background: rgba(0, 0, 0, 0.7); /* Dark background with transparency */
   color: white; /* White text color */
   border: none; /* Removes default button border */
   border-radius: 5px; /* Rounds the corners */
   cursor: pointer; /* Changes cursor to a pointer */
   transition: all 0.3s ease; /* Smooth transition for hover effects */
-  font-size: 18px; /* Sets font size */
+  font-size: 17px; /* Sets font size */
   font-weight: bold; /* Makes text bold */
 }
 
