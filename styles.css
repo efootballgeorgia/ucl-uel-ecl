@@ -115,7 +115,7 @@ header h2 {
 .main-nav {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 10px;
   margin-bottom: 5px; /* Increased gap below navigation buttons */
   margin-top: 5px;
   flex-wrap: wrap;
