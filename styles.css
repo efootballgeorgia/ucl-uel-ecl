@@ -340,7 +340,7 @@ tbody tr:hover {
 .modal {
   display: none; /* Hides the modal by default */
   position: fixed; /* Fixes the modal to the viewport */
-  z-index: 1; /* Places the modal on top */
+  z-index: 9999x; /* Places the modal on top */
   left: 0; /* Aligns to the left */
   top: 0; /* Aligns to the top */
   width: 100%; /* Spans full width */
@@ -570,8 +570,8 @@ button[type="submit"]:hover {
 /* Screen Gallery Image Styles */
 /* Styles for individual images within the screen gallery. */
 .screen-gallery img {
-  height: 35px; /* Sets fixed height for images */
-  width: 80.5px; /* Sets fixed width for images */
+  height: 46px; /* Sets fixed height for images */
+  width: 100px; /* Sets fixed width for images */
   border-radius: 5px; /* Rounds the corners */
   border: 2px solid #000000; /* Black border */
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; /* Smooth transitions for hover effects */
@@ -982,14 +982,14 @@ header img.league-logo {
   }
 
   .main-nav {
-    gap: 10px; /* Optimized gap for navigation buttons on mobile */
-    margin-bottom: 10px; /* Increased gap below navigation buttons */
+    gap: 3px; /* Optimized gap for navigation buttons on mobile */
+    margin-bottom: 15px; /* Increased gap below navigation buttons */
     margin-top: 10px
   }
 
   .nav-btn {
-    padding: 7px 5px; /* Smaller padding for navigation buttons */
-    font-size: 14px; /* Smaller font for navigation buttons */
+    padding: 5px 1px; /* Smaller padding for navigation buttons */
+    font-size: 12.3px; /* Smaller font for navigation buttons */
   }
 
   .league-table {
@@ -1095,6 +1095,6 @@ header img.league-logo {
     font-size: 0.8em; /* Smaller font size for match details */
   }
   .ucl-match-day-container, .uel-match-day-container, .ecl-match-day-container {
-    gap: 8px; /* Reduced gap between match day cards */
+    gap: 20px; /* Reduced gap between match day cards */
   }
 }
