@@ -1097,4 +1097,24 @@ header img.league-logo {
   .ucl-match-day-container, .uel-match-day-container, .ecl-match-day-container {
     gap: 20px; /* Reduced gap between match day cards */
   }
+
+    .wins {
+    min-width: 100%; /* Make win cards take full width on mobile */
+    margin: 10px 0; /* Add vertical margin for spacing between cards */
+    padding: 15px; /* Adjust padding for better spacing within the card */
+  }
+
+  /* Adjustments for image galleries within highlight sections */
+  .screen-gallery {
+    grid-template-columns: repeat(2, 1fr); /* Display 2 images per row in a grid layout */
+    gap: 10px; /* Space between images */
+    max-height: none; /* Remove max-height to allow all images to be visible */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+  }
+
+  /* Styles for images within the screen gallery */
+  .screen-gallery img {
+    height: auto; /* Allow image height to adjust based on aspect ratio */
+    width: 100%; /* Make images take full width of their grid column */
+  }
 }
