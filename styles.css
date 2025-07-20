@@ -340,7 +340,7 @@ tbody tr:hover {
 .modal {
   display: none; /* Hides the modal by default */
   position: fixed; /* Fixes the modal to the viewport */
-  z-index: 9999x; /* Places the modal on top */
+  z-index: 9999; /* Places the modal on top */
   left: 0; /* Aligns to the left */
   top: 0; /* Aligns to the top */
   width: 100%; /* Spans full width */
