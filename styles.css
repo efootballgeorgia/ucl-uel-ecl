@@ -124,7 +124,7 @@ header h2 {
 /* Navigation Button Styles */
 /* Basic styling for main navigation buttons. */
 .nav-btn {
-  padding: 8px 20px; /* Adds padding inside the button */
+  padding: 12px 20px; /* Adds padding inside the button */
   background: rgba(0, 0, 0, 0.7); /* Dark background with transparency */
   color: white; /* White text color */
   border: none; /* Removes default button border */
@@ -982,13 +982,13 @@ header img.league-logo {
   }
 
   .main-nav {
-    gap: 3px; /* Optimized gap for navigation buttons on mobile */
+    gap: 8px; /* Optimized gap for navigation buttons on mobile */
     margin-bottom: 15px; /* Increased gap below navigation buttons */
     margin-top: 10px
   }
 
   .nav-btn {
-    padding: 5px 1px; /* Smaller padding for navigation buttons */
+    padding: 8px 7px; /* Smaller padding for navigation buttons */
     font-size: 12.3px; /* Smaller font for navigation buttons */
   }
 
