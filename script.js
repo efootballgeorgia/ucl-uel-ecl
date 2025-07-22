@@ -642,56 +642,6 @@ function loadLeagueData(league) {
     .catch(error => console.error(`Error fetching initial data for ${league}:`, error));
 }
 
-// League selection functionality (UCL, UEL, ECL)
-function setupLeagueNavigation() {
-  const leagueButtons = document.querySelectorAll('.league-selector-nav .league-btn');
-  const leagueLogos = document.querySelectorAll('.league-logo');
-
-  leagueButtons.forEach(button => {
-    button.addEventListener('click', (event) => { // Add event parameter
-      const selectedLeague = button.dataset.league;
-
-      // Prevent opening UEL and ECL
-      if (selectedLeague === 'uel' || selectedLeague === 'ecl') {
-        event.preventDefault(); // Stop the default button behavior
-        alert('This league is in progress.'); // Inform the user
-        return; // Exit the function
-      }
-
-      // Update active button classes
-      leagueButtons.forEach(btn => btn.classList.remove('active'));
-      button.classList.add('active');
-
-      // Update active league logo
-      leagueLogos.forEach(logo => logo.classList.remove('active'));
-      document.querySelector(`[data-league-logo="${selectedLeague}"]`).classList.add('active');
-
-
-      currentLeague = selectedLeague; // Update global currentLeague
-
-      // Hide all main page sections
-      document.querySelectorAll('.page-section').forEach(section => {
-        section.classList.remove('active');
-      });
-
-      // Activate the default section ('league') for the newly selected league
-      document.getElementById(`${currentLeague}-league-section`).classList.add('active');
-
-      // Reset main navigation active state to 'League Table'
-      document.querySelectorAll('.main-nav .nav-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.dataset.page === 'league') {
-          btn.classList.add('active');
-        }
-      });
-
-      // Load data for the newly selected league
-      loadLeagueData(currentLeague);
-    });
-  });
-}
-
-
 window.onload = () => {
   document.getElementById('loading').style.display = 'none';
   setupNavigation(); // Initialize main page navigation
