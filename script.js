@@ -413,7 +413,7 @@ function updateKnockoutStage(league) {
     if (league === 'ucl') {
       if (position <= 8) targetSelector = `.r16-team.pos${position}`;
       else if (position <= 16) targetSelector = `.playoff-seeded.pos${position}`;
-      else if (position <= 24) targetSelector = `.playoff-unseeded.pos${position}`; 
+      else if (position <= 24) targetSelector = `.playoff-unseeded.pos${position}`;
     } else if (league === 'uel') {
       if (position <= 8) targetSelector = `.uel-r16-team.pos${position}`;
       else if (position <= 16) targetSelector = `.uel-playoff-seeded.pos${position}`;
@@ -445,24 +445,38 @@ function generateMatchDay(league) {
   fixtures[league] = [];
 
   // Basic Round-Robin Scheduling (e.g., 8 days for UCL/UEL, fewer for ECL if fewer teams)
-  const numDays = 8; // Default to 8 match days for simplicity. Adjust if ECL has fewer.
+const numDays = 8; // As requested, 8 match days.
+  const n = teams.length;
+
+  // This algorithm requires an even number of teams.
+  // Your list has 36, which works perfectly.
+  if (n % 2 !== 0) {
+      // You would need to add a "bye" team for this to work
+      console.error("Scheduling logic requires an even number of teams.");
+      return;
+  }
+
   for (let day = 1; day <= numDays; day++) {
     const dayFixtures = [];
-    let matchIndex = 0;
-    for (let i = 0; i < teams.length; i += 2) {
-      if (day % 2 === 0) {
-        if (i + 1 < teams.length) {
-          dayFixtures.push({ home: teams[i], away: teams[i + 1], day: day, matchIndex: matchIndex });
+    const numMatchesPerDay = n / 2;
+
+    for (let matchIndex = 0; matchIndex < numMatchesPerDay; matchIndex++) {
+        // Correctly pair teams from opposite ends of the array
+        const team1 = teams[matchIndex];
+        const team2 = teams[n - 1 - matchIndex];
+
+        // Keep the original logic for alternating home/away games
+        if (day % 2 === 0) {
+            dayFixtures.push({ home: team1, away: team2, day: day, matchIndex: matchIndex });
+        } else {
+            dayFixtures.push({ home: team2, away: team1, day: day, matchIndex: matchIndex });
         }
-      } else {
-        if (i + 1 < teams.length) {
-          dayFixtures.push({ home: teams[i + 1], away: teams[i], day: day, matchIndex: matchIndex });
-        }
-      }
-      matchIndex++;
     }
+
     fixtures[league].push(dayFixtures);
-    // Rotate teams for the next day (except the first team)
+    
+    // The rotation logic is correct and remains the same.
+    // It cycles the opponents for the fixed first team.
     teams.splice(1, 0, teams.pop());
   }
 
@@ -596,6 +610,44 @@ function setupLeagueNavigation() {
   });
 }
 
+function setupSearchFilters() {
+  const handleSearch = (league) => {
+    const searchInput = document.getElementById(`${league}TeamSearch`);
+    if (!searchInput) return;
+
+    const searchTerm = searchInput.value.toLowerCase();
+    const matchDayContainer = document.querySelector(`.${league}-match-day-container`);
+    if (!matchDayContainer) return;
+
+    const matchDays = matchDayContainer.querySelectorAll('.match-day-card');
+
+    matchDays.forEach(day => {
+      const matches = day.querySelectorAll('.match-card');
+      let dayHasVisibleMatch = false;
+
+      matches.forEach(match => {
+        const homeTeam = match.dataset.home.toLowerCase();
+        const awayTeam = match.dataset.away.toLowerCase();
+
+        const isVisible = homeTeam.includes(searchTerm) || awayTeam.includes(searchTerm);
+        match.style.display = isVisible ? 'block' : 'none';
+        if (isVisible) {
+          dayHasVisibleMatch = true;
+        }
+      });
+
+      day.style.display = dayHasVisibleMatch ? 'block' : 'none';
+    });
+  };
+
+  ['ucl', 'uel', 'ecl'].forEach(league => {
+    const searchInput = document.getElementById(`${league}TeamSearch`);
+    if (searchInput) {
+      searchInput.addEventListener('keyup', () => handleSearch(league));
+    }
+  });
+}
+
 // New function to load all data for a given league
 function loadLeagueData(league) {
   // Reset table stats for the current league
@@ -646,7 +698,7 @@ window.onload = () => {
   document.getElementById('loading').style.display = 'none';
   setupNavigation(); // Initialize main page navigation
   setupLeagueNavigation(); // Initialize league selection navigation
-
+  setupSearchFilters();
   // Initial load for the default league (UCL)
   loadLeagueData('ucl');
 };
