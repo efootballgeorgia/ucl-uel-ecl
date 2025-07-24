@@ -7,5 +7,8 @@ service cloud.firestore {
     match /uelMatches/{document} {
       allow read, write: if true; // Allows anyone to read and write to uelMatches
     }
+    match /eclMatches/{document} {
+      allow read, write: if true; // Allows anyone to read and write to uelMatches
+    }
   }
 }
