@@ -392,6 +392,33 @@ button[type="submit"]:hover {
   margin-top: 0.1875rem; /* 3px */
 }
 
+.search-container {
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.team-search-input {
+  width: 70%;
+  max-width: 400px;
+  padding: 0.6rem;
+  border-radius: 5px;
+  border: 1px solid #555;
+  background: #2a2a2a;
+  color: #fff;
+  font-size: 1rem;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-search-input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 10px rgba(0, 86, 179, 0.5);
+}
+
 /* ============================================
    8. Knockout Stage
 ============================================ */
@@ -461,7 +488,7 @@ button[type="submit"]:hover {
 .uel-logos-container .uel-r16-team.pos5 { top: 64%; left: 27%; }
 .uel-logos-container .uel-r16-team.pos6 { top: 64%; left: 68%; }
 .uel-logos-container .uel-r16-team.pos7 { top: 43%; left: 27%; }
-.uel-logos-container .uel-r16-team.pos8 { top: 43%; left: 68%; }
+.ucl-logos-container .uel-r16-team.pos8 { top: 43%; left: 68%; }
 .uel-logos-container .uel-playoff-seeded.pos9 { top: 39%; left: 9%; }
 .uel-logos-container .uel-playoff-seeded.pos10 { top: 39%; left: 86%; }
 .uel-logos-container .uel-playoff-seeded.pos11 { top: 59%; left: 86%; }
