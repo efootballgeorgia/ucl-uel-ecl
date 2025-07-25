@@ -30,24 +30,13 @@ body {
    2. Animations & Keyframes
 ============================================ */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-}
-
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
 }
 
 .team-logo:hover {
@@ -75,22 +64,11 @@ body {
   height: 100%;
   background: rgba(0, 0, 0, 0.8);
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   color: white;
   font-size: 2em;
   z-index: 9999;
-}
-
-.loading-spinner {
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top: 4px solid #ffcc00;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-  margin: 20px auto;
 }
 
 /* ============================================
@@ -268,115 +246,141 @@ tbody tr:hover td {
    6. Match & Form Elements
 ============================================ */
 .match-form {
-  display: none !important;
   background: rgba(0, 0, 0, 0.7);
-  padding: 1.25rem; /* 20px */
+  padding: 1.25rem;
   border-radius: 10px;
-  margin: 1.25rem auto; /* 20px */
-  width: 37.5rem; /* 600px */
+  margin: 1.25rem auto;
+  width: 37.5rem;
   z-index: 1;
   position: relative;
 }
 
 .match-form h2 {
-  margin-bottom: 1rem; /* 15px */
+  margin-bottom: 1rem;
 }
 
-#uclMatchForm, #uelMatchForm, #eclMatchForm {
+#matchForm {
   display: flex;
   flex-direction: column;
-  gap: 0.625rem; /* 10px */
+  gap: 0.625rem;
 }
 
 .form-group {
   display: flex;
-  gap: 0.625rem; /* 10px */
+  gap: 0.625rem;
   align-items: center;
 }
 
 .form-group select,
 .form-group input {
   flex: 1;
-  padding: 0.5rem; /* 8px */
+  padding: 0.5rem;
   border-radius: 5px;
   border: 1px solid #444;
   background: #333;
   color: white;
-  min-height: 3rem; /* 48px */
+  min-height: 3rem;
   font-size: 1rem;
 }
 
 button[type="submit"] {
   background: #4CAF50;
   color: white;
-  padding: 0.625rem 1.25rem; /* 10px 20px */
+  padding: 0.625rem 1.25rem;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   transition: background 0.3s;
-  min-height: 3rem; /* 48px */
+  min-height: 3rem;
 }
 
 button[type="submit"]:hover {
   background: #45a049;
 }
 
+.feedback-message {
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  max-height: 0;
+  overflow: hidden;
+}
+
+.feedback-message.show {
+  opacity: 1;
+  max-height: 40px; /* Adjust as needed */
+}
+
+.feedback-message.success {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.feedback-message.error {
+  background-color: #f44336;
+  color: white;
+}
+
 .match-day {
   background: rgba(0, 0, 0, 0.7);
-  padding: 1rem; /* 15px */
+  padding: 1rem;
   border-radius: 10px;
   margin: 1rem auto;
   width: 98%;
-  max-width: 62.5rem; /* 1000px */
+  max-width: 62.5rem;
   z-index: 1;
   position: relative;
   overflow-x: auto;
 }
 
 .match-day h2 {
-  margin-bottom: 1rem; /* 15px */
+  margin-bottom: 1rem;
   color: #fff;
   text-align: center;
 }
 
-.ucl-match-day-container, .uel-match-day-container, .ecl-match-day-container {
+#match-day-container {
   display: flex;
-  gap: 0.625rem; /* 10px */
+  gap: 0.625rem;
   padding-bottom: 1rem;
 }
 
 .match-day-card {
   background: #333;
   border-radius: 8px;
-  padding: 0.625rem; /* 10px */
+  padding: 0.625rem;
   text-align: center;
   color: #fff;
-  font-size: 0.875rem; /* 14px */
-  min-width: 9.375rem; /* 150px */
+  font-size: 0.875rem;
+  min-width: 9.375rem;
   flex-shrink: 0;
 }
 
 .match-day-card h3 {
-  margin: 0.3125rem 0 0.5rem; /* 5px 0 8px */
+  margin: 0.3125rem 0 0.5rem;
   font-size: 1em;
 }
 
 .match-card {
   background: #444;
   border-radius: 6px;
-  padding: 0.3125rem; /* 5px */
-  margin-bottom: 0.3125rem; /* 5px */
+  padding: 0.3125rem;
+  margin-bottom: 0.3125rem;
 }
 
 .match-card h3 {
   font-size: 0.9em;
-  margin-bottom: 0.1875rem; /* 3px */
+  margin-bottom: 0.1875rem;
 }
 
 .match-result {
   font-size: 1em;
   font-weight: bold;
-  margin-top: 0.1875rem; /* 3px */
+  margin-top: 0.1875rem;
 }
 
 .search-container {
@@ -410,16 +414,16 @@ button[type="submit"]:hover {
    7. Knockout Stage
 ============================================ */
 .knockout-stage {
-  margin: 2.5rem auto; /* 40px */
-  max-width: 75rem; /* 1200px */
-  padding: 1.25rem; /* 20px */
+  margin: 2.5rem auto;
+  max-width: 75rem;
+  padding: 1.25rem;
   position: relative;
 }
 
 .knockout-container {
   position: relative;
   width: 100%;
-  max-width: 75rem; /* 1200px */
+  max-width: 75rem;
   margin: 0 auto;
 }
 
@@ -429,98 +433,31 @@ button[type="submit"]:hover {
   display: block;
 }
 
-.logos-container div {
+.logo-wrapper {
   position: absolute;
+  width: 5%; /* Adjust width as needed */
   height: auto;
-  height: 8.5%;
   cursor: pointer;
   transition: transform 0.3s ease;
 }
 
-.logos-container div:hover {
-  transform: scale(1.1);
+.logo-wrapper img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
-.ucl-logos-container .r16-team.pos1 { top: 18.5%; left: 25%; }
-.ucl-logos-container .r16-team.pos2 { top: 18.5%; left: 72%; }
-.ucl-logos-container .r16-team.pos3 { top: 85%; left: 25%; }
-.ucl-logos-container .r16-team.pos4 { top: 85%; left: 72%; }
-.ucl-logos-container .r16-team.pos5 { top: 63%; left: 25%; }
-.ucl-logos-container .r16-team.pos6 { top: 63%; left: 72%; }
-.ucl-logos-container .r16-team.pos7 { top: 40%; left: 25%; }
-.ucl-logos-container .r16-team.pos8 { top: 40%; left: 72%; }
-.ucl-logos-container .playoff-seeded.pos9 { top: 36%; left: 10%; }
-.ucl-logos-container .playoff-seeded.pos10 { top: 36%; left: 86%; }
-.ucl-logos-container .playoff-seeded.pos11 { top: 60%; left: 86%; }
-.ucl-logos-container .playoff-seeded.pos12 { top: 60%; left: 10%; }
-.ucl-logos-container .playoff-seeded.pos13 { top: 83%; left: 86%; }
-.ucl-logos-container .playoff-seeded.pos14 { top: 81%; left: 10%; }
-.ucl-logos-container .playoff-seeded.pos15 { top: 15.5%; left: 86%; }
-.ucl-logos-container .playoff-seeded.pos16 { top: 14.5%; left: 10%; }
-.ucl-logos-container .playoff-unseeded.pos17 { top: 5%; left: 86%; }
-.ucl-logos-container .playoff-unseeded.pos18 { top: 5%; left: 10%; }
-.ucl-logos-container .playoff-unseeded.pos19 { top: 72%; left: 10%; }
-.ucl-logos-container .playoff-unseeded.pos20 { top: 72%; left: 86%; }
-.ucl-logos-container .playoff-unseeded.pos21 { top: 50%; left: 10%; }
-.ucl-logos-container .playoff-unseeded.pos22 { top: 50%; left: 86%; }
-.ucl-logos-container .playoff-unseeded.pos23 { top: 27.6%; left: 86%; }
-.ucl-logos-container .playoff-unseeded.pos24 { top: 27.6%; left: 10%; }
-
-.uel-logos-container .uel-r16-team.pos1 { top: 23%; left: 27%; }
-.uel-logos-container .uel-r16-team.pos2 { top: 23%; left: 68%; }
-.uel-logos-container .uel-r16-team.pos3 { top: 83%; left: 27%; }
-.uel-logos-container .uel-r16-team.pos4 { top: 83%; left: 68%; }
-.uel-logos-container .uel-r16-team.pos5 { top: 64%; left: 27%; }
-.uel-logos-container .uel-r16-team.pos6 { top: 64%; left: 68%; }
-.uel-logos-container .uel-r16-team.pos7 { top: 43%; left: 27%; }
-.uel-logos-container .uel-r16-team.pos8 { top: 43%; left: 68%; }
-.uel-logos-container .uel-playoff-seeded.pos9 { top: 39%; left: 9%; }
-.uel-logos-container .uel-playoff-seeded.pos10 { top: 39%; left: 86%; }
-.uel-logos-container .uel-playoff-seeded.pos11 { top: 59%; left: 86%; }
-.uel-logos-container .uel-playoff-seeded.pos12 { top: 59%; left: 9%; }
-.uel-logos-container .uel-playoff-seeded.pos13 { top: 79%; left: 86%; }
-.uel-logos-container .uel-playoff-seeded.pos14 { top: 79%; left: 9%; }
-.uel-logos-container .uel-playoff-seeded.pos15 { top: 19%; left: 86%; }
-.uel-logos-container .uel-playoff-seeded.pos16 { top: 19%; left: 9%; }
-.uel-logos-container .uel-playoff-unseeded.pos17 { top: 10%; left: 86%; }
-.uel-logos-container .uel-playoff-unseeded.pos18 { top: 10%; left: 9%; }
-.uel-logos-container .uel-playoff-unseeded.pos19 { top: 70%; left: 9%; }
-.uel-logos-container .uel-playoff-unseeded.pos20 { top: 70%; left: 86%; }
-.uel-logos-container .uel-playoff-unseeded.pos21 { top: 50%; left: 9%; }
-.uel-logos-container .uel-playoff-unseeded.pos22 { top: 50%; left: 86%; }
-.uel-logos-container .uel-playoff-unseeded.pos23 { top: 30%; left: 86%; }
-.uel-logos-container .uel-playoff-unseeded.pos24 { top: 30%; left: 9%; }
-
-.ecl-logos-container .ecl-r16-team.pos1 { top: 17%; left: 24.5%; }
-.ecl-logos-container .ecl-r16-team.pos2 { top: 17%; left: 70.5%; }
-.ecl-logos-container .ecl-r16-team.pos3 { top: 83%; left: 24.5%; }
-.ecl-logos-container .ecl-r16-team.pos4 { top: 83%; left: 70.5%; }
-.ecl-logos-container .ecl-r16-team.pos5 { top: 61%; left: 24.5%; }
-.ecl-logos-container .ecl-r16-team.pos6 { top: 61%; left: 70.5%; }
-.ecl-logos-container .ecl-r16-team.pos7 { top: 39%; left: 24.5%; }
-.ecl-logos-container .ecl-r16-team.pos8 { top: 39%; left: 70.5%; }
-.ecl-logos-container .ecl-playoff-seeded.pos9 { top: 34%; left: 6.5%; }
-.ecl-logos-container .ecl-playoff-seeded.pos10 { top: 34%; left: 88.5%; }
-.ecl-logos-container .ecl-playoff-seeded.pos11 { top: 57%; left: 88.5%; }
-.ecl-logos-container .ecl-playoff-seeded.pos12 { top: 57%; left: 6.5%; }
-.ecl-logos-container .ecl-playoff-seeded.pos13 { top: 79%; left: 88.5%; }
-.ecl-logos-container .ecl-playoff-seeded.pos14 { top: 79%; left: 6.5%; }
-.ecl-logos-container .ecl-playoff-seeded.pos15 { top: 14%; left: 88.5%; }
-.ecl-logos-container .ecl-playoff-seeded.pos16 { top: 14%; left: 6.5%; }
-.ecl-logos-container .ecl-playoff-unseeded.pos17 { top: 5%; left: 88.5%; }
-.ecl-logos-container .ecl-playoff-unseeded.pos18 { top: 5%; left: 6.5%; }
-.ecl-logos-container .ecl-playoff-unseeded.pos19 { top: 70%; left: 6.5%; }
-.ecl-logos-container .ecl-playoff-unseeded.pos20 { top: 70%; left: 88.5%; }
-.ecl-logos-container .ecl-playoff-unseeded.pos21 { top: 48%; left: 6.5%; }
-.ecl-logos-container .ecl-playoff-unseeded.pos22 { top: 48%; left: 88.5%; }
-.ecl-logos-container .ecl-playoff-unseeded.pos23 { top: 25%; left: 88.5%; }
-.ecl-logos-container .ecl-playoff-unseeded.pos24 { top: 25%; left: 6.5%; }
+.logo-wrapper:hover {
+  transform: scale(1.1);
+  z-index: 10;
+}
 
 /* ============================================
-   8. Highlights & Galleries
+   8. Highlights Gallery
 ============================================ */
 .win-images {
-  margin: 2.5rem auto; /* 40px */
+  margin: 2.5rem auto;
+  padding: 1.25rem;
   text-align: center;
   color: #fff;
   z-index: 1;
@@ -530,15 +467,15 @@ button[type="submit"]:hover {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 1.25rem; /* 20px */
+  gap: 1.25rem;
 }
 
 .wins {
   background: #292929;
   border-radius: 10px;
-  padding: 1.25rem; /* 20px */
-  flex: 1 1 18.75rem; /* 300px */
-  max-width: 20rem; /* 320px */
+  padding: 1.25rem;
+  flex: 1 1 18.75rem;
+  max-width: 20rem;
   text-align: center;
   box-sizing: border-box;
   position: relative;
@@ -547,17 +484,17 @@ button[type="submit"]:hover {
 
 .screen-gallery {
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  gap: 0.625rem; /* 10px */
-  max-height: 25rem; /* 400px */
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 0.625rem;
+  max-height: 25rem;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: #0307c9 #1a1a40;
+  scrollbar-color: var(--accent-color) var(--primary-bg);
 }
 
 .screen-gallery img {
-  height: 2.875rem; /* 46px */
-  width: 6.25rem; /* 100px */
+  width: 130px;
+  height: 58px;
   border-radius: 5px;
   border: 2px solid #000000;
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
@@ -566,10 +503,12 @@ button[type="submit"]:hover {
 }
 
 .screen-gallery img:hover {
-  transform: scale(1.01);
+  transform: scale(1.05);
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
   border-color: #ffcc00;
 }
+
+
 /* ============================================
    9. Modal
 ============================================ */
@@ -602,10 +541,10 @@ button[type="submit"]:hover {
 
 .close {
   position: absolute;
-  top: 1.25rem; /* 20px */
-  right: 2.1875rem; /* 35px */
+  top: 1.25rem;
+  right: 2.1875rem;
   color: #fff;
-  font-size: 2.5rem; /* 40px */
+  font-size: 2.5rem;
   font-weight: bold;
   cursor: pointer;
 }
@@ -620,129 +559,26 @@ button[type="submit"]:hover {
    10. Media Queries & Responsive
 ============================================ */
 @media (max-width: 1024px) {
-  body {
-    font-size: 14px;
-  }
-
-  header {
-    height: auto;
-    padding-top: 1rem; /* 15px -> 14px */
-    padding-bottom: 2rem; /* 30px -> 28px */
-  }
-
-  header .league-logo {
-    max-width: 7.14rem; /* 100px */
-  }
-
-  .main-nav {
-    gap: 0.57rem; /* 8px */
-    margin-bottom: 1.07rem; /* 15px */
-    margin-top: 0.71rem; /* 10px */
-  }
-
-  .nav-btn {
-    padding: 0.57rem 0.5rem; /* 8px 7px */
-    font-size: 0.88rem; /* ~12.3px */
-  }
-
-  .league-table {
-    width: 90%;
-  }
-
-  table {
-    font-size: 0.71rem; /* 10px */
-  }
-
-  thead th, tbody td {
-    padding: 0.5rem; /* 7px */
-  }
-
-  tbody td img {
-    width: 1.42rem; /* 20px */
-    height: 1.42rem; /* 20px */
-    margin-right: 0.28rem; /* 4px */
-  }
-  
-  .form-box {
-    width: 0.71rem; /* 10px */
-    height: 0.71rem; /* 10px */
-  }
-
-  .match-form {
-    width: 95%;
-  }
-
-  .form-group {
-    flex-direction: column;
-    gap: 0.57rem; /* 8px */
-  }
-
-  .form-group select,
-  .form-group input,
-  button[type="submit"] {
-    min-height: 2.85rem; /* 40px */
-    font-size: 1rem; /* 14px */
-  }
-
-  .win-gallery {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .wins {
-    min-width: 100%;
-    margin: 0.71rem 0; /* 10px */
-    padding: 1.07rem; /* 15px */
-  }
-
-  .screen-gallery {
-    grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr)); /* Adjust for smaller screens */
-    max-height: 21.4rem; /* 300px */
-  }
-
-  .player-details {
-    flex-direction: column;
-    max-width: 95%;
-  }
-
-  .player-info {
-    width: auto;
-    padding: 1.07rem; /* 15px */
-  }
-
-  .player-info h4 {
-    font-size: 1.42rem; /* 20px */
-  }
-
-  .player-info p {
-    font-size: 1rem; /* 14px */
-  }
-
-  .knockout-container {
-    max-width: 100%;
-  }
-
-  .match-day-card {
-    min-width: 8.57rem; /* 120px */
-    padding: 0.57rem; /* 8px */
-  }
-
-  .match-day-card h3 {
-    font-size: 0.9em;
-  }
-  
-  .match-card {
-    padding: 0.28rem; /* 4px */
-    margin-bottom: 0.28rem;
-  }
-
-  .match-card h3, .match-result {
-    font-size: 0.8em;
-  }
-
-  .ucl-match-day-container,
-  .uel-match-day-container,
-  .ecl-match-day-container {
-    gap: 1.42rem; /* 20px */
-  }
+  body { font-size: 14px; }
+  header { height: auto; padding-top: 1rem; padding-bottom: 2rem; }
+  header .league-logo { max-width: 7.14rem; }
+  .main-nav { gap: 0.57rem; margin-bottom: 1.07rem; margin-top: 0.71rem; }
+  .nav-btn { padding: 0.57rem 0.5rem; font-size: 0.88rem; }
+  .league-table { width: 90%; }
+  table { font-size: 0.71rem; }
+  thead th, tbody td { padding: 0.5rem; }
+  tbody td img { width: 1.42rem; height: 1.42rem; margin-right: 0.28rem; }
+  .form-box { width: 0.71rem; height: 0.71rem; }
+  .match-form { width: 95%; }
+  .form-group { flex-direction: column; gap: 0.57rem; }
+  .form-group select, .form-group input, button[type="submit"] { min-height: 2.85rem; font-size: 1rem; }
+  .knockout-container { max-width: 100%; }
+  .match-day-card { min-width: 8.57rem; padding: 0.57rem; }
+  .match-day-card h3 { font-size: 0.9em; }
+  .match-card { padding: 0.28rem; margin-bottom: 0.28rem; }
+  .match-card h3, .match-result { font-size: 0.8em; }
+  #match-day-container { gap: 1.42rem; }
+  .win-gallery { flex-direction: column; align-items: center; }
+  .wins { min-width: 100%; margin: 0.71rem 0; padding: 1.07rem; }
+  .screen-gallery { grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr)); max-height: 21.4rem; }
 }
