@@ -188,7 +188,7 @@ function sortTable(columnIndex, dataType) {
     const rows = Array.from(dom.leagueTableBody.querySelectorAll('tr:not(.separator)'));
 
     if (sortConfig.column === columnIndex) {
-        sortConfig.isAscending = !sortConfig.isAscending;
+        sortConfig.isDescending = !sortConfig.isDescending;
     } else {
         sortConfig.column = columnIndex;
         sortConfig.isAscending = (columnIndex === 1);
