@@ -54,10 +54,6 @@ body {
   animation: spin 1s linear infinite;
 }
 
-.team-logo.bounce:hover {
-  animation: bounce 0.5s ease infinite;
-}
-
 /* ============================================
    3. Background & Loading
 ============================================ */
@@ -153,9 +149,6 @@ header {
   box-shadow: 0 0 15px rgba(0, 86, 179, 0.6);
 }
 
-/* ============================================
-   5. Page Sections
-============================================ */
 .page-section {
   display: none;
   animation: fadeIn 0.5s ease-out;
@@ -166,7 +159,7 @@ header {
 }
 
 /* ============================================
-   6. League Table
+   5. League Table
 ============================================ */
 .league-table {
   width: 90%;
@@ -272,13 +265,9 @@ tbody tr:hover td {
 }
 
 /* ============================================
-   7. Match & Form Elements
-============================================ */
-/* ============================================
-   7.1 Match Submission Form
+   6. Match & Form Elements
 ============================================ */
 .match-form {
-  display: none !important;
   background: rgba(0, 0, 0, 0.7);
   padding: 1.25rem; /* 20px */
   border-radius: 10px;
@@ -331,9 +320,6 @@ button[type="submit"]:hover {
   background: #45a049;
 }
 
-/* ============================================
-   7.2 Match Day Section
-============================================ */
 .match-day {
   background: rgba(0, 0, 0, 0.7);
   padding: 1rem; /* 15px */
@@ -420,7 +406,7 @@ button[type="submit"]:hover {
 }
 
 /* ============================================
-   8. Knockout Stage
+   7. Knockout Stage
 ============================================ */
 .knockout-stage {
   margin: 2.5rem auto; /* 40px */
@@ -454,7 +440,6 @@ button[type="submit"]:hover {
   transform: scale(1.1);
 }
 
-/* UCL Specific Knockout Positions */
 .ucl-logos-container .r16-team.pos1 { top: 18.5%; left: 25%; }
 .ucl-logos-container .r16-team.pos2 { top: 18.5%; left: 72%; }
 .ucl-logos-container .r16-team.pos3 { top: 85%; left: 25%; }
@@ -480,7 +465,6 @@ button[type="submit"]:hover {
 .ucl-logos-container .playoff-unseeded.pos23 { top: 27.6%; left: 86%; }
 .ucl-logos-container .playoff-unseeded.pos24 { top: 27.6%; left: 10%; }
 
-/* UEL Specific Knockout Positions */
 .uel-logos-container .uel-r16-team.pos1 { top: 23%; left: 27%; }
 .uel-logos-container .uel-r16-team.pos2 { top: 23%; left: 68%; }
 .uel-logos-container .uel-r16-team.pos3 { top: 83%; left: 27%; }
@@ -488,7 +472,7 @@ button[type="submit"]:hover {
 .uel-logos-container .uel-r16-team.pos5 { top: 64%; left: 27%; }
 .uel-logos-container .uel-r16-team.pos6 { top: 64%; left: 68%; }
 .uel-logos-container .uel-r16-team.pos7 { top: 43%; left: 27%; }
-.ucl-logos-container .uel-r16-team.pos8 { top: 43%; left: 68%; }
+.uel-logos-container .uel-r16-team.pos8 { top: 43%; left: 68%; }
 .uel-logos-container .uel-playoff-seeded.pos9 { top: 39%; left: 9%; }
 .uel-logos-container .uel-playoff-seeded.pos10 { top: 39%; left: 86%; }
 .uel-logos-container .uel-playoff-seeded.pos11 { top: 59%; left: 86%; }
@@ -506,7 +490,6 @@ button[type="submit"]:hover {
 .uel-logos-container .uel-playoff-unseeded.pos23 { top: 30%; left: 86%; }
 .uel-logos-container .uel-playoff-unseeded.pos24 { top: 30%; left: 9%; }
 
-/* ECL Specific Knockout Positions */
 .ecl-logos-container .ecl-r16-team.pos1 { top: 17%; left: 24.5%; }
 .ecl-logos-container .ecl-r16-team.pos2 { top: 17%; left: 70.5%; }
 .ecl-logos-container .ecl-r16-team.pos3 { top: 83%; left: 24.5%; }
@@ -533,7 +516,7 @@ button[type="submit"]:hover {
 .ecl-logos-container .ecl-playoff-unseeded.pos24 { top: 25%; left: 6.5%; }
 
 /* ============================================
-   9. Highlights & Galleries
+   8. Highlights & Galleries
 ============================================ */
 .win-images {
   margin: 2.5rem auto; /* 40px */
@@ -586,137 +569,8 @@ button[type="submit"]:hover {
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
   border-color: #ffcc00;
 }
-
-.image-gallery {
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
-  transform: translateY(-1.25rem); /* -20px */
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  padding: 0 1rem;
-}
-
-.image-gallery.show {
-  max-height: 93.75rem; /* 1500px */
-  opacity: 1;
-  transform: translateY(0);
-  padding: 1rem;
-}
-
-.image-gallery img {
-  border-radius: 5px;
-  border: 2px solid #000000;
-  object-fit: cover;
-}
-
-
 /* ============================================
-   10. Player Details
-============================================ */
-.formation-screenshot {
-  position: relative;
-  margin: 0.625rem 0; /* 10px */
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  overflow-x: auto;
-}
-
-.formation-screenshot img {
-  width: 100%;
-  display: block;
-  pointer-events: none;
-}
-
-.player-icon {
-  position: absolute;
-  width: 3.125rem; /* 50px */
-  height: 3.125rem; /* 50px */
-  border: 2px solid transparent;
-  border-radius: 50%;
-  cursor: pointer;
-  transform: translate(-50%, -50%);
-  transition: all 0.3s ease;
-  z-index: 2;
-  overflow: hidden;
-}
-
-.player-icon img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.player-icon:hover {
-  transform: translate(-50%, -50%) scale(1.2);
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
-}
-
-.player-details-container {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.9);
-  z-index: 100;
-  justify-content: center;
-  align-items: center;
-}
-
-.player-details-container.active {
-  display: flex;
-}
-
-.player-details {
-  display: flex;
-  max-width: 50rem; /* 800px */
-  background: #292929;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.player-photo {
-  pointer-events: auto;
-  cursor: zoom-in;
-}
-
-.player-info {
-  padding: 1.25rem; /* 20px */
-  width: 18.75rem; /* 300px */
-}
-
-.player-info h4 {
-  font-size: 1.5rem; /* 24px */
-  margin-bottom: 1rem; /* 15px */
-  color: gold;
-}
-
-.player-info p {
-  margin: 0.625rem 0; /* 10px */
-  font-size: 1rem; /* 16px */
-}
-
-.close-details {
-  position: absolute;
-  top: 1.25rem; /* 20px */
-  right: 1.25rem; /* 20px */
-  color: white;
-  font-size: 1.875rem; /* 30px */
-  cursor: pointer;
-}
-
-.team-squad {
-  background: rgba(41, 41, 41, 0.8);
-  border-radius: 10px;
-  padding: 1.25rem; /* 20px */
-  margin: 1.25rem auto; /* 20px */
-  max-width: 56.25rem; /* 900px */
-}
-
-/* ============================================
-   11. Modal
+   9. Modal
 ============================================ */
 .modal {
   display: none;
@@ -762,7 +616,7 @@ button[type="submit"]:hover {
 }
 
 /* ============================================
-   12. Media Queries & Responsive
+   10. Media Queries & Responsive
 ============================================ */
 @media (max-width: 1024px) {
   body {
