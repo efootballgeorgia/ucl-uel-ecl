@@ -16,16 +16,12 @@ const appState = {
       bracket: "knockout-bracket.jpg",
       qualificationZones: { 8: "round16", 16: "knockout-seeded", 24: "knockout-unseeded" },
       highlights: {
-        "1": [],
-        "2": [],
-        "3": [],
-        "4": [],
-        "5": [],
-        "6": [],
-        "7": [],
-        "8": []
+        "1": [],"2": [],"3": [],"4": [],"5": [],"6": [],"7": [],"8": []
       },
-      teams: [ "Parma", "Tottenham", "Hellas Verona", "Nottingham Forest", "Lyon", "Manchester City", "Arsenal", "Celta Vigo", "Athletic Bilbao", "Juventus", "Marseille", "PSG", "AC Milan", "Barcelona", "Torino", "Osasuna", "Everton", "Empoli", "Metz", "Atalanta", "Liverpool", "Mallorca", "Brest", "Villarreal", "Chelsea", "Real Betis", "Monza", "Real Madrid", "Girona", "Venezia", "Manchester United", "Crystal Palace", "Rennes", "Inter Milan", "Bayern Munich", "Atletico Madrid" ],
+      teams: [ "Real Madrid", "Brest", "Manchester City", "Everton", "Celta Vigo", "Empoli", "Lyon", "Metz", "AC Milan", "Rennes", "Osasuna",
+         "Manchester United", "Atalanta", "Juventus", "Chelsea", "Parma", "Villarreal", "Girona", "Torino", "Athletic Bilbao", "Barcelona",
+          "Crystal Palace", "Inter Milan", "Hellas Verona", "Nottingham Forest", "PSG", "Real Betis", "Venezia", "Tottenham", "Mallorca",
+           "Bayern Munich", "Arsenal", "Liverpool", "Monza", "Monaco", "Atletico Madrid" ],
       knockoutPositions: [ { top: '18.5%', left: '25%' }, { top: '18.5%', left: '72%' }, { top: '85%', left: '25%' }, { top: '85%', left: '72%' }, { top: '63%', left: '25%' }, { top: '63%', left: '72%' }, { top: '40%', left: '25%' }, { top: '40%', left: '72%' }, { top: '36%', left: '10%' }, { top: '36%', left: '86%' }, { top: '60%', left: '86%' }, { top: '60%', left: '10%' }, { top: '83%', left: '86%' }, { top: '81%', left: '10%' }, { top: '15.5%', left: '86%' }, { top: '14.5%', left: '10%' }, { top: '5%', left: '86%' }, { top: '5%', left: '10%' }, { top: '72%', left: '10%' }, { top: '72%', left: '86%' }, { top: '50%', left: '10%' }, { top: '50%', left: '86%' }, { top: '27.6%', left: '86%' }, { top: '27.6%', left: '10%' }]
     },
     uel: {
@@ -34,14 +30,7 @@ const appState = {
       bracket: "uel-knockout-bracket.jpg",
       qualificationZones: { 8: "uel-round16" },
       highlights: {
-        "1": [],
-        "2": [],
-        "3": [],
-        "4": [],
-        "5": [],
-        "6": [],
-        "7": [],
-        "8": []
+        "1": [],"2": [],"3": [],"4": [],"5": [],"6": [],"7": [],"8": []
       },
       teams: [ ],
       knockoutPositions: [ { top: '23%', left: '27%' }, { top: '23%', left: '68%' }, { top: '83%', left: '27%' }, { top: '83%', left: '68%' }, { top: '64%', left: '27%' }, { top: '64%', left: '68%' }, { top: '43%', left: '27%' }, { top: '43%', left: '68%' }, { top: '39%', left: '9%' }, { top: '39%', left: '86%' }, { top: '59%', left: '86%' }, { top: '59%', left: '9%' }, { top: '79%', left: '86%' }, { top: '79%', left: '9%' }, { top: '19%', left: '86%' }, { top: '19%', left: '9%' }, { top: '10%', left: '86%' }, { top: '10%', left: '9%' }, { top: '70%', left: '9%' }, { top: '70%', left: '86%' }, { top: '50%', left: '9%' }, { top: '50%', left: '86%' }, { top: '30%', left: '86%' }, { top: '30%', left: '9%' }]
@@ -52,14 +41,7 @@ const appState = {
       bracket: "ecl-knockout-bracket.jpg",
       qualificationZones: { 8: "ecl-round16" },
       highlights: {
-        "1": [],
-        "2": [],
-        "3": [],
-        "4": [],
-        "5": [],
-        "6": [],
-        "7": [],
-        "8": []
+        "1": [],"2": [],"3": [],"4": [],"5": [],"6": [],"7": [],"8": []
       },
       teams: [ ],
       knockoutPositions: [ { top: '17%', left: '24.5%' }, { top: '17%', left: '70.5%' }, { top: '83%', left: '24.5%' }, { top: '83%', left: '70.5%' }, { top: '61%', left: '24.5%' }, { top: '61%', left: '70.5%' }, { top: '39%', left: '24.5%' }, { top: '39%', left: '70.5%' }, { top: '34%', left: '6.5%' }, { top: '34%', left: '88.5%' }, { top: '57%', left: '88.5%' }, { top: '57%', left: '6.5%' }, { top: '79%', left: '88.5%' }, { top: '79%', left: '6.5%' }, { top: '14%', left: '88.5%' }, { top: '14%', left: '6.5%' }, { top: '5%', left: '88.5%' }, { top: '5%', left: '6.5%' }, { top: '70%', left: '6.5%' }, { top: '70%', left: '88.5%' }, { top: '48%', left: '6.5%' }, { top: '48%', left: '88.5%' }, { top: '25%', left: '88.5%' }, { top: '25%', left: '6.5%' }]
@@ -294,11 +276,6 @@ function updateKnockoutStage(league) {
 
 function generateMatchDay(league) {
     const teams = [...appState.config[league].teams];
-    if (teams.length < 2) {
-        dom.matchDayContainer.innerHTML = '<p>Not enough teams for fixtures.</p>';
-        return;
-    }
-    
     const localFixtures = [];
     const numDays = 8;
     const n = teams.length;
