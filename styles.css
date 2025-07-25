@@ -681,7 +681,10 @@ button[type="submit"]:hover {
     max-width: 100%; 
   }
   #match-day-container { 
-    gap: 0.8rem; /* Reduced gap between cards */
+    display: flex; /* Ensures items are in a row */
+    overflow-x: auto; /* Enables horizontal scrolling */
+    padding-bottom: 1rem; /* Adds some space below the scrollbar */
+    gap: 0.8rem; /* Keeps the space between cards */
   }
   .win-gallery { 
     flex-direction: column; 
@@ -698,21 +701,22 @@ button[type="submit"]:hover {
 
   /* Adjustments for Match Day cards */
   .match-day-card {
-    min-width: 9rem; /* Reduced minimum width */
-    padding: 0.8rem; /* Adjusted padding */
+    min-width: 9rem;
+    padding: 0.8rem;
+    flex-shrink: 0; /* Prevents cards from shrinking */
   }
   
   .match-day-card h3 {
-    font-size: 1em; /* Smaller day title */
+    font-size: 1em;
     margin-bottom: 0.8rem;
   }
   
   .match-card {
-    padding: 0.4rem; /* Smaller padding for each match */
+    padding: 0.4rem;
     font-size: 0.9em;
   }
 
   .match-result {
-    font-size: 1em; /* Adjusted result font size */
+    font-size: 1em;
   }
 }
