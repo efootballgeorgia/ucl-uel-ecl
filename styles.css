@@ -267,7 +267,7 @@ tbody tr:hover td { background-color: rgba(41, 41, 41, 0.7); }
    6. Match & Form Elements
 ============================================ */
 .match-form {\
-  display: none important!;
+  display: none !important;
   background: rgba(22, 27, 34, 0.8);
   backdrop-filter: blur(10px);
   padding: 2rem;
