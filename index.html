@@ -21,56 +21,48 @@
         <button class="league-btn" data-league="uel">Europa League</button>
         <button class="league-btn" data-league="ecl">Conference League</button>
       </nav>
-      <img src="images/logos/champions-league-logo.webp" alt="Champions League Logo" class="league-logo ucl-logo active" data-league-logo="ucl">
-      <img src="images/logos/europa-league-logo.webp" alt="Europa League Logo" class="league-logo uel-logo" data-league-logo="uel">
-      <img src="images/logos/conference-league-logo.webp" alt="Conference League Logo" class="league-logo ecl-logo" data-league-logo="ecl">
+      <img src="images/logos/champions-league-logo.webp" alt="League Logo" id="league-logo" class="league-logo active">
       <nav class="main-nav">
         <button class="nav-btn active" data-page="league">Table</button>
         <button class="nav-btn" data-page="matches">Matches</button>
         <button class="nav-btn" data-page="knockout">Knockout</button>
-        <button class="nav-btn" data-page="day-win-images">Highlights</button>
+        <button class="nav-btn" data-page="highlights">Highlights</button>
       </nav>
     </div>
   </header>
 
   <main>
-    <section id="ucl-league-section" class="page-section active" data-league="ucl">
+    <section id="league-section" class="page-section active">
       <div class="league-table">
-        <table id="uclLeagueTable">
+        <table id="leagueTable">
           <thead>
             <tr>
               <th>#</th>
-              <th onclick="sortTable('ucl', 1, 'string')">Team</th>
-              <th onclick="sortTable('ucl', 2, 'number')">P</th>
-              <th onclick="sortTable('ucl', 3, 'number')">W</th>
-              <th onclick="sortTable('ucl', 4, 'number')">D</th>
-              <th onclick="sortTable('ucl', 5, 'number')">L</th>
-              <th onclick="sortTable('ucl', 6, 'goals')">+/-</th>
-              <th onclick="sortTable('ucl', 7, 'number')">Pts</th>
+              <th data-column-index="1" data-type="string">Team</th>
+              <th data-column-index="2" data-type="number">P</th>
+              <th data-column-index="3" data-type="number">W</th>
+              <th data-column-index="4" data-type="number">D</th>
+              <th data-column-index="5" data-type="number">L</th>
+              <th data-column-index="6" data-type="goals">+/-</th>
+              <th data-column-index="7" data-type="number">Pts</th>
               <th>Form</th>
             </tr>
           </thead>
           <tbody>
-          </tbody>
+            </tbody>
         </table>
       </div>
 
       <section class="match-form">
-        <h2>Add UCL Match Result</h2>
-        <div class="feedback-message"></div>
-        <form id="uclMatchForm">
+        <h2 id="match-form-title">Add UCL Match Result</h2>
+        <form id="matchForm">
           <div class="form-group">
-            <select id="uclHomeTeam" required>
-              <option value="">Home Team</option>
-            </select>
-            <input type="number" id="uclHomeScore" min="0" required>
+            <select id="homeTeam" required><option value="">Home Team</option></select>
+            <input type="number" id="homeScore" min="0" required>
           </div>
-
           <div class="form-group">
-            <select id="uclAwayTeam" required>
-              <option value="">Away Team</option>
-            </select>
-            <input type="number" id="uclAwayScore" min="0" required>
+            <select id="awayTeam" required><option value="">Away Team</option></select>
+            <input type="number" id="awayScore" min="0" required>
           </div>
           <div class="feedback-message"></div>
           <button type="submit">Add Match</button>
@@ -78,264 +70,34 @@
       </section>
     </section>
 
-    <section id="uel-league-section" class="page-section" data-league="uel">
-      <div class="league-table">
-        <table id="uelLeagueTable">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th onclick="sortTable('uel', 1, 'string')">Team</th>
-              <th onclick="sortTable('uel', 2, 'number')">P</th>
-              <th onclick="sortTable('uel', 3, 'number')">W</th>
-              <th onclick="sortTable('uel', 4, 'number')">D</th>
-              <th onclick="sortTable('uel', 5, 'number')">L</th>
-              <th onclick="sortTable('uel', 6, 'goals')">+/-</th>
-              <th onclick="sortTable('uel', 7, 'number')">Pts</th>
-              <th>Form</th>
-            </tr>
-          </thead>
-          <tbody>
-
-          </tbody>
-        </table>
-      </div>
-
-      <section class="match-form">
-        <h2>Add UEL Match Result</h2>
-        <div class="feedback-message"></div>
-        <form id="uelMatchForm">
-          <div class="form-group">
-            <select id="uelHomeTeam" required>
-              <option value="">Home Team</option>
-
-            </select>
-            <input type="number" id="uelHomeScore" min="0" required>
-          </div>
-
-          <div class="form-group">
-            <select id="uelAwayTeam" required>
-              <option value="">Away Team</option>
-            </select>
-            <input type="number" id="uelAwayScore" min="0" required>
-          </div>
-          <button type="submit">Add Match</button>
-        </form>
-      </section>
-    </section>
-
-    <section id="ecl-league-section" class="page-section" data-league="ecl">
-      <div class="league-table">
-        <table id="eclLeagueTable">
-          <thead>
-            <tr>
-              <th>#</th>
-              <th onclick="sortTable('ecl', 1, 'string')">Team</th>
-              <th onclick="sortTable('ecl', 2, 'number')">P</th>
-              <th onclick="sortTable('ecl', 3, 'number')">W</th>
-              <th onclick="sortTable('ecl', 4, 'number')">D</th>
-              <th onclick="sortTable('ecl', 5, 'number')">L</th>
-              <th onclick="sortTable('ecl', 6, 'goals')">+/-</th>
-              <th onclick="sortTable('ecl', 7, 'number')">Pts</th>
-              <th>Form</th>
-            </tr>
-          </thead>
-          <tbody>
-
-          </tbody>
-        </table>
-      </div>
-
-      <section class="match-form">
-        <h2>Add ECL Match Result</h2>
-        <div class="feedback-message"></div>
-        <form id="eclMatchForm">
-          <div class="form-group">
-            <select id="eclHomeTeam" required>
-              <option value="">Home Team</option>
-
-            </select>
-            <input type="number" id="eclHomeScore" min="0" required>
-          </div>
-
-          <div class="form-group">
-            <select id="eclAwayTeam" required>
-              <option value="">Away Team</option>
-
-            </select>
-            <input type="number" id="eclAwayScore" min="0" required>
-          </div>
-          <button type="submit">Add Match</button>
-        </form>
-      </section>
-    </section>
-
-    <section id="ucl-matches-section" class="page-section" data-league="ucl">
+    <section id="matches-section" class="page-section">
       <div class="match-day">
-        <h2>UCL Match Day</h2>
+        <h2 id="match-day-title">UCL Match Day</h2>
         <div class="search-container">
-          <input type="text" id="uclTeamSearch" class="team-search-input" placeholder="Search for a team...">
+          <input type="text" id="teamSearch" class="team-search-input" placeholder="Search for a team...">
         </div>
-        <div class="ucl-match-day-container"></div>
+        <div id="match-day-container"></div>
       </div>
     </section>
 
-    <section id="uel-matches-section" class="page-section" data-league="uel">
-      <div class="match-day">
-        <h2>UEL Match Day</h2>
-        <div class="search-container">
-          <input type="text" id="uelTeamSearch" class="team-search-input" placeholder="Search for a team...">
-        </div>
-        <div class="uel-match-day-container"></div>
-      </div>
-    </section>
-
-    <section id="ecl-matches-section" class="page-section" data-league="ecl">
-      <div class="match-day">
-        <h2>ECL Match Day</h2>
-        <div class="search-container">
-          <input type="text" id="eclTeamSearch" class="team-search-input" placeholder="Search for a team...">
-        </div>
-        <div class="ecl-match-day-container"></div>
-      </div>
-    </section>
-
-    <section id="ucl-knockout-section" class="page-section" data-league="ucl">
+    <section id="knockout-section" class="page-section">
       <div class="knockout-stage">
-        <h2>UCL Knockout Stage</h2>
-        <div class="ucl-knockout-container knockout-container">
-          <img src="images/knockout-bracket.jpg" alt="UCL Knockout Stage" class="knockout-bg">
-          <div class="ucl-logos-container logos-container">
-            <div class="r16-team pos1"></div>
-            <div class="r16-team pos2"></div>
-            <div class="r16-team pos3"></div>
-            <div class="r16-team pos4"></div>
-            <div class="r16-team pos5"></div>
-            <div class="r16-team pos6"></div>
-            <div class="r16-team pos7"></div>
-            <div class="r16-team pos8"></div>
-
-            <div class="playoff-seeded pos9"></div>
-            <div class="playoff-seeded pos10"></div>
-            <div class="playoff-seeded pos11"></div>
-            <div class="playoff-seeded pos12"></div>
-            <div class="playoff-seeded pos13"></div>
-            <div class="playoff-seeded pos14"></div>
-            <div class="playoff-seeded pos15"></div>
-            <div class="playoff-seeded pos16"></div>
-
-            <div class="playoff-unseeded pos17"></div>
-            <div class="playoff-unseeded pos18"></div>
-            <div class="playoff-unseeded pos19"></div>
-            <div class="playoff-unseeded pos20"></div>
-            <div class="playoff-unseeded pos21"></div>
-            <div class="playoff-unseeded pos22"></div>
-            <div class="playoff-unseeded pos23"></div>
-            <div class="playoff-unseeded pos24"></div>
+        <h2 id="knockout-title">UCL Knockout Stage</h2>
+        <div id="knockout-container" class="knockout-container">
           </div>
+      </div>
+    </section>
+    
+    <section id="highlights-section" class="page-section">
+        <div class="win-images">
+            <h2 id="highlights-title">Highlights</h2>
+            <div id="win-gallery-container" class="win-gallery">
+                </div>
         </div>
-      </div>
-    </section>
-
-    <section id="uel-knockout-section" class="page-section" data-league="uel">
-      <div class="knockout-stage">
-        <h2>UEL Knockout Stage</h2>
-        <div class="uel-knockout-container knockout-container">
-          <img src="images/uel-knockout-bracket.jpg" alt="UEL Knockout Stage" class="knockout-bg">
-          <div class="uel-logos-container logos-container">
-            <div class="uel-r16-team pos1"></div>
-            <div class="uel-r16-team pos2"></div>
-            <div class="uel-r16-team pos3"></div>
-            <div class="uel-r16-team pos4"></div>
-            <div class="uel-r16-team pos5"></div>
-            <div class="uel-r16-team pos6"></div>
-            <div class="uel-r16-team pos7"></div>
-            <div class="uel-r16-team pos8"></div>
-
-            <div class="uel-playoff-seeded pos9"></div>
-            <div class="uel-playoff-seeded pos10"></div>
-            <div class="uel-playoff-seeded pos11"></div>
-            <div class="uel-playoff-seeded pos12"></div>
-            <div class="uel-playoff-seeded pos13"></div>
-            <div class="uel-playoff-seeded pos14"></div>
-            <div class="uel-playoff-seeded pos15"></div>
-            <div class="uel-playoff-seeded pos16"></div>
-
-            <div class="uel-playoff-unseeded pos17"></div>
-            <div class="uel-playoff-unseeded pos18"></div>
-            <div class="uel-playoff-unseeded pos19"></div>
-            <div class="uel-playoff-unseeded pos20"></div>
-            <div class="uel-playoff-unseeded pos21"></div>
-            <div class="uel-playoff-unseeded pos22"></div>
-            <div class="uel-playoff-unseeded pos23"></div>
-            <div class="uel-playoff-unseeded pos24"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="ecl-knockout-section" class="page-section" data-league="ecl">
-      <div class="knockout-stage">
-        <h2>ECL Knockout Stage</h2>
-        <div class="ecl-knockout-container knockout-container">
-          <img src="images/ecl-knockout-bracket.jpg" alt="ECL Knockout Stage" class="knockout-bg">
-          <div class="ecl-logos-container logos-container">
-            <div class="ecl-r16-team pos1"></div>
-            <div class="ecl-r16-team pos2"></div>
-            <div class="ecl-r16-team pos3"></div>
-            <div class="ecl-r16-team pos4"></div>
-            <div class="ecl-r16-team pos5"></div>
-            <div class="ecl-r16-team pos6"></div>
-            <div class="ecl-r16-team pos7"></div>
-            <div class="ecl-r16-team pos8"></div>
-
-            <div class="ecl-playoff-seeded pos9"></div>
-            <div class="ecl-playoff-seeded pos10"></div>
-            <div class="ecl-playoff-seeded pos11"></div>
-            <div class="ecl-playoff-seeded pos12"></div>
-            <div class="ecl-playoff-seeded pos13"></div>
-            <div class="ecl-playoff-seeded pos14"></div>
-            <div class="ecl-playoff-seeded pos15"></div>
-            <div class="ecl-playoff-seeded pos16"></div>
-
-            <div class="ecl-playoff-unseeded pos17"></div>
-            <div class="ecl-playoff-unseeded pos18"></div>
-            <div class="ecl-playoff-unseeded pos19"></div>
-            <div class="ecl-playoff-unseeded pos20"></div>
-            <div class="ecl-playoff-unseeded pos21"></div>
-            <div class="ecl-playoff-unseeded pos22"></div>
-            <div class="ecl-playoff-unseeded pos23"></div>
-            <div class="ecl-playoff-unseeded pos24"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="ucl-day-win-images-section" class="page-section" data-league="ucl">
-      <div class="win-images">
-        <h2>Team Highlights</h2>
-        <div class="win-gallery">
-          </div>
-      </div>
-    </section>
-
-    <section id="uel-day-win-images-section" class="page-section" data-league="uel">
-      <div class="win-images">
-        <h2>Team Highlights</h2>
-        <div class="win-gallery">
-          </div>
-      </div>
-    </section>
-
-    <section id="ecl-day-win-images-section" class="page-section" data-league="ecl">
-      <div class="win-images">
-        <h2>Team Highlights</h2>
-        <div class="win-gallery">
-          </div>
-      </div>
     </section>
 
     <div class="modal" id="myModal">
-      <span class="close" onclick="closeModal()">&times;</span>
+      <span class="close" id="closeModal">&times;</span>
       <img class="modal-content" id="modalImage">
     </div>
   </main>
