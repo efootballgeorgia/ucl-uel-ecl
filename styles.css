@@ -2,20 +2,24 @@
    1. General Styles & CSS Variables
 ============================================ */
 :root {
-  --primary-bg: #1a1a40;
-  --secondary-bg: #292929;
-  --tertiary-bg: #333;
-  --text-color: #fff;
-  --accent-color: #0056b3;
-  --win-color: green;
-  --loss-color: red;
-  --draw-color: gray;
-  --border-radius: 8px;
+  --primary-bg: #0d1117;
+  --secondary-bg: #161b22;
+  --tertiary-bg: #21262d;
+  --text-color: #c9d1d9;
+  --text-color-secondary: #8b949e;
+  --accent-color: #ffd700; /* Gold */
+  --win-color: #238636;
+  --loss-color: #da3633;
+  --draw-color: #8b949e;
+  --border-color: #30363d;
+  --border-radius: 12px;
   --header-height: 80px;
+  --font-primary: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-secondary: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: var(--font-secondary);
   background: var(--primary-bg);
   color: var(--text-color);
   text-align: center;
@@ -24,6 +28,12 @@ body {
   position: relative;
   box-sizing: border-box;
   font-size: 16px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-primary);
+    font-weight: 600;
+    color: #fff;
 }
 
 /* ============================================
@@ -40,7 +50,8 @@ body {
 }
 
 .team-logo:hover {
-  animation: spin 1s linear infinite;
+  transform: scale(1.1);
+  transition: transform 0.2s ease-in-out;
 }
 
 /* ============================================
@@ -54,6 +65,7 @@ body {
   height: 100%;
   object-fit: cover;
   z-index: -1;
+  filter: blur(5px) brightness(0.7);
 }
 
 #loading {
@@ -62,7 +74,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.9);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -77,18 +89,23 @@ body {
 header {
   position: relative;
   z-index: 1000;
-  padding: 1rem 0;
+  padding: 1.5rem 0;
+  background: rgba(13, 17, 23, 0.7);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .header-content {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .league-logo {
-  max-width: 150px;
+  max-width: 120px;
   height: auto;
   display: none;
 }
@@ -105,26 +122,31 @@ header {
 }
 
 .league-btn, .nav-btn {
-  padding: 0.75rem 1.25rem;
-  background: rgba(0, 0, 0, 0.7);
+  padding: 0.75rem 1.5rem;
+  background: transparent;
   color: var(--text-color);
-  border: none;
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   cursor: pointer;
   transition: all 0.3s ease;
-  font-weight: bold;
+  font-weight: 600;
+  font-family: var(--font-primary);
 }
 
 .league-btn:hover, .nav-btn:hover,
 .league-btn:focus, .nav-btn:focus {
   background: var(--accent-color);
-  outline: 2px solid var(--accent-color);
-  outline-offset: 2px;
+  color: var(--primary-bg);
+  border-color: var(--accent-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.2);
 }
 
 .league-btn.active, .nav-btn.active {
   background: var(--accent-color);
-  box-shadow: 0 0 15px rgba(0, 86, 179, 0.6);
+  color: var(--primary-bg);
+  border-color: var(--accent-color);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
 }
 
 .page-section {
@@ -140,14 +162,17 @@ header {
    5. League Table
 ============================================ */
 .league-table {
-  width: 90%;
+  width: 95%;
   max-width: 1200px;
   margin: 2rem auto;
   border-radius: var(--border-radius);
   overflow: hidden;
   -webkit-overflow-scrolling: touch;
   overflow-x: auto;
-  font-size: 19px;
+  font-size: 1rem;
+  background: rgba(22, 27, 34, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
 }
 
 table {
@@ -156,59 +181,72 @@ table {
 }
 
 thead th {
-  background-color: #222;
-  color: rgb(149, 131, 131);
-  padding: 0.75rem;
+  background-color: rgba(33, 38, 45, 0.9);
+  color: #fff;
+  padding: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
   white-space: nowrap;
+  font-family: var(--font-primary);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 thead th:hover {
-  background-color: #333;
+  background-color: var(--tertiary-bg);
 }
 
 th[data-sort="asc"]::after {
   content: " ▲";
-  font-size: 0.75rem;
-  color: #4CAF50;
+  font-size: 0.8rem;
+  color: var(--accent-color);
 }
 
 th[data-sort="desc"]::after {
   content: " ▼";
-  font-size: 0.75rem;
-  color: #F44336;
+  font-size: 0.8rem;
+  color: var(--accent-color);
 }
 
 tbody td {
-  background-color: var(--secondary-bg);
-  padding: 0.75rem;
+  padding: 0.8rem 1rem;
   text-align: center;
   transition: background-color 0.3s ease;
   white-space: nowrap;
+  border-bottom: 1px solid var(--border-color);
+}
+
+tbody td b.points {
+  color: #fff;
+  font-weight: 700;
 }
 
 tbody td img {
-  height: 40px;
+  height: 35px;
+  width: 35px;
   vertical-align: middle;
-  margin-right: 10px;
+  margin-right: 15px;
   cursor: pointer;
+  border-radius: 50%;
+  padding: 2px;
 }
 
-tbody tr:nth-child(even) td {
-  background-color: var(--tertiary-bg);
+tbody tr {
+    background-color: transparent;
 }
 
 tbody tr:hover td {
-  background-color: #444;
+  background-color: rgba(41, 41, 41, 0.7);
 }
 
 .form-box {
   display: inline-block;
   width: 1rem;
   height: 1rem;
-  margin: 0 2px;
-  border-radius: 3px;
+  margin: 0 3px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .form-box.victory { background-color: var(--win-color); }
@@ -216,10 +254,11 @@ tbody tr:hover td {
 .form-box.draw { background-color: var(--draw-color); }
 
 .separator td {
-  background-color: var(--primary-bg) !important;
+  background-color: transparent !important;
   padding: 0 !important;
   height: 25px;
   position: relative;
+  border: 0;
 }
 
 .separator .line {
@@ -231,7 +270,7 @@ tbody tr:hover td {
 .round16 .line { background-color: #0de41c; }
 .knockout-seeded .line { background-color: #157736; }
 .knockout-unseeded .line { background-color: #d72811; }
-.uel-round16 .line { background-color: #FFD700; }
+.uel-round16 .line { background-color: var(--accent-color); }
 .ecl-round16 .line { background-color: #FFA500; }
 
 .separator .label {
@@ -248,56 +287,68 @@ tbody tr:hover td {
 ============================================ */
 .match-form {
   display: none !important;
-  background: rgba(0, 0, 0, 0.7);
-  padding: 1.25rem;
-  border-radius: 10px;
-  margin: 1.25rem auto;
-  width: 37.5rem;
+  background: rgba(22, 27, 34, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  margin: 2rem auto;
+  width: 90%;
+  max-width: 600px;
   z-index: 1;
   position: relative;
-}
-
-.match-form h2 {
-  margin-bottom: 1rem;
+  border: 1px solid var(--border-color);
 }
 
 #matchForm {
   display: flex;
   flex-direction: column;
-  gap: 0.625rem;
+  gap: 1rem;
 }
 
 .form-group {
   display: flex;
-  gap: 0.625rem;
+  gap: 1rem;
   align-items: center;
 }
 
 .form-group select,
 .form-group input {
   flex: 1;
-  padding: 0.5rem;
-  border-radius: 5px;
-  border: 1px solid #444;
-  background: #333;
-  color: white;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--secondary-bg);
+  color: var(--text-color);
   min-height: 3rem;
   font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-group select:focus,
+.form-group input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
 }
 
 button[type="submit"] {
-  background: #4CAF50;
-  color: white;
-  padding: 0.625rem 1.25rem;
+  background: var(--accent-color);
+  color: var(--primary-bg);
+  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s ease;
   min-height: 3rem;
+  font-family: var(--font-primary);
+  font-weight: 700;
+  font-size: 1.1rem;
 }
 
 button[type="submit"]:hover {
-  background: #45a049;
+  background: #ffed4a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.2);
 }
 
 .feedback-message {
@@ -318,60 +369,66 @@ button[type="submit"]:hover {
 }
 
 .feedback-message.success {
-  background-color: #4CAF50;
+  background-color: var(--win-color);
   color: white;
 }
 
 .feedback-message.error {
-  background-color: #f44336;
+  background-color: var(--loss-color);
   color: white;
 }
 
 .match-day {
-  background: rgba(0, 0, 0, 0.7);
-  padding: 1rem;
-  border-radius: 10px;
+  background: rgba(22, 27, 34, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
   margin: 1rem auto;
   width: 98%;
   max-width: 62.5rem;
   z-index: 1;
   position: relative;
   overflow-x: auto;
+  border: 1px solid var(--border-color);
 }
 
 .match-day h2 {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   color: #fff;
   text-align: center;
 }
 
 #match-day-container {
   display: flex;
-  gap: 0.625rem;
+  gap: 1rem;
   padding-bottom: 1rem;
 }
 
 .match-day-card {
-  background: #333;
-  border-radius: 8px;
-  padding: 0.625rem;
+  background: var(--tertiary-bg);
+  border-radius: var(--border-radius);
+  padding: 0.8rem;
   text-align: center;
   color: #fff;
   font-size: 0.875rem;
-  min-width: 9.375rem;
+  min-width: 9rem;
   flex-shrink: 0;
+  border: 1px solid var(--border-color);
 }
 
 .match-day-card h3 {
-  margin: 0.3125rem 0 0.5rem;
+  margin: 0.3125rem 0 1rem;
   font-size: 1em;
+  font-family: var(--font-primary);
+  margin-bottom: 0.8rem;
 }
 
 .match-card {
-  background: #444;
-  border-radius: 6px;
-  padding: 0.3125rem;
-  margin-bottom: 0.3125rem;
+  background: var(--secondary-bg);
+  border-radius: 8px;
+  padding: 0.4rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.9em;
 }
 
 .match-card h3 {
@@ -382,11 +439,12 @@ button[type="submit"]:hover {
 .match-result {
   font-size: 1em;
   font-weight: bold;
-  margin-top: 0.1875rem;
+  margin-top: 0.3rem;
+  color: var(--accent-color);
 }
 
 .search-container {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -396,10 +454,10 @@ button[type="submit"]:hover {
 .team-search-input {
   width: 70%;
   max-width: 400px;
-  padding: 0.6rem;
-  border-radius: 5px;
-  border: 1px solid #555;
-  background: #2a2a2a;
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--secondary-bg);
   color: #fff;
   font-size: 1rem;
   box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
@@ -409,7 +467,7 @@ button[type="submit"]:hover {
 .team-search-input:focus {
   outline: none;
   border-color: var(--accent-color);
-  box-shadow: 0 0 10px rgba(0, 86, 179, 0.5);
+  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
 }
 
 /* ============================================
@@ -433,11 +491,12 @@ button[type="submit"]:hover {
   width: 100%;
   height: auto;
   display: block;
+  border-radius: var(--border-radius);
 }
 
 .logo-wrapper {
   position: absolute;
-  width: 5%; /* Adjust width as needed */
+  width: 5%;
   height: auto;
   cursor: pointer;
   transition: transform 0.3s ease;
@@ -447,10 +506,11 @@ button[type="submit"]:hover {
   width: 100%;
   height: auto;
   object-fit: contain;
+  border-radius: 50%;
 }
 
 .logo-wrapper:hover {
-  transform: scale(1.1);
+  transform: scale(1.15);
   z-index: 10;
 }
 
@@ -469,25 +529,36 @@ button[type="submit"]:hover {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 1.25rem;
+  gap: 1.5rem;
 }
 
 .wins {
-  background: #292929;
-  border-radius: 10px;
-  padding: 1.25rem;
-  flex: 1 1 18.75rem;
-  max-width: 20rem;
+  background: rgba(22, 27, 34, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  padding: 1.5rem;
+  flex: 1 1 20rem;
+  max-width: 22rem;
   text-align: center;
   box-sizing: border-box;
   position: relative;
   animation: fadeIn 0.5s ease-out;
 }
 
+.wins h3 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+}
+
 .screen-gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-  gap: 0.625rem;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1rem;
   max-height: 25rem;
   overflow-y: auto;
   scrollbar-width: thin;
@@ -495,10 +566,10 @@ button[type="submit"]:hover {
 }
 
 .screen-gallery img {
-  width: 130px;
-  height: 58px;
-  border-radius: 5px;
-  border: 2px solid #000000;
+  width: 100%;
+  height: 80px;
+  border-radius: 8px;
+  border: 2px solid transparent;
   transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   object-fit: cover;
   cursor: pointer;
@@ -506,8 +577,8 @@ button[type="submit"]:hover {
 
 .screen-gallery img:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6);
-  border-color: #ffcc00;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  border-color: var(--accent-color);
 }
 
 
@@ -522,10 +593,10 @@ button[type="submit"]:hover {
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.9);
   justify-content: center;
   align-items: center;
-  transition: opacity 0.5s ease-in-out;
+  transition: opacity 0.3s ease;
   opacity: 0;
 }
 
@@ -535,52 +606,113 @@ button[type="submit"]:hover {
 }
 
 .modal-content {
-  max-width: 95%;
-  max-height: 95%;
+  max-width: 90%;
+  max-height: 90%;
   object-fit: contain;
   cursor: pointer;
+  border-radius: var(--border-radius);
+  box-shadow: 0 0 50px rgba(0,0,0,0.7);
 }
 
 .close {
   position: absolute;
-  top: 1.25rem;
-  right: 2.1875rem;
+  top: 1.5rem;
+  right: 2.5rem;
   color: #fff;
-  font-size: 2.5rem;
+  font-size: 3rem;
   font-weight: bold;
   cursor: pointer;
+  transition: color 0.3s ease;
 }
 
 .close:hover,
 .close:focus {
-  color: #bbb;
+  color: var(--accent-color);
   text-decoration: none;
 }
 
 /* ============================================
    10. Media Queries & Responsive
 ============================================ */
-@media (max-width: 1024px) {
-  body { font-size: 14px; }
-  header { height: auto; padding-top: 1rem; padding-bottom: 2rem; }
-  header .league-logo { max-width: 7.14rem; }
-  .main-nav { gap: 0.57rem; margin-bottom: 1.07rem; margin-top: 0.71rem; }
-  .nav-btn { padding: 0.57rem 0.5rem; font-size: 0.88rem; }
-  .league-table { width: 90%; }
-  table { font-size: 0.71rem; }
-  thead th, tbody td { padding: 0.5rem; }
-  tbody td img { width: 1.42rem; height: 1.42rem; margin-right: 0.28rem; }
-  .form-box { width: 0.71rem; height: 0.71rem; }
-  .match-form { width: 95%; }
-  .form-group { flex-direction: column; gap: 0.57rem; }
-  .form-group select, .form-group input, button[type="submit"] { min-height: 2.85rem; font-size: 1rem; }
-  .knockout-container { max-width: 100%; }
-  .match-day-card { min-width: 8.57rem; padding: 0.57rem; }
-  .match-day-card h3 { font-size: 0.9em; }
-  .match-card { padding: 0.28rem; margin-bottom: 0.28rem; }
-  .match-card h3, .match-result { font-size: 0.8em; }
-  #match-day-container { gap: 1.42rem; }
-  .win-gallery { flex-direction: column; align-items: center; }
-  .wins { min-width: 100%; margin: 0.71rem 0; padding: 1.07rem; }
-  .screen-gallery { grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr)); max-height: 21.4rem; }
+@media (max-width: 768px) {
+  body { 
+    font-size: 12px;
+  }
+  header { 
+    padding: 1rem; 
+  }
+  .header-content { 
+    gap: 1rem; 
+  }
+  .league-logo { 
+    max-width: 100px; 
+  }
+  .main-nav { 
+    gap: 0.5rem; 
+  }
+  .nav-btn { 
+    padding: 0.6rem 1rem; 
+  }
+  .league-table { 
+    width: 98%; 
+    font-size: 0.75rem;
+  }
+  thead th, tbody td { 
+    padding: 0.5rem 0.3rem;
+  }
+  tbody td img { 
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+  }
+  .form-box { 
+    width: 0.7rem;
+    height: 0.7rem;
+  }
+  .match-form { 
+    width: 95%; 
+    padding: 1.5rem; 
+  }
+  .form-group { 
+    flex-direction: column; 
+    gap: 0.8rem; 
+  }
+  .knockout-container { 
+    max-width: 100%; 
+  }
+  #match-day-container { 
+    gap: 0.8rem; /* Reduced gap between cards */
+  }
+  .win-gallery { 
+    flex-direction: column; 
+    align-items: center; 
+  }
+  .wins { 
+    width: 100%; 
+    max-width: 100%; 
+    margin: 0.71rem 0; 
+  }
+  .screen-gallery { 
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
+  }
+
+  /* Adjustments for Match Day cards */
+  .match-day-card {
+    min-width: 9rem; /* Reduced minimum width */
+    padding: 0.8rem; /* Adjusted padding */
+  }
+  
+  .match-day-card h3 {
+    font-size: 1em; /* Smaller day title */
+    margin-bottom: 0.8rem;
+  }
+  
+  .match-card {
+    padding: 0.4rem; /* Smaller padding for each match */
+    font-size: 0.9em;
+  }
+
+  .match-result {
+    font-size: 1em; /* Adjusted result font size */
+  }
 }
