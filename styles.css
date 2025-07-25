@@ -147,6 +147,7 @@ header {
   overflow: hidden;
   -webkit-overflow-scrolling: touch;
   overflow-x: auto;
+  font-size: 19px;
 }
 
 table {
