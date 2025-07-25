@@ -113,6 +113,21 @@ const debounce = (func, delay = 300) => {
     };
 };
 
+function checkFormValidity() {
+  const form = dom.matchForm;
+  const submitButton = form.querySelector('button[type="submit"]');
+  const homeTeam = dom.homeTeamSelect.value;
+  const awayTeam = dom.awayTeamSelect.value;
+  const homeScore = document.getElementById('homeScore').value;
+  const awayScore = document.getElementById('awayScore').value;
+
+  if (homeTeam && awayTeam && homeTeam !== awayTeam && homeScore !== '' && awayScore !== '') {
+    submitButton.classList.add('ready');
+  } else {
+    submitButton.classList.remove('ready');
+  }
+}
+
 /* ============================================
    5. Core Application Logic
 ============================================ */
@@ -357,6 +372,7 @@ async function handleMatchSubmission(e) {
     
     submitButton.textContent = 'Adding...';
     submitButton.disabled = true;
+    submitButton.classList.remove('ready');
 
     const matchData = {
         homeTeam, awayTeam, homeScore, awayScore,
@@ -399,7 +415,7 @@ async function loadLeagueData(league) {
 
         matches.forEach(match => {
             const isDraw = match.homeScore === match.awayScore;
-            updateTeamStats(match.homeTeam, match.homeScore, match.awayScore, match.homeScore > match.awayScore, isDraw);
+            updateTeamStats(match.homeTeam, match.homeScore, match.awayScore, match.homeScore > match.aScore, isDraw);
             updateTeamStats(match.awayTeam, match.awayScore, match.homeScore, match.awayScore > match.homeScore, isDraw);
             updateMatchDayResults(match.homeTeam, match.awayTeam, match.homeScore, match.awayScore);
         });
@@ -445,6 +461,7 @@ function setupEventListeners() {
     });
     
     dom.matchForm.addEventListener('submit', handleMatchSubmission);
+    dom.matchForm.addEventListener('input', checkFormValidity);
 
     dom.teamSearchInput.addEventListener('keyup', debounce(() => {
         const searchTerm = dom.teamSearchInput.value.toLowerCase();
