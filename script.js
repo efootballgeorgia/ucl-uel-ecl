@@ -1,704 +1,502 @@
 /* ============================================
-   1. Constants & DOM Elements
+   1. App Configuration & State
 ============================================ */
-const images = document.querySelectorAll('.image-gallery img');
-const screens = document.querySelectorAll('.screen-gallery img');
+const leagueConfig = {
+  ucl: {
+    teams: [
+      "Parma", "Tottenham", "Hellas Verona", "Nottingham Forest", "Lyon", "Manchester City",
+      "Arsenal", "Celta Vigo", "Athletic Bilbao", "Juventus", "Marseille", "PSG", "AC Milan",
+      "Barcelona", "Torino", "Osasuna", "Everton", "Empoli", "Metz", "Atalanta", "Liverpool",
+      "Mallorca", "Brest", "Villarreal", "Chelsea", "Real Betis", "Monza", "Real Madrid",
+      "Girona", "Venezia", "Manchester United", "Crystal Palace", "Rennes", "Inter Milan",
+      "Bayern Munich", "Atletico Madrid"
+    ]
+  },
+  uel: {
+    teams: [ ] // Example teams
+  },
+  ecl: {
+    teams: [ ] // Example teams
+  }
+};
+
 const modal = document.getElementById('myModal');
 const modalImage = document.getElementById('modalImage');
-
-let currentSortColumn = {}; // Object to store sort column per league
-let isAscending = {}; // Object to store sort order per league
 const matchDayContainers = {
   ucl: document.querySelector('.ucl-match-day-container'),
   uel: document.querySelector('.uel-match-day-container'),
-  ecl: document.querySelector('.ecl-match-day-container') // New: Conference League match day container
+  ecl: document.querySelector('.ecl-match-day-container')
 };
-let matchDayGenerated = { ucl: false, uel: false, ecl: false }; // Flag per league
-let fixtures = { ucl: [], uel: [], ecl: [] }; // Store generated fixtures per league
 
-let currentLeague = 'ucl'; // Default to UCL
+let currentLeague = 'ucl';
+let currentSortColumn = {};
+let isAscending = {};
+let matchDayGenerated = { ucl: false, uel: false, ecl: false };
+let fixtures = { ucl: [], uel: [], ecl: [] };
 
 /* ============================================
    2. Firebase Configuration & Initialization
 ============================================ */
+// IMPORTANT: For production, move this configuration to a secure environment.
 const firebaseConfig = {
-  apiKey: "AIzaSyAQSPphqNP7BHzbRXLYDwrkUsPyIJpcALc",
-  authDomain: "nekro-league-9e7bf.firebaseapp.com",
-  projectId: "nekro-league-9e7bf",
-  storageBucket: "nekro-league-9e7bf.appspot.com",
-  messagingSenderId: "721371342919",
-  appId: "1:721371342919:web:217f325dadb42db4a8e962",
-  measurementId: "G-0NCFK58SMN"
+    apiKey: "AIzaSyAQSPphqNP7BHzbRXLYDwrkUsPyIJpcALc",
+    authDomain: "nekro-league-9e7bf.firebaseapp.com",
+    projectId: "nekro-league-9e7bf",
+    storageBucket: "nekro-league-9e7bf.appspot.com",
+    messagingSenderId: "721371342919",
+    appId: "1:721371342919:web:217f325dadb42db4a8e962"
 };
 
 const app = firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-const analytics = firebase.analytics(app);
-console.log("Firebase initialized:", app);
+console.log("Firebase initialized");
 
 /* ============================================
-   3. Utility Functions
+   3. Utility & Helper Functions
 ============================================ */
-
-// Modal Control
 function closeModal() {
   modal.classList.remove('show');
 }
 
-// Toggle Gallery Display (if still used)
-function toggleGallery(logo) {
-  const gallery = logo.nextElementSibling;
-  if (gallery.classList.contains('show')) {
-    gallery.classList.remove('show');
-  } else {
-    gallery.classList.add('show');
-  }
+function debounce(func, delay = 300) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
 }
 
-// Enhanced Sorting Functionality for League Table
+function showFeedback(formElement, message, isSuccess) {
+  const feedbackDiv = formElement.querySelector('.feedback-message');
+  feedbackDiv.textContent = message;
+  feedbackDiv.className = `feedback-message ${isSuccess ? 'success' : 'error'} show`;
+  setTimeout(() => {
+    feedbackDiv.className = 'feedback-message';
+  }, 3000);
+}
+
+/* ============================================
+   4. Core Table & Data Functions
+============================================ */
+function renderTable(league) {
+    const tableBody = document.querySelector(`#${league}LeagueTable tbody`);
+    const teams = leagueConfig[league].teams;
+    const fragment = document.createDocumentFragment(); // Use a Document Fragment
+
+    tableBody.innerHTML = '';
+
+    if (!teams || teams.length === 0) {
+        return;
+    }
+
+    teams.forEach((teamName, index) => {
+        const teamLogoName = teamName.toLowerCase().replace(/ /g, '-');
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>
+              <picture>
+                <source srcset="images/logos/${teamLogoName}.webp" type="image/webp">
+                <source srcset="images/logos/${teamLogoName}.png" type="image/png">
+                <img src="images/logos/${teamLogoName}.png" alt="${teamName}" loading="lazy">
+              </picture>
+              <b>${teamName}</b>
+            </td>
+            <td>0</td><td>0</td><td>0</td><td>0</td><td>0:0</td>
+            <td><b class="points">0</b></td>
+            <td><span class="form-box draw"></span></td>
+        `;
+        fragment.appendChild(row); // Append row to the fragment
+
+        if ([7, 15, 23].includes(index)) {
+            const separatorRow = document.createElement('tr');
+            separatorRow.className = 'separator';
+            let lineClass = index === 7 ? 'round16' : (index === 15 ? 'knockout-seeded' : 'knockout-unseeded');
+            separatorRow.innerHTML = `<td colspan="9" class="${lineClass}"><span class="line"></span></td>`;
+            fragment.appendChild(separatorRow); // Append separator to the fragment
+        }
+    });
+
+    tableBody.appendChild(fragment); // Append the entire fragment to the DOM once
+}
+
+
+function populateTeamDropdowns(league) {
+    const homeSelect = document.getElementById(`${league}HomeTeam`);
+    const awaySelect = document.getElementById(`${league}AwayTeam`);
+    const teams = leagueConfig[league].teams;
+
+    homeSelect.innerHTML = '<option value="">Home Team</option>';
+    awaySelect.innerHTML = '<option value="">Away Team</option>';
+
+    teams.forEach(team => {
+        homeSelect.add(new Option(team, team));
+        awaySelect.add(new Option(team, team));
+    });
+}
+
 function sortTable(league, columnIndex, dataType) {
   const table = document.getElementById(`${league}LeagueTable`);
   const tbody = table.querySelector('tbody');
-  const rows = Array.from(tbody.querySelectorAll('tr'));
+  const rows = Array.from(tbody.querySelectorAll('tr:not(.separator)'));
 
-  const teamRows = rows.filter(row => !row.classList.contains('separator'));
-  const separatorRows = rows.filter(row => row.classList.contains('separator'));
-
-  // Initialize sort state for the league if not present
   if (currentSortColumn[league] === undefined) {
-    currentSortColumn[league] = null;
-    isAscending[league] = true;
+    currentSortColumn[league] = 7;
+    isAscending[league] = false;
   }
 
-  // Toggle sort order if the same column is clicked again
   if (currentSortColumn[league] === columnIndex) {
     isAscending[league] = !isAscending[league];
   } else {
     currentSortColumn[league] = columnIndex;
-    isAscending[league] = true;
+    isAscending[league] = (columnIndex === 1);
   }
 
-  teamRows.sort((a, b) => {
+  rows.sort((a, b) => {
     const aPoints = parseInt(a.cells[7].querySelector('.points').textContent);
     const bPoints = parseInt(b.cells[7].querySelector('.points').textContent);
-
-    // Primary sort: points
     if (aPoints !== bPoints) {
-      return isAscending[league] ? bPoints - aPoints : aPoints - bPoints;
+        return isAscending[league] ? aPoints - bPoints : bPoints - aPoints;
     }
 
-    // Secondary sort: selected column based on data type
     const aCell = a.cells[columnIndex];
     const bCell = b.cells[columnIndex];
-    let aValue, bValue;
+    let aVal, bVal;
 
     switch (dataType) {
-      case 'number':
-        aValue = parseInt(aCell.textContent);
-        bValue = parseInt(bCell.textContent);
-        break;
-      case 'string':
-        aValue = aCell.textContent.trim().toLowerCase();
-        bValue = bCell.textContent.trim().toLowerCase();
-        break;
-      case 'goals':
-        const aGoals = aCell.textContent.split(':').map(Number);
-        const bGoals = bCell.textContent.split(':').map(Number);
-        aValue = aGoals[0] - aGoals[1];
-        bValue = bGoals[0] - bGoals[1];
-        break;
-      default:
-        return 0;
+        case 'number':
+            aVal = parseInt(aCell.textContent) || 0;
+            bVal = parseInt(bCell.textContent) || 0;
+            return isAscending[league] ? aVal - bVal : bVal - aVal;
+        case 'string':
+            aVal = aCell.textContent.trim().toLowerCase();
+            bVal = bCell.textContent.trim().toLowerCase();
+            return isAscending[league] ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+        case 'goals':
+            const [aF, aA] = aCell.textContent.split(':').map(Number);
+            const [bF, bA] = bCell.textContent.split(':').map(Number);
+            aVal = aF - aA;
+            bVal = bF - bA;
+            return isAscending[league] ? aVal - bVal : bVal - aVal;
+        default:
+            return 0;
     }
-
-    if (aValue < bValue) return isAscending[league] ? -1 : 1;
-    if (aValue > bValue) return isAscending[league] ? 1 : -1;
-    return 0;
   });
 
-  // Rebuild the table with updated rows and positions
-  tbody.innerHTML = '';
+  const fragment = document.createDocumentFragment();
   let teamIndex = 0;
-  rows.forEach((row) => {
-    if (row.classList.contains('separator')) {
-      tbody.appendChild(row);
-    } else {
-      const teamRow = teamRows[teamIndex];
-      teamRow.cells[0].textContent = teamIndex + 1; // Update team position
-      tbody.appendChild(teamRow);
-      teamIndex++;
-    }
-  });
-
-  // Add visual feedback for sorted column
-  const headers = table.querySelectorAll('th');
-  headers.forEach((header, index) => {
-    if (index === columnIndex) {
-      header.setAttribute('data-sort', isAscending[league] ? 'asc' : 'desc');
-    } else {
-      header.removeAttribute('data-sort');
-    }
-  });
-}
-
-// Update Team Statistics
-function updateTeamStats(league, teamName, goalsFor, goalsAgainst, isWin, isDraw) {
-  const rows = document.querySelectorAll(`#${league}LeagueTable tbody tr:not(.separator)`);
+  let separatorIndex = 0;
+  const originalRows = Array.from(tbody.querySelectorAll('tr'));
+  const separators = originalRows.filter(row => row.classList.contains('separator'));
 
   rows.forEach(row => {
-    const teamCell = row.cells[1];
-    if (teamCell.querySelector('b').textContent === teamName) {
+      teamIndex++;
+      row.cells[0].textContent = teamIndex;
+      fragment.appendChild(row);
+      if ([8, 16, 24].includes(teamIndex) && separatorIndex < separators.length) {
+          fragment.appendChild(separators[separatorIndex++]);
+      }
+  });
+  tbody.innerHTML = '';
+  tbody.appendChild(fragment);
+
+  table.querySelectorAll('th').forEach((th, i) => th.dataset.sort = (i === columnIndex) ? (isAscending[league] ? 'asc' : 'desc') : '');
+}
+
+function updateTeamStats(league, teamName, gf, ga, isWin, isDraw) {
+  const rows = document.querySelectorAll(`#${league}LeagueTable tbody tr`);
+  rows.forEach(row => {
+    if (row.cells.length > 1 && row.cells[1].querySelector('b')?.textContent === teamName) {
       const cells = row.cells;
-      cells[2].textContent = parseInt(cells[2].textContent) + 1; // Played
-      cells[3].textContent = parseInt(cells[3].textContent) + (isWin ? 1 : 0); // Won
-      cells[4].textContent = parseInt(cells[4].textContent) + (isDraw ? 1 : 0); // Draw
-      cells[5].textContent = parseInt(cells[5].textContent) + (!isWin && !isDraw ? 1 : 0); // Lost
+      cells[2].textContent = parseInt(cells[2].textContent) + 1; // P
+      cells[3].textContent = parseInt(cells[3].textContent) + (isWin ? 1 : 0); // W
+      cells[4].textContent = parseInt(cells[4].textContent) + (isDraw ? 1 : 0); // D
+      cells[5].textContent = parseInt(cells[5].textContent) + (!isWin && !isDraw ? 1 : 0); // L
+      const [currF, currA] = cells[6].textContent.split(':').map(Number);
+      cells[6].textContent = `${currF + gf}:${currA + ga}`; // +/-
+      cells[7].querySelector('.points').textContent = (parseInt(cells[3].textContent) * 3) + parseInt(cells[4].textContent);
 
-      const [currentFor, currentAgainst] = cells[6].textContent.split(':').map(Number);
-      cells[6].textContent = `${currentFor + goalsFor}:${currentAgainst + goalsAgainst}`; // Goal difference
-
-      const points = (parseInt(cells[3].textContent) * 3) + parseInt(cells[4].textContent);
-      cells[7].querySelector('.points').textContent = points; // Update points
-
-      // Update the match form cell with new form box
       const formCell = cells[8];
-
-      // Remove the oldest form box if there are already 5 form boxes
-      if (formCell.children.length >= 5) {
-        formCell.removeChild(formCell.lastChild);
-      }
-
-      // Create and add the new form box
+      if (formCell.children.length >= 5) formCell.removeChild(formCell.lastChild);
       const formBox = document.createElement('span');
-      formBox.className = 'form-box';
-      if (isWin) {
-        formBox.classList.add('victory');
-      } else if (isDraw) {
-        formBox.classList.add('draw');
-      } else {
-        formBox.classList.add('loss');
-      }
+      formBox.className = `form-box ${isWin ? 'victory' : isDraw ? 'draw' : 'loss'}`;
       formCell.prepend(formBox);
     }
   });
 }
 
-// Add Match to Firestore
-function addMatch(league, homeTeam, awayTeam, homeScore, awayScore) {
-  return db.collection(`${league}Matches`).add({ // Use league to determine collection
-    homeTeam: homeTeam,
-    awayTeam: awayTeam,
-    homeScore: homeScore,
-    awayScore: awayScore,
-    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-  });
-}
-
-// Fetch and Display Existing Matches
-function fetchMatches(league) {
-  return db.collection(`${league}Matches`).orderBy('timestamp', 'desc').get(); // Use league to determine collection
-}
-
-/* ============================================
-   4. Event Listeners for Modal & Gallery
-============================================ */
-// Open modal when any gallery image is clicked
-screens.forEach(screen => {
-  screen.addEventListener('click', (event) => { // Add event parameter
-    modal.classList.add('show');
-    modalImage.src = event.target.src; // Use clicked image's src
-  });
-});
-
-// Close modal when clicking outside the modal image
-modal.addEventListener('click', (event) => {
-  if (event.target === modal) {
-    closeModal();
-  }
-});
-
-/* ============================================
-   5. Event Listener for Match Form Submission
-============================================ */
-document.getElementById('uclMatchForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-
-  const homeTeam = document.getElementById('uclHomeTeam').value;
-  const awayTeam = document.getElementById('uclAwayTeam').value;
-  const homeScore = parseInt(document.getElementById('uclHomeScore').value);
-  const awayScore = parseInt(document.getElementById('uclAwayScore').value);
-
-  if (homeTeam === awayTeam) {
-    alert('A team cannot play against itself!');
-    return;
-  }
-
-  this.reset();
-  updateAll('ucl'); // Pass league to updateAll
-
-  // Save match to Firestore and update UI
-  addMatch('ucl', homeTeam, awayTeam, homeScore, awayScore)
-    .then(() => {
-      console.log('UCL Match added to Firestore');
-      const isDraw = homeScore === awayScore;
-
-      updateTeamStats(
-        'ucl',
-        homeTeam,
-        homeScore,
-        awayScore,
-        homeScore > awayScore,
-        isDraw
-      );
-      updateTeamStats(
-        'ucl',
-        awayTeam,
-        awayScore,
-        homeScore,
-        awayScore > homeScore, // Corrected win condition for away team
-        isDraw
-      );
-
-      sortTable('ucl', 7, 'number');
-      updateMatchDayResults('ucl', homeTeam, awayTeam, homeScore, awayScore);
-    })
-    .catch(error => console.error("Error adding UCL match:", error));
-});
-
-document.getElementById('uelMatchForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-
-  const homeTeam = document.getElementById('uelHomeTeam').value;
-  const awayTeam = document.getElementById('uelAwayTeam').value;
-  const homeScore = parseInt(document.getElementById('uelHomeScore').value);
-  const awayScore = parseInt(document.getElementById('uelAwayScore').value);
-
-  if (homeTeam === awayTeam) {
-    alert('A team cannot play against itself!');
-    return;
-  }
-
-  this.reset();
-  updateAll('uel'); // Pass league to updateAll
-
-  // Save match to Firestore and update UI
-  addMatch('uel', homeTeam, awayTeam, homeScore, awayScore)
-    .then(() => {
-      console.log('UEL Match added to Firestore');
-      const isDraw = homeScore === awayScore;
-
-      updateTeamStats(
-        'uel',
-        homeTeam,
-        homeScore,
-        awayScore,
-        homeScore > awayScore,
-        isDraw
-      );
-      updateTeamStats(
-        'uel',
-        awayTeam,
-        awayScore,
-        homeScore,
-        awayScore > homeScore, // Corrected win condition for away team
-        isDraw
-      );
-
-      sortTable('uel', 7, 'number');
-      updateMatchDayResults('uel', homeTeam, awayTeam, homeScore, awayScore);
-    })
-    .catch(error => console.error("Error adding UEL match:", error));
-});
-
-// New Event Listener for Conference League Match Form Submission
-document.getElementById('eclMatchForm').addEventListener('submit', function(e) {
-  e.preventDefault();
-
-  const homeTeam = document.getElementById('eclHomeTeam').value;
-  const awayTeam = document.getElementById('eclAwayTeam').value;
-  const homeScore = parseInt(document.getElementById('eclHomeScore').value);
-  const awayScore = parseInt(document.getElementById('eclAwayScore').value);
-
-  if (homeTeam === awayTeam) {
-    alert('A team cannot play against itself!');
-    return;
-  }
-
-  this.reset();
-  updateAll('ecl'); // Pass league to updateAll
-
-  // Save match to Firestore and update UI
-  addMatch('ecl', homeTeam, awayTeam, homeScore, awayScore)
-    .then(() => {
-      console.log('ECL Match added to Firestore');
-      const isDraw = homeScore === awayScore;
-
-      updateTeamStats(
-        'ecl',
-        homeTeam,
-        homeScore,
-        awayScore,
-        homeScore > awayScore,
-        isDraw
-      );
-      updateTeamStats(
-        'ecl',
-        awayTeam,
-        awayScore,
-        homeScore,
-        awayScore > homeScore,
-        isDraw
-      );
-
-      sortTable('ecl', 7, 'number');
-      updateMatchDayResults('ecl', homeTeam, awayTeam, homeScore, awayScore);
-    })
-    .catch(error => console.error("Error adding ECL match:", error));
-});
-
-
-/* ============================================
-   6. Player Squad Interaction
-============================================ */
-
-// Initialize player interactions (if applicable for both leagues)
-function initPlayerInteractions(league) {
-  // Assuming player details are still global or handled elsewhere.
-  // If player data becomes league-specific, this function would need
-  // to be adapted to fetch correct data based on the league.
-  document.querySelectorAll(`#${league}LeagueTable tbody td img`).forEach(logo => {
-    logo.addEventListener('click', function() {
-      const teamName = this.closest('td').querySelector('b').textContent;
-      const formattedName = teamName.toLowerCase().replace(/ /g, '-');
-      const gameplanPath = `images/gameplans/${formattedName}.jpg`;
-
-      modalImage.src = gameplanPath;
-      modal.classList.add('show');
-    });
-  });
-}
-
-function showPlayerDetails(playerId, teamContainer) {
-  // Hide all player details in this team first
-  teamContainer.querySelectorAll('.player-details').forEach(detail => {
-    detail.style.display = 'none';
-  });
-
-  // Show the selected player
-  const playerDetail = teamContainer.querySelector(`.player-details[data-player="${playerId}"]`);
-  if (playerDetail) {
-    playerDetail.style.display = 'flex';
-    teamContainer.querySelector('.player-details-container').classList.add('active');
-  }
-}
-
-function closePlayerDetails(teamContainer) {
-  teamContainer.querySelector('.player-details-container').classList.remove('active');
-}
-
 function updateKnockoutStage(league) {
-  const teams = Array.from(document.querySelectorAll(`#${league}LeagueTable tbody tr:not(.separator)`));
+    const teams = Array.from(document.querySelectorAll(`#${league}LeagueTable tbody tr:not(.separator)`));
+    const leagueContainer = document.querySelector(`.${league}-logos-container`);
 
-  // Clear existing logos for the current league
-  document.querySelector(`.${league}-logos-container`).querySelectorAll('div').forEach(div => div.innerHTML = '');
+    if (!leagueContainer) return;
 
-  teams.forEach((team, index) => {
-    const position = index + 1;
-    const logo = team.querySelector('img').cloneNode(true);
-    logo.style.width = '100%';
-    logo.style.height = '100%';
-    logo.style.objectFit = 'cover';
+    leagueContainer.querySelectorAll('div').forEach(div => div.innerHTML = '');
 
-    let targetSelector;
-    if (league === 'ucl') {
-      if (position <= 8) targetSelector = `.r16-team.pos${position}`;
-      else if (position <= 16) targetSelector = `.playoff-seeded.pos${position}`;
-      else if (position <= 24) targetSelector = `.playoff-unseeded.pos${position}`;
-    } else if (league === 'uel') {
-      if (position <= 8) targetSelector = `.uel-r16-team.pos${position}`;
-      else if (position <= 16) targetSelector = `.uel-playoff-seeded.pos${position}`;
-      else if (position <= 24) targetSelector = `.uel-playoff-unseeded.pos${position}`;
-    } else if (league === 'ecl') { // New: Conference League logic
-      if (position <= 8) targetSelector = `.ecl-r16-team.pos${position}`;
-      else if (position <= 16) targetSelector = `.ecl-playoff-seeded.pos${position}`;
-      else if (position <= 24) targetSelector = `.ecl-playoff-unseeded.pos${position}`;
-    }
-
-    if (targetSelector) {
-      const container = document.querySelector(`.${league}-logos-container ${targetSelector}`);
-      if (container) container.appendChild(logo);
-    }
-  });
-}
-
-// Call this after any table update
-function updateAll(league) {
-  sortTable(league, 7, 'number');
-  updateKnockoutStage(league);
-}
-
-// Function to generate and display match day fixtures
-function generateMatchDay(league) {
-  if (matchDayGenerated[league]) return; // Only generate once per league
-
-  const teams = Array.from(document.querySelectorAll(`#${league}LeagueTable tbody tr:not(.separator)`)).map(row => row.cells[1].querySelector('b').textContent);
-  fixtures[league] = [];
-
-  // Basic Round-Robin Scheduling (e.g., 8 days for UCL/UEL, fewer for ECL if fewer teams)
-const numDays = 8; // As requested, 8 match days.
-  const n = teams.length;
-
-  // This algorithm requires an even number of teams.
-  // Your list has 36, which works perfectly.
-  if (n % 2 !== 0) {
-      // You would need to add a "bye" team for this to work
-      console.error("Scheduling logic requires an even number of teams.");
-      return;
-  }
-
-  for (let day = 1; day <= numDays; day++) {
-    const dayFixtures = [];
-    const numMatchesPerDay = n / 2;
-
-    for (let matchIndex = 0; matchIndex < numMatchesPerDay; matchIndex++) {
-        // Correctly pair teams from opposite ends of the array
-        const team1 = teams[matchIndex];
-        const team2 = teams[n - 1 - matchIndex];
-
-        // Keep the original logic for alternating home/away games
-        if (day % 2 === 0) {
-            dayFixtures.push({ home: team1, away: team2, day: day, matchIndex: matchIndex });
-        } else {
-            dayFixtures.push({ home: team2, away: team1, day: day, matchIndex: matchIndex });
+    teams.forEach((team, index) => {
+        const position = index + 1;
+        const pictureElement = team.querySelector('picture').cloneNode(true);
+        const logoImage = pictureElement.querySelector('img');
+        if (logoImage) {
+            logoImage.style.width = '100%';
+            logoImage.style.height = '100%';
+            logoImage.style.objectFit = 'cover';
         }
-    }
+        let targetClass;
+        if (position <= 8) {
+            targetClass = league === 'ucl' ? `.r16-team.pos${position}` : `.${league}-r16-team.pos${position}`;
+        } else if (position <= 16) {
+            targetClass = league === 'ucl' ? `.playoff-seeded.pos${position}` : `.${league}-playoff-seeded.pos${position}`;
+        } else if (position <= 24) {
+            targetClass = league === 'ucl' ? `.playoff-unseeded.pos${position}` : `.${league}-playoff-unseeded.pos${position}`;
+        }
 
-    fixtures[league].push(dayFixtures);
-    
-    // The rotation logic is correct and remains the same.
-    // It cycles the opponents for the fixed first team.
-    teams.splice(1, 0, teams.pop());
-  }
-
-  // Display fixtures
-  let matchDayHTML = '';
-  fixtures[league].forEach((dayFixtures, index) => {
-    matchDayHTML += `
-            <div class="match-day-card">
-                <h3>Day ${index + 1}</h3>
-        `;
-    dayFixtures.forEach(match => {
-      matchDayHTML += `
-                <div class="match-card" data-home="${match.home}" data-away="${match.away}" data-day="${match.day}" data-match-index="${match.matchIndex}">
-                    ${match.home} vs ${match.away}
-                    <div class="match-result">- / -</div>
-                </div>
-            `;
+        if (targetClass) {
+            const container = leagueContainer.querySelector(targetClass);
+            if (container) {
+                container.appendChild(pictureElement);
+            }
+        }
     });
-    matchDayHTML += '</div>';
-  });
-
-  matchDayContainers[league].innerHTML = matchDayHTML;
-  matchDayGenerated[league] = true;
 }
 
-// Update match results in the Match Day section
-function updateMatchDayResults(league, homeTeam, awayTeam, homeScore, awayScore) {
+/* ============================================
+   5. Match Day & Fixtures
+============================================ */
+function generateMatchDay(league) {
+    if (matchDayGenerated[league]) return;
+    const teams = [...leagueConfig[league].teams];
+    if (teams.length < 2) {
+        matchDayContainers[league].innerHTML = '<p>Not enough teams for fixtures.</p>';
+        return;
+    }
+    fixtures[league] = [];
+    const numDays = 8;
+    const n = teams.length;
+    for (let day = 1; day <= numDays; day++) {
+        const dayFixtures = [];
+        for (let i = 0; i < n / 2; i++) {
+            dayFixtures.push(day % 2 === 0 ? { home: teams[i], away: teams[n - 1 - i] } : { home: teams[n - 1 - i], away: teams[i] });
+        }
+        fixtures[league].push(dayFixtures);
+        teams.splice(1, 0, teams.pop());
+    }
+    let html = '';
+    fixtures[league].forEach((dayFixtures, i) => {
+        html += `<div class="match-day-card"><h3>Day ${i + 1}</h3>`;
+        dayFixtures.forEach(match => {
+            html += `<div class="match-card" data-home="${match.home}" data-away="${match.away}">
+                        ${match.home} vs ${match.away}
+                        <div class="match-result">- / -</div>
+                     </div>`;
+        });
+        html += '</div>';
+    });
+    matchDayContainers[league].innerHTML = html;
+    matchDayGenerated[league] = true;
+}
+
+function updateMatchDayResults(league, home, away, homeScore, awayScore) {
   const matchCards = document.querySelectorAll(`#${league}-matches-section .match-card`);
   matchCards.forEach(card => {
-    if ((card.dataset.home === homeTeam && card.dataset.away === awayTeam) ||
-      (card.dataset.home === awayTeam && card.dataset.away === homeTeam)) { // Handle both home/away scenarios
+    if (card.dataset.home === home && card.dataset.away === away) {
       card.querySelector('.match-result').textContent = `${homeScore} / ${awayScore}`;
+    } else if (card.dataset.home === away && card.dataset.away === home) {
+        card.querySelector('.match-result').textContent = `${awayScore} / ${homeScore}`;
     }
   });
 }
 
 function loadMatchDayResults(league) {
-  fetchMatches(league)
-    .then(querySnapshot => {
-      querySnapshot.forEach(doc => {
-        const match = doc.data();
-        updateMatchDayResults(league, match.homeTeam, match.awayTeam, match.homeScore, match.awayScore);
-      });
-    })
-    .catch(error => console.error(`Error fetching matches for ${league} Match Day:`, error));
+    fetchMatches(league).then(snapshot => {
+        snapshot.forEach(doc => {
+            const match = doc.data();
+            updateMatchDayResults(league, match.homeTeam, match.awayTeam, match.homeScore, match.awayScore);
+        });
+    });
 }
 
-function initTeamLogoInteractions(league) {
-  document.querySelectorAll(`#${league}LeagueTable tbody td img`).forEach(logo => {
-    logo.addEventListener('click', function() {
-      const teamName = this.closest('td').querySelector('b').textContent;
-      const formattedName = teamName.toLowerCase().replace(/ /g, '-');
-      const gameplanPath = `images/gameplans/${formattedName}.jpg`;
-
-      modalImage.src = gameplanPath;
-      modal.classList.add('show');
-    });
+/* ============================================
+   6. Firebase Interactions
+============================================ */
+function addMatch(league, homeTeam, awayTeam, homeScore, awayScore) {
+  return db.collection(`${league}Matches`).add({
+    homeTeam, awayTeam, homeScore, awayScore,
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
   });
 }
 
-// Navigation functionality (main tabs: League Table, Match Day, Knockout)
+function fetchMatches(league) {
+  return db.collection(`${league}Matches`).orderBy('timestamp', 'desc').get();
+}
+
+/* ============================================
+   7. Event Listeners & App Initialization
+============================================ */
+function handleMatchSubmission(league) {
+    const homeTeam = document.getElementById(`${league}HomeTeam`).value;
+    const awayTeam = document.getElementById(`${league}AwayTeam`).value;
+    const homeScore = parseInt(document.getElementById(`${league}HomeScore`).value);
+    const awayScore = parseInt(document.getElementById(`${league}AwayScore`).value);
+    const form = document.getElementById(`${league}MatchForm`);
+    const submitButton = form.querySelector('button[type="submit"]');
+
+    if (!homeTeam || !awayTeam || isNaN(homeScore) || isNaN(awayScore)) {
+        showFeedback(form, 'Please fill all fields.', false);
+        return;
+    }
+    if (homeTeam === awayTeam) {
+        showFeedback(form, 'A team cannot play itself.', false);
+        return;
+    }
+    
+    submitButton.textContent = 'Adding...';
+    submitButton.disabled = true;
+
+    addMatch(league, homeTeam, awayTeam, homeScore, awayScore).then(() => {
+        showFeedback(form, 'Match added successfully!', true);
+        const isDraw = homeScore === awayScore;
+        updateTeamStats(league, homeTeam, homeScore, awayScore, homeScore > awayScore, isDraw);
+        updateTeamStats(league, awayTeam, awayScore, homeScore, awayScore > homeScore, isDraw);
+        sortTable(league, 7, 'number');
+        updateMatchDayResults(league, homeTeam, awayTeam, homeScore, awayScore);
+        updateKnockoutStage(league);
+        form.reset();
+    }).catch(error => {
+        showFeedback(form, 'Error adding match.', false);
+        console.error(`Error adding ${league.toUpperCase()} match:`, error);
+    }).finally(() => {
+        submitButton.textContent = 'Add Match';
+        submitButton.disabled = false;
+    });
+}
+
 function setupNavigation() {
-  const navButtons = document.querySelectorAll('.main-nav .nav-btn');
-  // Sections are now filtered by league
-  const pageSections = document.querySelectorAll('.page-section');
-
-  navButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      // Remove active class from all buttons
-      navButtons.forEach(btn => btn.classList.remove('active'));
-      button.classList.add('active'); // Add active class to clicked button
-
-      // Hide all page sections for all leagues
-      pageSections.forEach(section => section.classList.remove('active'));
-
-      // Show the corresponding section for the currentLeague
-      const pageId = button.dataset.page;
-      document.getElementById(`${currentLeague}-${pageId}-section`).classList.add('active');
-
-      // Special handling for each page if needed
-      if (pageId === 'matches') {
-        generateMatchDay(currentLeague);
-        loadMatchDayResults(currentLeague);
-      }
-      if (pageId === 'knockout') {
-        updateKnockoutStage(currentLeague);
-      }
+    document.querySelectorAll('.main-nav .nav-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            document.querySelectorAll('.main-nav .nav-btn').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+            document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
+            const pageId = button.dataset.page;
+            document.getElementById(`${currentLeague}-${pageId}-section`).classList.add('active');
+            if (pageId === 'matches') generateMatchDay(currentLeague);
+        });
     });
-  });
 }
 
-// League selection functionality (UCL, UEL, ECL)
 function setupLeagueNavigation() {
-  const leagueButtons = document.querySelectorAll('.league-selector-nav .league-btn');
-  const leagueLogos = document.querySelectorAll('.league-logo');
-
-  leagueButtons.forEach(button => {
-    button.addEventListener('click', () => {
-      const selectedLeague = button.dataset.league;
-
-      // Update active button classes
-      leagueButtons.forEach(btn => btn.classList.remove('active'));
-      button.classList.add('active');
-
-      // Update active league logo
-      leagueLogos.forEach(logo => logo.classList.remove('active'));
-      document.querySelector(`[data-league-logo="${selectedLeague}"]`).classList.add('active');
-
-
-      currentLeague = selectedLeague; // Update global currentLeague
-
-      // Hide all main page sections
-      document.querySelectorAll('.page-section').forEach(section => {
-        section.classList.remove('active');
-      });
-
-      // Activate the default section ('league') for the newly selected league
-      document.getElementById(`${currentLeague}-league-section`).classList.add('active');
-
-      // Reset main navigation active state to 'League Table'
-      document.querySelectorAll('.main-nav .nav-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if (btn.dataset.page === 'league') {
-          btn.classList.add('active');
-        }
-      });
-
-      // Load data for the newly selected league
-      loadLeagueData(currentLeague);
+    document.querySelectorAll('.league-selector-nav .league-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            currentLeague = button.dataset.league;
+            document.querySelectorAll('.league-selector-nav .league-btn, .league-logo').forEach(el => el.classList.remove('active'));
+            button.classList.add('active');
+            document.querySelector(`[data-league-logo="${currentLeague}"]`).classList.add('active');
+            document.querySelectorAll('.page-section').forEach(section => section.classList.remove('active'));
+            document.querySelector('.main-nav .nav-btn.active').classList.remove('active');
+            document.querySelector('.main-nav .nav-btn[data-page="league"]').classList.add('active');
+            document.getElementById(`${currentLeague}-league-section`).classList.add('active');
+            loadLeagueData(currentLeague);
+        });
     });
-  });
 }
 
 function setupSearchFilters() {
-  const handleSearch = (league) => {
-    const searchInput = document.getElementById(`${league}TeamSearch`);
-    if (!searchInput) return;
-
-    const searchTerm = searchInput.value.toLowerCase();
-    const matchDayContainer = document.querySelector(`.${league}-match-day-container`);
-    if (!matchDayContainer) return;
-
-    const matchDays = matchDayContainer.querySelectorAll('.match-day-card');
-
-    matchDays.forEach(day => {
-      const matches = day.querySelectorAll('.match-card');
-      let dayHasVisibleMatch = false;
-
-      matches.forEach(match => {
-        const homeTeam = match.dataset.home.toLowerCase();
-        const awayTeam = match.dataset.away.toLowerCase();
-
-        const isVisible = homeTeam.includes(searchTerm) || awayTeam.includes(searchTerm);
-        match.style.display = isVisible ? 'block' : 'none';
-        if (isVisible) {
-          dayHasVisibleMatch = true;
-        }
-      });
-
-      day.style.display = dayHasVisibleMatch ? 'block' : 'none';
+    const handleSearch = (league) => {
+        const searchTerm = document.getElementById(`${league}TeamSearch`).value.toLowerCase();
+        const matchDays = document.querySelector(`.${league}-match-day-container`).querySelectorAll('.match-day-card');
+        matchDays.forEach(day => {
+            let dayHasVisibleMatch = false;
+            day.querySelectorAll('.match-card').forEach(match => {
+                const home = match.dataset.home.toLowerCase();
+                const away = match.dataset.away.toLowerCase();
+                const isVisible = home.includes(searchTerm) || away.includes(searchTerm);
+                match.style.display = isVisible ? 'block' : 'none';
+                if (isVisible) dayHasVisibleMatch = true;
+            });
+            day.style.display = dayHasVisibleMatch ? 'block' : 'none';
+        });
+    };
+    ['ucl', 'uel', 'ecl'].forEach(league => {
+        const input = document.getElementById(`${league}TeamSearch`);
+        if (input) input.addEventListener('keyup', debounce(() => handleSearch(league)));
     });
-  };
-
-  ['ucl', 'uel', 'ecl'].forEach(league => {
-    const searchInput = document.getElementById(`${league}TeamSearch`);
-    if (searchInput) {
-      searchInput.addEventListener('keyup', () => handleSearch(league));
-    }
-  });
 }
 
-// New function to load all data for a given league
 function loadLeagueData(league) {
-  // Reset table stats for the current league
-  document.querySelectorAll(`#${league}LeagueTable tbody tr:not(.separator)`).forEach(row => {
-    const cells = row.cells;
-    cells[2].textContent = '0'; // Played
-    cells[3].textContent = '0'; // Won
-    cells[4].textContent = '0'; // Draw
-    cells[5].textContent = '0'; // Lost
-    cells[6].textContent = '0:0'; // Goal difference
-    cells[7].querySelector('.points').textContent = '0'; // Points
-    cells[8].innerHTML = '<span class="form-box draw"></span>'; // Reset form to draw
-  });
+    renderTable(league);
+    populateTeamDropdowns(league);
+    fetchMatches(league).then(snapshot => {
+        snapshot.forEach(doc => {
+            const match = doc.data();
+            updateTeamStats(league, match.homeTeam, match.homeScore, match.awayScore, match.homeScore > match.awayScore, match.homeScore === match.awayScore);
+            updateTeamStats(league, match.awayTeam, match.awayScore, match.homeScore, match.awayScore > match.homeScore, match.homeScore === match.awayScore);
+        });
+        sortTable(league, 7, 'number');
+        matchDayGenerated[league] = false;
+        generateMatchDay(league);
+        loadMatchDayResults(league);
+        updateKnockoutStage(league);
+    }).catch(error => console.error(`Error loading data for ${league}:`, error));
+}
 
-  fetchMatches(league)
-    .then(querySnapshot => {
-      querySnapshot.forEach(doc => {
-        const match = doc.data();
-        updateTeamStats(
-          league,
-          match.homeTeam,
-          match.homeScore,
-          match.awayScore,
-          match.homeScore > match.awayScore,
-          match.homeScore === match.awayScore
-        );
-        updateTeamStats(
-          league,
-          match.awayTeam,
-          match.awayScore,
-          match.homeScore,
-          match.awayScore > match.homeScore,
-          match.awayScore === match.homeScore
-        );
-      });
-      sortTable(league, 7, 'number');
-      // Reset matchDayGenerated flag for the current league if you want it regenerated on switch
-      matchDayGenerated[league] = false;
-      generateMatchDay(league);
-      loadMatchDayResults(league);
-      updateKnockoutStage(league);
-      initTeamLogoInteractions(league);
-    })
-    .catch(error => console.error(`Error fetching initial data for ${league}:`, error));
+function renderHighlightGalleries() {
+  const leagues = {
+    ucl: 'champions-league-logo',
+    uel: 'europa-league-logo',
+    ecl: 'conference-league-logo'
+  };
+
+  for (const [league, logoFile] of Object.entries(leagues)) {
+    const galleryContainer = document.querySelector(`#${league}-day-win-images-section .win-gallery`);
+    if (galleryContainer) {
+      let galleryHtml = '';
+      for (let i = 1; i <= 8; i++) {
+        galleryHtml += `
+          <div class="wins">
+            <h3>
+              <img src="images/logos/${logoFile}.webp" style="height: 40px; vertical-align: middle; margin-right: 10px;" alt="${league.toUpperCase()} Day ${i} Logo">
+              <b>Day ${i}</b>
+            </h3>
+            <div class="screen-gallery">
+              </div>
+          </div>
+        `;
+      }
+      galleryContainer.innerHTML = galleryHtml;
+    }
+  }
 }
 
 window.onload = () => {
   document.getElementById('loading').style.display = 'none';
-  setupNavigation(); // Initialize main page navigation
-  setupLeagueNavigation(); // Initialize league selection navigation
+  setupNavigation();
+  setupLeagueNavigation();
   setupSearchFilters();
-  // Initial load for the default league (UCL)
+  renderHighlightGalleries();
+  
+  ['ucl', 'uel', 'ecl'].forEach(league => {
+      document.getElementById(`${league}MatchForm`).addEventListener('submit', (e) => {
+          e.preventDefault();
+          handleMatchSubmission(league);
+      });
+  });
+
+  // Event Delegation for all logo clicks
+  document.querySelector('main').addEventListener('click', function(event) {
+      const logo = event.target.closest('.league-table img');
+      if (logo) {
+          const teamName = logo.closest('td').querySelector('b').textContent;
+          const gameplanPath = `images/gameplans/${teamName.toLowerCase().replace(/ /g, '-')}.jpg`;
+          modalImage.src = gameplanPath;
+          modal.classList.add('show');
+      }
+  });
+  
+  modal.addEventListener('click', (event) => {
+      if (event.target === modal) closeModal();
+  });
+
   loadLeagueData('ucl');
 };
