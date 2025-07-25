@@ -169,7 +169,7 @@ header {
   overflow: hidden;
   -webkit-overflow-scrolling: touch;
   overflow-x: auto;
-  font-size: 1rem;
+  font-size: 18px;
   background: rgba(22, 27, 34, 0.8);
   backdrop-filter: blur(10px);
   border: 1px solid var(--border-color);
