@@ -20,22 +20,22 @@
   <header>
     <div class="header-content">
       <nav class="league-selector-nav">
-        <button class="league-btn active" data-league="ucl">Champions League</button>
-        <button class="league-btn" data-league="uel">Europa League</button>
-        <button class="league-btn" data-league="ecl">Conference League</button>
+        <button class="league-btn btn active" data-league="ucl">Champions League</button>
+        <button class="league-btn btn" data-league="uel">Europa League</button>
+        <button class="league-btn btn" data-league="ecl">Conference League</button>
       </nav>
-      <img src="images/logos/champions-league-logo.webp" alt="League Logo" id="league-logo" class="league-logo active">
-      <nav class="main-nav">
-        <button class="nav-btn active" data-page="league">Table</button>
-        <button class="nav-btn" data-page="matches">Matches</button>
-        <button class="nav-btn" data-page="knockout">Knockout</button>
-        <button class="nav-btn" data-page="highlights">Highlights</button>
+      <img src="images/logos/champions-league-logo.webp" alt="Champions League Logo" id="league-logo" class="league-logo active">
+      <nav class="main-nav" role="tablist" aria-label="Main Navigation">
+        <button class="nav-btn btn active" id="tab-league" role="tab" aria-selected="true" aria-controls="panel-league" data-page="league">Table</button>
+        <button class="nav-btn btn" id="tab-matches" role="tab" aria-selected="false" aria-controls="panel-matches" data-page="matches">Matches</button>
+        <button class="nav-btn btn" id="tab-knockout" role="tab" aria-selected="false" aria-controls="panel-knockout" data-page="knockout">Knockout</button>
+        <button class="nav-btn btn" id="tab-highlights" role="tab" aria-selected="false" aria-controls="panel-highlights" data-page="highlights">Highlights</button>
       </nav>
     </div>
   </header>
 
   <main>
-    <section id="league-section" class="page-section active">
+    <section id="league-section" class="page-section active" role="tabpanel" aria-labelledby="tab-league">
       <div class="league-table">
         <table id="leagueTable">
           <thead>
@@ -60,20 +60,24 @@
         <h2 id="match-form-title">Add UCL Match Result</h2>
         <form id="matchForm">
           <div class="form-group">
+            <label for="homeTeam" class="visually-hidden">Home Team</label>
             <select id="homeTeam" required><option value="">Home Team</option></select>
+            <label for="homeScore" class="visually-hidden">Home Score</label>
             <input type="number" id="homeScore" min="0" required>
           </div>
           <div class="form-group">
+            <label for="awayTeam" class="visually-hidden">Away Team</label>
             <select id="awayTeam" required><option value="">Away Team</option></select>
+            <label for="awayScore" class="visually-hidden">Away Score</label>
             <input type="number" id="awayScore" min="0" required>
           </div>
           <div class="feedback-message"></div>
-          <button type="submit">Add Match</button>
+          <button type="submit" class="btn">Add Match</button>
         </form>
       </section>
     </section>
 
-    <section id="matches-section" class="page-section">
+    <section id="matches-section" class="page-section" role="tabpanel" aria-labelledby="tab-matches">
       <div class="match-day">
         <h2 id="match-day-title">UCL Match Day</h2>
         <div class="search-container">
@@ -83,7 +87,7 @@
       </div>
     </section>
 
-    <section id="knockout-section" class="page-section">
+    <section id="knockout-section" class="page-section" role="tabpanel" aria-labelledby="tab-knockout">
       <div class="knockout-stage">
         <h2 id="knockout-title">UCL Knockout Stage</h2>
         <div id="knockout-container" class="knockout-container">
@@ -91,7 +95,7 @@
       </div>
     </section>
     
-    <section id="highlights-section" class="page-section">
+    <section id="highlights-section" class="page-section" role="tabpanel" aria-labelledby="tab-highlights">
         <div class="win-images">
             <h2 id="highlights-title">Highlights</h2>
             <div id="win-gallery-container" class="win-gallery">
