@@ -194,9 +194,9 @@ header {
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   cursor: pointer;
-  transition: all 0.3s ease;
   font-weight: 600;
   font-family: var(--font-primary);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .btn:hover, .btn:focus {
