@@ -323,36 +323,28 @@ function updateKnockoutStage(league) {
 
 
 function generateMatchDay(league) {
-    const teams = [...(appState.config[league]?.teams || [])];
-    if (teams.length === 0) {
-        dom.matchDayContainer.innerHTML = '<p class="empty-state" style="display:block;">No teams configured for this league.</p>';
+    const teams = [...appState.config[league].teams];
+    if (teams.length < 2) {
+        dom.matchDayContainer.innerHTML = '<p>Not enough teams for fixtures.</p>';
         return;
-    };
-
-    const localFixtures = [];
-    const numDays = 8; // Full home and away fixtures
-    const half = teams.length / 2;
-    
-    // Generate pairings for the first half of the season
-    for (let day = 0; day < numDays / 2; day++) {
-        const dayFixtures = [];
-        for (let i = 0; i < half; i++) {
-            dayFixtures.push({ home: teams[i], away: teams[teams.length - 1 - i] });
-        }
-        localFixtures.push(dayFixtures);
-        // Rotate teams for the next day
-        teams.splice(1, 0, teams.pop());
     }
     
-    // Generate return fixtures for the second half
-    const returnFixtures = localFixtures.map(day => {
-      return day.map(match => ({ home: match.away, away: match.home }));
-    });
-
-    const allFixtures = [...localFixtures, ...returnFixtures];
+    const localFixtures = [];
+    const numDays = 8;
+    const n = teams.length;
+    for (let day = 1; day <= numDays; day++) {
+        const dayFixtures = [];
+        for (let i = 0; i < n / 2; i++) {
+            const home = teams[i];
+            const away = teams[n - 1 - i];
+            dayFixtures.push(day % 2 === 0 ? { home, away } : { home: away, away: home });
+        }
+        localFixtures.push(dayFixtures);
+        teams.splice(1, 0, teams.pop());
+    }
 
     let html = '';
-    allFixtures.forEach((dayFixtures, i) => {
+    localFixtures.forEach((dayFixtures, i) => {
         html += `<div class="match-day-card"><h3>Day ${i + 1}</h3>`;
         dayFixtures.forEach(match => {
             html += `<div class="match-card" data-home="${match.home}" data-away="${match.away}">
@@ -366,21 +358,11 @@ function generateMatchDay(league) {
 }
 
 function updateMatchDayResults(home, away, homeScore, awayScore) {
-    // Check for home match first
-    let matchCard = dom.matchDayContainer.querySelector(`.match-card[data-home="${home}"][data-away="${away}"]`);
-    // If not found, check for the reverse fixture (away match)
-    if (!matchCard) {
-      matchCard = dom.matchDayContainer.querySelector(`.match-card[data-home="${away}"][data-away="${home}"]`);
-       // If found, we update its result, but the score is swapped for display if needed
-       if (matchCard) {
-         matchCard.querySelector('.match-result').textContent = `${awayScore} / ${homeScore}`;
-       }
-    } else {
-      matchCard.querySelector('.match-result').textContent = `${homeScore} / ${awayScore}`;
+    const matchCard = dom.matchDayContainer.querySelector(`.match-card[data-home="${home}"][data-away="${away}"]`);
+    if (matchCard) {
+        matchCard.querySelector('.match-result').textContent = `${homeScore} / ${awayScore}`;
     }
 }
-
-// script.js
 
 function renderHighlights(league) {
     const config = appState.config[league];
