@@ -380,23 +380,29 @@ function updateMatchDayResults(home, away, homeScore, awayScore) {
     }
 }
 
+// script.js
+
 function renderHighlights(league) {
     const config = appState.config[league];
     if (!config) {
       dom.winGalleryContainer.innerHTML = '';
       return;
     }
+
     const logoFile = config.logo;
     const highlightsByDay = config.highlights || {};
+    // New: Get knockout highlights
+    const knockoutHighlights = config.knockoutHighlights || {};
+
     const galleryContainer = dom.winGalleryContainer;
     galleryContainer.innerHTML = ''; // Clear previous league's gallery
     let allDaysHtml = '';
-    const numMatchDays = 8;
+    const numMatchDays = 8; // Assuming 8 regular match days
 
-
+    // --- Render Regular Match Day Highlights ---
     for (let i = 1; i <= numMatchDays; i++) {
         const dayImages = highlightsByDay[i] || [];
-        let imagesHtml = dayImages.length > 0 
+        let imagesHtml = dayImages.length > 0
             ? dayImages.map(imagePath => `<img src="${imagePath}" loading="lazy" alt="Highlight for Day ${i}">`).join('')
             : '<p class="empty-state">No highlights for this day yet.</p>';
 
@@ -410,6 +416,30 @@ function renderHighlights(league) {
             </div>
         `;
     }
+
+    // --- Render Knockout Stage Highlights ---
+    // Loop through each knockout stage defined in the config
+    for (const stageKey in knockoutHighlights) {
+        if (knockoutHighlights.hasOwnProperty(stageKey)) {
+            const stageImages = knockoutHighlights[stageKey];
+            const stageTitle = stageKey.charAt(0).toUpperCase() + stageKey.slice(1).replace(/([A-Z])/g, ' $1'); // Simple conversion like 'round16' to 'Round 16'
+
+            let knockoutImagesHtml = stageImages.length > 0
+                ? stageImages.map(imagePath => `<img src="${imagePath}" loading="lazy" alt="Highlight for ${stageTitle}">`).join('')
+                : '<p class="empty-state">No highlights for this stage yet.</p>';
+
+            allDaysHtml += `
+                <div class="wins">
+                  <h3>
+                    <img src="images/logos/${logoFile}" style="height: 40px; vertical-align: middle; margin-right: 10px;" alt="${league.toUpperCase()} ${stageTitle} Logo">
+                    <b>${stageTitle}</b>
+                  </h3>
+                  <div class="screen-gallery">${knockoutImagesHtml}</div>
+                </div>
+            `;
+        }
+    }
+
     galleryContainer.innerHTML = allDaysHtml;
 }
 
