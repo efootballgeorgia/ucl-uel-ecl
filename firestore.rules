@@ -8,8 +8,12 @@ service cloud.firestore {
 
     // Allow authenticated users to create/update their own user profile in a 'users' collection
     match /users/{userId} {
-      allow read: if true; // Or restrict if profiles should be private
-      allow create, update: if request.auth.uid == userId;
+      // Any authenticated user can read any user's profile (adjust if privacy is needed)
+      allow read: if request.auth != null; // Changed from `if true` for better security, assuming users are logged in to view profiles
+
+      // A user can create their own profile if they are authenticated and the userId matches their UID
+      // A user can update their own profile if they are authenticated and the userId matches their UID
+      allow create, update: if request.auth != null && request.auth.uid == userId;
     }
 
     // Allow anyone to read match results
