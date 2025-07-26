@@ -330,7 +330,7 @@ function generateMatchDay(league) {
     };
 
     const localFixtures = [];
-    const numDays = (teams.length - 1) * 2; // Full home and away fixtures
+    const numDays = 8; // Full home and away fixtures
     const half = teams.length / 2;
     
     // Generate pairings for the first half of the season
@@ -391,7 +391,7 @@ function renderHighlights(league) {
     const galleryContainer = dom.winGalleryContainer;
     galleryContainer.innerHTML = ''; // Clear previous league's gallery
     let allDaysHtml = '';
-    const numMatchDays = (config.teams?.length - 1) * 2 || 0;
+    const numMatchDays = 8;
 
 
     for (let i = 1; i <= numMatchDays; i++) {
