@@ -15,7 +15,9 @@
     Your browser does not support the video tag.
   </video>
 
-  <div id="loading">Loading...</div>
+  <div id="loading">
+    <div class="spinner"></div>
+  </div>
 
   <header>
     <div class="header-content">
@@ -83,6 +85,7 @@
         <div class="search-container">
           <input type="text" id="teamSearch" class="team-search-input" placeholder="Search for a team...">
         </div>
+        <div id="no-search-results" class="empty-state">No matches found for your search.</div>
         <div id="match-day-container"></div>
       </div>
     </section>
