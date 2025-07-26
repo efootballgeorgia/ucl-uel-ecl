@@ -4,14 +4,12 @@ service cloud.firestore {
     // Allow anyone to read all league data (tables, highlights etc.)
     match /leagues/{leagueId} {
       allow read: if true;
-    }
+}
 
     // Allow anyone to read match results
     match /{leagueCollection=**} { // This will match UCLMatches, UELMatches, etc.
       allow read: if true;
-
-      // Only allow users whose UID exists in the 'admins' collection to write match results.
-      // This protects your match data from unauthorized submissions.
+// Only allow users whose UID exists in the 'admins' collection to write match results.
       allow write: if request.auth.uid != null && get(/databases/$(database)/documents/admins/$(request.auth.uid)).exists();
     }
   }
