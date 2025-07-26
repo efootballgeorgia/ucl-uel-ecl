@@ -327,12 +327,33 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
 .feedback-message.success { background-color: var(--win-color); color: white; }
 .feedback-message.error { background-color: var(--loss-color); color: white; }
 
-.match-day {
+/* New styling for the search container wrapper */
+.search-container-wrapper {
+  margin: 2rem auto 1rem; /* Adjust margins to provide separation */
+  width: 98%;
+  max-width: 62.5rem;
   background: rgba(22, 27, 34, 0.8);
   backdrop-filter: blur(10px);
   padding: 1.5rem;
   border-radius: var(--border-radius);
-  margin: 1rem auto;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+}
+
+.search-container-wrapper h2 {
+    margin-top: 0; /* Remove top margin */
+    margin-bottom: 1.5rem;
+    color: #fff;
+    text-align: center;
+}
+
+.match-day {
+  /* Removed search-related styles as they are now in .search-container-wrapper */
+  background: rgba(22, 27, 34, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 1.5rem;
+  border-radius: var(--border-radius);
+  margin: 1rem auto; /* Adjusted margin to separate from the search box */
   width: 98%;
   max-width: 62.5rem;
   position: relative;
@@ -341,7 +362,8 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
 }
 
-.match-day h2 { margin-bottom: 1.5rem; color: #fff; text-align: center; }
+.match-day h2 { display: none; } /* Hide the match day title in the match-day box itself, as it's now in the wrapper */
+
 #match-day-container { display: flex; gap: 1rem; padding-bottom: 1rem; }
 .match-day-card { background: var(--tertiary-bg); border-radius: var(--border-radius); padding: 0.8rem; text-align: center; color: #fff; font-size: 0.875rem; min-width: 9rem; flex-shrink: 0; border: 1px solid var(--border-color); }
 .match-day-card h3 { margin: 0.3125rem 0 1rem; font-size: 1em; font-family: var(--font-primary); margin-bottom: 0.8rem; }
@@ -460,6 +482,13 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
   .form-group { flex-direction: column; gap: 0.8rem; }
   .knockout-container { max-width: 100%; }
   .knockout-stage-item h3 { font-size: 1.5rem; }
+  /* Adjust search container wrapper for mobile */
+  .search-container-wrapper {
+    margin: 1.5rem auto 0.8rem;
+    padding: 1rem;
+  }
+  .search-container::before { left: 8%; } /* Adjust icon position */
+
   #match-day-container { display: flex; overflow-x: auto; padding-bottom: 1rem; gap: 0.8rem; }
   .win-gallery { flex-direction: column; align-items: center; }
   .wins { width: 100%; max-width: 100%; margin: 0.71rem 0; }
