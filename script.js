@@ -45,7 +45,6 @@ const dom = {
   teamSearchInput: document.getElementById('teamSearch'),
   noSearchResults: document.getElementById('no-search-results'),
   feedbackMessage: document.querySelector('.feedback-message'),
-  authRequiredMessage: document.querySelector('.auth-required-message'), // This message now applies to non-admins
   // Auth Modal Elements
   authModal: document.getElementById('auth-modal'),
   closeAuthModalBtn: document.getElementById('closeAuthModal'),
@@ -160,10 +159,6 @@ function updateUIFromConfig(config) {
 function updateAuthUI() {
     const submitButton = dom.matchForm.querySelector('button[type="submit"]');
 
-    // Initially hide both the form and the message
-    dom.matchForm.style.display = 'none';
-    dom.authRequiredMessage.style.display = 'none';
-
     if (appState.currentUser) {
         dom.userStatusSpan.textContent = `Logged in`;
         dom.authBtn.style.display = 'none';
@@ -171,11 +166,9 @@ function updateAuthUI() {
 
         if (appState.isAdmin) {
             dom.matchForm.style.display = 'flex'; // Show match form for admins
-            dom.authRequiredMessage.style.display = 'none'; // Hide message
         } else {
             dom.matchForm.style.display = 'none'; // Hide form for non-admins
         }
-        checkFormValidity(); // Re-check validity based on admin status
     } else {
         dom.userStatusSpan.textContent = 'Not logged in';
         dom.authBtn.style.display = 'inline-block';
@@ -750,7 +743,7 @@ function setupEventListeners() {
     });
 
     dom.matchForm.addEventListener('submit', handleMatchSubmission);
-    dom.matchForm.addEventListener('input', checkFormValidity); // Validity now depends on login state
+    dom.matchForm.addEventListener('input', checkFormValidity);
 
     dom.teamSearchInput.addEventListener('keyup', debounce(() => {
         const searchTerm = dom.teamSearchInput.value.toLowerCase();
