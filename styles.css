@@ -133,6 +133,9 @@ header {
   background: rgba(13, 17, 23, 0.7);
   border-bottom: 1px solid var(--border-color);
   transition: padding 0.3s ease, background 0.3s ease;
+  display: flex; /* Added for alignment of auth-status */
+  flex-direction: column; /* To stack items if needed */
+  align-items: center; /* Center horizontally */
 }
 
 .header-content {
@@ -142,7 +145,11 @@ header {
   gap: 1.5rem;
   max-width: 1200px;
   margin: 0 auto;
+  width: 100%; /* Ensure it takes full width */
+  padding: 0 1rem; /* Add some padding */
+  box-sizing: border-box; /* Include padding in width */
 }
+
 
 /* General Scrollbar Styling */
 ::-webkit-scrollbar {
@@ -218,6 +225,25 @@ header {
 .page-section.active {
   display: block;
 }
+
+/* Auth status styling */
+.auth-status {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--text-color-secondary);
+    font-size: 0.9em;
+    margin-top: 1rem; /* Space from navigation */
+}
+.auth-status #user-status {
+    font-weight: 600;
+    color: var(--accent-color);
+}
+.auth-status .btn {
+    padding: 0.5rem 1rem; /* Smaller padding for auth buttons */
+    font-size: 0.9em;
+}
+
 
 /* ============================================
    5. League Table
@@ -319,7 +345,6 @@ tbody tr:hover td {
    6. Match & Form Elements
 ============================================ */
 .match-form {
-  display: none !important;
   background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(33, 38, 45, 0.9)); /* Subtle gradient */
   backdrop-filter: blur(10px);
   padding: 2rem;
@@ -330,6 +355,7 @@ tbody tr:hover td {
   position: relative;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  display: none !important; /* This ensures it's hidden by default */
 }
 
 #matchForm { display: flex; flex-direction: column; gap: 1rem; }
@@ -346,59 +372,92 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
 .feedback-message.success { background-color: var(--win-color); color: white; }
 .feedback-message.error { background-color: var(--loss-color); color: white; }
 
-/* New styling for the search container wrapper */
-.search-container-wrapper {
-  margin: 2rem auto 1rem; /* Adjust margins to provide separation */
-  width: 98%;
-  max-width: 62.5rem;
-  background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(33, 38, 45, 0.9)); /* Subtle gradient */
-  backdrop-filter: blur(10px);
-  padding: 1.5rem;
-  border-radius: var(--border-radius);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+.auth-required-message {
+    color: var(--text-color-secondary);
+    font-style: italic;
+    margin-top: 1rem;
 }
 
-.search-container-wrapper h2 {
-    /* margin-top: 0; removed as agreed */
-    margin-bottom: 1.5rem;
-    color: #fff;
+/* ============================================
+   Auth Modal Specific Styles
+============================================ */
+.auth-modal {
+    z-index: 99999; /* Higher than other modals */
+}
+
+.auth-modal-content {
+    background: linear-gradient(135deg, rgba(22, 27, 34, 0.95), rgba(33, 38, 45, 0.95));
+    backdrop-filter: blur(15px);
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    max-width: 450px;
+    width: 90%;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     text-align: center;
+    position: relative;
+    animation: fadeIn 0.4s ease-out;
 }
 
-.match-day {
-  background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(33, 38, 45, 0.9)); /* Subtle gradient */
-  backdrop-filter: blur(10px);
-  padding: 1.5rem;
-  border-radius: var(--border-radius);
-  margin: 1rem auto; /* Adjusted margin to separate from the search box */
-  width: 98%;
-  max-width: 62.5rem;
-  position: relative;
-  overflow-x: auto;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+.auth-modal-content h2 {
+    color: var(--accent-color);
+    margin-bottom: 1.5rem;
+    font-size: 2em;
 }
 
-.match-day h2 { display: none; } /* Hide the match day title in the match-day box itself, as it's now in the wrapper */
-
-#match-day-container { display: flex; gap: 1rem; padding-bottom: 1rem; }
-.match-day-card { background: var(--tertiary-bg); border-radius: var(--border-radius); padding: 0.8rem; text-align: center; color: #fff; font-size: 0.875rem; min-width: 9rem; flex-shrink: 0; border: 1px solid var(--border-color); }
-.match-day-card h3 { margin: 0.3125rem 0 1rem; font-size: 1em; font-family: var(--font-primary); margin-bottom: 0.8rem; }
-.match-card { background: var(--secondary-bg); border-radius: 8px; padding: 0.4rem; margin-bottom: 0.5rem; font-size: 0.9em; }
-.match-result { font-size: 1em; font-weight: bold; margin-top: 0.3rem; color: var(--accent-color); }
-
-.search-container { margin-bottom: 1.5rem; display: flex; justify-content: center; align-items: center; gap: 0.5rem; position: relative; }
-.search-container::before { content: ''; position: absolute; left: 16%; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; background-image: url('images/search-icon.svg'); background-size: contain; background-repeat: no-repeat; opacity: 0.6; }
-.team-search-input { width: 70%; max-width: 400px; padding: 0.8rem 0.8rem 0.8rem 2.5rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--secondary-bg); color: #fff; font-size: 1rem; box-shadow: inset 0 1px 3px rgba(0,0,0,0.5); transition: border-color 0.3s ease, box-shadow 0.3s ease; }
-.team-search-input:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
-
-.empty-state {
-  display: none; /* Hidden by default */
-  padding: 2rem;
-  color: var(--text-color-secondary);
-  font-style: italic;
+#auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
 }
+
+#auth-form .form-group {
+    display: flex;
+    flex-direction: column; /* Stack label and input */
+    gap: 0.5rem;
+    align-items: stretch; /* Stretch inputs to full width */
+}
+
+#auth-form input[type="email"],
+#auth-form input[type="password"] {
+    padding: 0.8rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: var(--secondary-bg);
+    color: var(--text-color);
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box; /* Include padding in width */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#auth-form input[type="email"]:focus,
+#auth-form input[type="password"]:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+#auth-form .btn {
+    width: 100%;
+    margin-top: 0.5rem;
+    font-size: 1.1em;
+}
+
+.auth-feedback-message {
+    padding: 10px;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    background-color: var(--loss-color);
+    display: none; /* Hidden by default */
+}
+.auth-feedback-message.show {
+    display: block;
+}
+
 
 /* ============================================
    7. Knockout Stage & Highlights
@@ -508,7 +567,7 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
   thead th, tbody td { padding: 0.5rem 0.3rem; }
   tbody td img { width: 30px; height: 30px; margin-right: 5px; }
   .form-box { width: 0.7rem; height: 0.7rem; }
-  .match-form { width: 95%; padding: 1.5rem; }
+  .match-form { width: 95%; padding: 1.5rem;} /* Reverted display:none for auth */
   .form-group { flex-direction: column; gap: 0.8rem; }
   .knockout-container { max-width: 100%; }
   .knockout-stage-item h3 { font-size: 1.5rem; }
