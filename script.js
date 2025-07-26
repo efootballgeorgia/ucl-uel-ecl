@@ -4,49 +4,15 @@
 const appState = {
   db: null,
   currentLeague: 'ucl',
+  // Unsubscribe function for the real-time listener
+  unsubscribe: null,
   currentSort: {
     ucl: { column: 7, isAscending: false },
     uel: { column: 7, isAscending: false },
     ecl: { column: 7, isAscending: false },
   },
-  config: {
-    ucl: {
-      name: "Champions League",
-      logo: "champions-league-logo.webp",
-      bracket: "knockout-bracket.jpg",
-      qualificationZones: { 8: "round16", 16: "knockout-seeded", 24: "knockout-unseeded" },
-      highlights: {
-        "1": [],"2": [],"3": [],"4": [],"5": [],"6": [],"7": [],"8": []
-      },
-      teams: [ "Real Madrid", "Brest", "Manchester City", "Everton", "Celta Vigo", "Empoli", "Lyon", "Metz", "AC Milan", "Rennes", "Osasuna",
-         "Manchester United", "Atalanta", "Juventus", "Chelsea", "Parma", "Villarreal", "Girona", "Torino", "Athletic Bilbao", "Barcelona",
-          "Crystal Palace", "Inter Milan", "Hellas Verona", "Nottingham Forest", "PSG", "Real Betis", "Venezia", "Tottenham", "Mallorca",
-           "Bayern Munich", "Arsenal", "Liverpool", "Monza", "Monaco", "Atletico Madrid" ],
-      knockoutPositions: [ { top: '18.5%', left: '25%' }, { top: '18.5%', left: '72%' }, { top: '85%', left: '25%' }, { top: '85%', left: '72%' }, { top: '63%', left: '25%' }, { top: '63%', left: '72%' }, { top: '40%', left: '25%' }, { top: '40%', left: '72%' }, { top: '36%', left: '10%' }, { top: '36%', left: '86%' }, { top: '60%', left: '86%' }, { top: '60%', left: '10%' }, { top: '83%', left: '86%' }, { top: '81%', left: '10%' }, { top: '15.5%', left: '86%' }, { top: '14.5%', left: '10%' }, { top: '5%', left: '86%' }, { top: '5%', left: '10%' }, { top: '72%', left: '10%' }, { top: '72%', left: '86%' }, { top: '50%', left: '10%' }, { top: '50%', left: '86%' }, { top: '27.6%', left: '86%' }, { top: '27.6%', left: '10%' }]
-    },
-    uel: {
-      name: "Europa League",
-      logo: "europa-league-logo.webp",
-      bracket: "uel-knockout-bracket.jpg",
-      qualificationZones: { 8: "uel-round16" },
-      highlights: {
-        "1": [],"2": [],"3": [],"4": [],"5": [],"6": [],"7": [],"8": []
-      },
-      teams: [ ],
-      knockoutPositions: [ { top: '23%', left: '27%' }, { top: '23%', left: '68%' }, { top: '83%', left: '27%' }, { top: '83%', left: '68%' }, { top: '64%', left: '27%' }, { top: '64%', left: '68%' }, { top: '43%', left: '27%' }, { top: '43%', left: '68%' }, { top: '39%', left: '9%' }, { top: '39%', left: '86%' }, { top: '59%', left: '86%' }, { top: '59%', left: '9%' }, { top: '79%', left: '86%' }, { top: '79%', left: '9%' }, { top: '19%', left: '86%' }, { top: '19%', left: '9%' }, { top: '10%', left: '86%' }, { top: '10%', left: '9%' }, { top: '70%', left: '9%' }, { top: '70%', left: '86%' }, { top: '50%', left: '9%' }, { top: '50%', left: '86%' }, { top: '30%', left: '86%' }, { top: '30%', left: '9%' }]
-    },
-    ecl: {
-      name: "Conference League",
-      logo: "conference-league-logo.webp",
-      bracket: "ecl-knockout-bracket.jpg",
-      qualificationZones: { 8: "ecl-round16" },
-      highlights: {
-        "1": [],"2": [],"3": [],"4": [],"5": [],"6": [],"7": [],"8": []
-      },
-      teams: [ ],
-      knockoutPositions: [ { top: '17%', left: '24.5%' }, { top: '17%', left: '70.5%' }, { top: '83%', left: '24.5%' }, { top: '83%', left: '70.5%' }, { top: '61%', left: '24.5%' }, { top: '61%', left: '70.5%' }, { top: '39%', left: '24.5%' }, { top: '39%', left: '70.5%' }, { top: '34%', left: '6.5%' }, { top: '34%', left: '88.5%' }, { top: '57%', left: '88.5%' }, { top: '57%', left: '6.5%' }, { top: '79%', left: '88.5%' }, { top: '79%', left: '6.5%' }, { top: '14%', left: '88.5%' }, { top: '14%', left: '6.5%' }, { top: '5%', left: '88.5%' }, { top: '5%', left: '6.5%' }, { top: '70%', left: '6.5%' }, { top: '70%', left: '88.5%' }, { top: '48%', left: '6.5%' }, { top: '48%', left: '88.5%' }, { top: '25%', left: '88.5%' }, { top: '25%', left: '6.5%' }]
-    }
-  }
+  // Config will now be loaded from Firestore
+  config: {}
 };
 
 /* ============================================
@@ -132,10 +98,12 @@ function checkFormValidity() {
    5. Core Application Logic
 ============================================ */
 function renderTable(league) {
-    const teams = appState.config[league].teams;
-    const qualificationZones = appState.config[league].qualificationZones;
+    const config = appState.config[league];
+    if (!config || !config.teams) return;
+
+    const teams = config.teams;
+    const qualificationZones = config.qualificationZones;
     dom.leagueTableBody.innerHTML = '';
-    if (!teams || teams.length === 0) return;
 
     const fragment = document.createDocumentFragment();
     teams.forEach((teamName, index) => {
@@ -159,7 +127,7 @@ function renderTable(league) {
         fragment.appendChild(row);
 
         const position = index + 1;
-        if (qualificationZones[position]) {
+        if (qualificationZones && qualificationZones[position]) {
             const separatorRow = document.createElement('tr');
             separatorRow.className = 'separator';
             separatorRow.innerHTML = `<td colspan="9" class="${qualificationZones[position]}"><span class="line"></span></td>`;
@@ -170,7 +138,7 @@ function renderTable(league) {
 }
 
 function populateTeamDropdowns(league) {
-    const teams = appState.config[league].teams;
+    const teams = appState.config[league]?.teams || [];
     dom.homeTeamSelect.innerHTML = '<option value="">Home Team</option>';
     dom.awayTeamSelect.innerHTML = '<option value="">Away Team</option>';
     teams.forEach(team => {
@@ -183,47 +151,69 @@ function sortTable(columnIndex, dataType) {
     const league = appState.currentLeague;
     const sortConfig = appState.currentSort[league];
     const rows = Array.from(dom.leagueTableBody.querySelectorAll('tr:not(.separator)'));
+    const qualificationZones = appState.config[league]?.qualificationZones || {};
 
+    // Determine sort direction
     if (sortConfig.column === columnIndex) {
         sortConfig.isDescending = !sortConfig.isDescending;
     } else {
         sortConfig.column = columnIndex;
-        sortConfig.isAscending = (columnIndex === 1);
+        // Default to descending for points, ascending for name
+        sortConfig.isDescending = (columnIndex !== 1);
     }
     
     rows.sort((a, b) => {
-        const aPoints = parseInt(a.cells[7].querySelector('.points').textContent);
-        const bPoints = parseInt(b.cells[7].querySelector('.points').textContent);
-        if (aPoints !== bPoints) return sortConfig.isAscending ? aPoints - bPoints : bPoints - aPoints;
-
         let aVal, bVal;
         const aCell = a.cells[columnIndex];
         const bCell = b.cells[columnIndex];
 
-        if (dataType === 'number') {
-            aVal = parseInt(aCell.textContent) || 0;
-            bVal = parseInt(bCell.textContent) || 0;
-        } else if (dataType === 'string') {
-            aVal = aCell.textContent.trim().toLowerCase();
-            bVal = bCell.textContent.trim().toLowerCase();
-            return sortConfig.isAscending ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-        } else if (dataType === 'goals') {
+        if (dataType === 'goals') {
             const [aF, aA] = aCell.textContent.split(':').map(Number);
             const [bF, bA] = bCell.textContent.split(':').map(Number);
             aVal = aF - aA;
             bVal = bF - bA;
+        } else if (dataType === 'number') {
+            aVal = parseInt(aCell.textContent) || 0;
+            bVal = parseInt(bCell.textContent) || 0;
+        } else { // string
+            aVal = aCell.textContent.trim().toLowerCase();
+            bVal = bCell.textContent.trim().toLowerCase();
         }
-        return sortConfig.isAscending ? aVal - bVal : bVal - aVal;
+
+        // Primary sort: by the selected column
+        let comparison = 0;
+        if (aVal < bVal) comparison = -1;
+        if (aVal > bVal) comparison = 1;
+
+        // Secondary sort: points (if not sorting by points)
+        if (columnIndex !== 7) {
+            const aPoints = parseInt(a.cells[7].textContent);
+            const bPoints = parseInt(b.cells[7].textContent);
+            if (aPoints !== bPoints) {
+                return bPoints - aPoints; // Always sort by points descending
+            }
+        }
+        
+        // Tertiary sort: goal difference (if points are equal)
+        const [aGF, aGA] = a.cells[6].textContent.split(':').map(Number);
+        const [bGF, bGA] = b.cells[6].textContent.split(':').map(Number);
+        const aGD = aGF - aGA;
+        const bGD = bGF - bGA;
+
+        if (comparison === 0 && aGD !== bGD) {
+            return bGD - aGD;
+        }
+
+        return sortConfig.isDescending ? -comparison : comparison;
     });
 
     dom.leagueTableBody.innerHTML = '';
     const fragment = document.createDocumentFragment();
-    const qualificationZones = appState.config[league].qualificationZones;
-
     rows.forEach((row, index) => {
         const position = index + 1;
         row.cells[0].textContent = position;
         fragment.appendChild(row);
+
         if (qualificationZones[position]) {
             const separatorRow = document.createElement('tr');
             separatorRow.className = 'separator';
@@ -234,21 +224,22 @@ function sortTable(columnIndex, dataType) {
     dom.leagueTableBody.appendChild(fragment);
 
     document.querySelectorAll('#leagueTable thead th').forEach(th => th.removeAttribute('data-sort'));
-    document.querySelector(`#leagueTable thead th[data-column-index="${columnIndex}"]`).dataset.sort = sortConfig.isAscending ? 'asc' : 'desc';
+    document.querySelector(`#leagueTable thead th[data-column-index="${columnIndex}"]`).dataset.sort = sortConfig.isDescending ? 'desc' : 'asc';
 }
+
 
 function updateTeamStats(teamName, gf, ga, isWin, isDraw) {
     const row = dom.leagueTableBody.querySelector(`tr[data-team="${teamName}"]`);
     if (!row) return;
 
     const cells = row.cells;
-    cells[2].textContent = parseInt(cells[2].textContent) + 1;
-    cells[3].textContent = parseInt(cells[3].textContent) + (isWin ? 1 : 0);
-    cells[4].textContent = parseInt(cells[4].textContent) + (isDraw ? 1 : 0);
-    cells[5].textContent = parseInt(cells[5].textContent) + (!isWin && !isDraw ? 1 : 0);
+    cells[2].textContent = parseInt(cells[2].textContent) + 1; // Played
+    cells[3].textContent = parseInt(cells[3].textContent) + (isWin ? 1 : 0); // Wins
+    cells[4].textContent = parseInt(cells[4].textContent) + (isDraw ? 1 : 0); // Draws
+    cells[5].textContent = parseInt(cells[5].textContent) + (!isWin && !isDraw ? 1 : 0); // Losses
     const [currF, currA] = cells[6].textContent.split(':').map(Number);
-    cells[6].textContent = `${currF + gf}:${currA + ga}`;
-    cells[7].querySelector('.points').textContent = (parseInt(cells[3].textContent) * 3) + parseInt(cells[4].textContent);
+    cells[6].textContent = `${currF + gf}:${currA + ga}`; // Goals
+    cells[7].querySelector('.points').textContent = (parseInt(cells[3].textContent) * 3) + parseInt(cells[4].textContent); // Points
 
     const formContainer = cells[8].querySelector('.form-container');
     if (formContainer.children.length >= 5) formContainer.removeChild(formContainer.lastChild);
@@ -259,10 +250,15 @@ function updateTeamStats(teamName, gf, ga, isWin, isDraw) {
 
 function updateKnockoutStage(league) {
     const teams = Array.from(dom.leagueTableBody.querySelectorAll('tr:not(.separator)'));
-    const positions = appState.config[league].knockoutPositions;
-    dom.knockoutContainer.innerHTML = `<img src="images/${appState.config[league].bracket}" alt="${appState.config[league].name} Knockout Stage" class="knockout-bg">`;
-    if (!positions) return;
+    const config = appState.config[league];
+    if (!config || !config.knockoutPositions) {
+        dom.knockoutContainer.innerHTML = '';
+        return;
+    }
 
+    const positions = config.knockoutPositions;
+    dom.knockoutContainer.innerHTML = `<img src="images/${config.bracket}" alt="${config.name} Knockout Stage" class="knockout-bg">`;
+    
     const logosContainer = document.createElement('div');
     logosContainer.className = 'logos-container';
 
@@ -290,7 +286,12 @@ function updateKnockoutStage(league) {
 }
 
 function generateMatchDay(league) {
-    const teams = [...appState.config[league].teams];
+    const teams = [...(appState.config[league]?.teams || [])];
+    if (teams.length === 0) {
+        dom.matchDayContainer.innerHTML = '<p>No teams configured for this league.</p>';
+        return;
+    };
+
     const localFixtures = [];
     const numDays = 8;
     const n = teams.length;
@@ -302,7 +303,10 @@ function generateMatchDay(league) {
             dayFixtures.push(day % 2 === 0 ? { home, away } : { home: away, away: home });
         }
         localFixtures.push(dayFixtures);
-        teams.splice(1, 0, teams.pop());
+        // Rotate teams for next round of fixtures
+        if (n > 1) {
+            teams.splice(1, 0, teams.pop());
+        }
     }
 
     let html = '';
@@ -327,19 +331,22 @@ function updateMatchDayResults(home, away, homeScore, awayScore) {
 }
 
 function renderHighlights(league) {
-    const logoFile = appState.config[league].logo;
-    const highlightsByDay = appState.config[league].highlights || {};
+    const config = appState.config[league];
+    if (!config) {
+      dom.winGalleryContainer.innerHTML = '';
+      return;
+    }
+    const logoFile = config.logo;
+    const highlightsByDay = config.highlights || {};
     const galleryContainer = dom.winGalleryContainer;
     galleryContainer.innerHTML = ''; // Clear previous league's gallery
     let allDaysHtml = '';
 
     for (let i = 1; i <= 8; i++) {
         const dayImages = highlightsByDay[i] || [];
-        let imagesHtml = '';
-
-        dayImages.forEach(imagePath => {
-            imagesHtml += `<img src="${imagePath}" loading="lazy" alt="Highlight for Day ${i}">`;
-        });
+        let imagesHtml = dayImages.length > 0 
+            ? dayImages.map(imagePath => `<img src="${imagePath}" loading="lazy" alt="Highlight for Day ${i}">`).join('')
+            : '<p></p>';
 
         allDaysHtml += `
             <div class="wins">
@@ -354,6 +361,7 @@ function renderHighlights(league) {
     galleryContainer.innerHTML = allDaysHtml;
 }
 
+
 async function handleMatchSubmission(e) {
     e.preventDefault();
     const homeTeam = dom.homeTeamSelect.value;
@@ -366,8 +374,9 @@ async function handleMatchSubmission(e) {
     if (!homeTeam || !awayTeam || isNaN(homeScore) || isNaN(awayScore)) {
         return showFeedback('Please fill all fields.', false);
     }
+    // Updated Validation
     if (homeTeam === awayTeam) {
-        return showFeedback('A team cannot play itself.', false);
+        return showFeedback('A team cannot play against itself.', false);
     }
     
     submitButton.textContent = 'Adding...';
@@ -381,12 +390,11 @@ async function handleMatchSubmission(e) {
 
     try {
         await appState.db.collection(`${league}Matches`).add(matchData);
-        
         showFeedback('Match added successfully!', true);
-        loadLeagueData(league);
         dom.matchForm.reset();
+        checkFormValidity();
     } catch (error) {
-        showFeedback(`Error: ${error.message}. You may need to log in.`, false);
+        showFeedback(`Error: ${error.message}.`, false);
         console.error(`Error adding ${league.toUpperCase()} match:`, error);
     } finally {
         submitButton.textContent = 'Add Match';
@@ -394,39 +402,79 @@ async function handleMatchSubmission(e) {
     }
 }
 
-async function loadLeagueData(league) {
-    appState.currentLeague = league;
-    const config = appState.config[league];
-
-    dom.leagueLogo.src = `images/logos/${config.logo}`;
-    dom.matchFormTitle.textContent = `Add ${config.name} Match Result`;
-    dom.matchDayTitle.textContent = `${config.name} Match Day`;
-    dom.knockoutTitle.textContent = `${config.name} Knockout Stage`;
-    dom.highlightsTitle.textContent = `${config.name} Highlights`;
-    
+// New function to process matches and update the UI
+function processMatchesAndUpdateUI(matches, league) {
+    // Reset and render the base table and fixtures first
     renderTable(league);
-    populateTeamDropdowns(league);
     generateMatchDay(league);
-    renderHighlights(league);
     
-    try {
-        const snapshot = await appState.db.collection(`${league}Matches`).orderBy('timestamp', 'desc').get();
-        const matches = snapshot.docs.map(doc => doc.data());
+    matches.forEach(match => {
+        const isDraw = match.homeScore === match.awayScore;
+        const homeWin = match.homeScore > match.awayScore;
+        const awayWin = match.awayScore > match.homeScore;
+        updateTeamStats(match.homeTeam, match.homeScore, match.awayScore, homeWin, isDraw);
+        updateTeamStats(match.awayTeam, match.awayScore, match.homeScore, awayWin, isDraw);
+        updateMatchDayResults(match.homeTeam, match.awayTeam, match.homeScore, match.awayScore);
+    });
 
-        matches.forEach(match => {
-            const isDraw = match.homeScore === match.awayScore;
-            updateTeamStats(match.homeTeam, match.homeScore, match.awayScore, match.homeScore > match.aScore, isDraw);
-            updateTeamStats(match.awayTeam, match.awayScore, match.homeScore, match.awayScore > match.homeScore, isDraw);
-            updateMatchDayResults(match.homeTeam, match.awayTeam, match.homeScore, match.awayScore);
+    // Sort table and update knockout stage after all stats are processed
+    const currentSort = appState.currentSort[league];
+    const sortDataType = document.querySelector(`#leagueTable thead th[data-column-index="${currentSort.column}"]`).dataset.type;
+    sortTable(currentSort.column, sortDataType);
+    updateKnockoutStage(league);
+}
+
+// Updated function to handle loading all league data
+async function switchLeague(league) {
+    dom.loading.style.display = 'flex';
+    appState.currentLeague = league;
+
+    // Unsubscribe from the previous listener if it exists
+    if (appState.unsubscribe) {
+        appState.unsubscribe();
+    }
+
+    try {
+        // Fetch the league's configuration from Firestore
+        const configDoc = await appState.db.collection('leagues').doc(league).get();
+        if (!configDoc.exists) {
+            console.error(`No configuration found for league: ${league}`);
+            showFeedback(`Configuration for ${league.toUpperCase()} is missing.`, false);
+            appState.config[league] = {}; // Clear config
+        } else {
+            appState.config[league] = configDoc.data();
+        }
+
+        const config = appState.config[league] || {};
+
+        // Update UI elements based on the loaded config
+        dom.leagueLogo.src = config.logo ? `images/logos/${config.logo}` : '';
+        dom.leagueLogo.alt = config.name ? `${config.name} Logo` : 'League Logo';
+        dom.matchFormTitle.textContent = `Add ${config.name || 'N/A'} Match Result`;
+        dom.matchDayTitle.textContent = `${config.name || 'N/A'} Match Day`;
+        dom.knockoutTitle.textContent = `${config.name || 'N/A'} Knockout Stage`;
+        dom.highlightsTitle.textContent = `${config.name || 'N/A'} Highlights`;
+
+        // Populate UI components that depend on config
+        populateTeamDropdowns(league);
+        renderHighlights(league);
+
+        // Set up real-time listener for matches
+        const matchesCollection = appState.db.collection(`${league}Matches`);
+        appState.unsubscribe = matchesCollection.orderBy('timestamp', 'asc').onSnapshot(snapshot => {
+            const matches = snapshot.docs.map(doc => doc.data());
+            processMatchesAndUpdateUI(matches, league);
+        }, error => {
+            console.error(`Error listening to ${league} matches:`, error);
+            showFeedback(`Could not load real-time data for ${league}.`, false);
         });
-        
+
     } catch (error) {
         console.error(`Error loading data for ${league}:`, error);
         showFeedback(`Could not load data for ${league}.`, false);
+    } finally {
+        dom.loading.style.display = 'none';
     }
-
-    sortTable(appState.currentSort[league].column, document.querySelector(`#leagueTable thead th[data-column-index="${appState.currentSort[league].column}"]`).dataset.type);
-    updateKnockoutStage(league);
 }
 
 /* ============================================
@@ -434,22 +482,28 @@ async function loadLeagueData(league) {
 ============================================ */
 function setupEventListeners() {
     document.querySelector('.league-selector-nav').addEventListener('click', (e) => {
-        if (e.target.matches('.league-btn')) {
-            const league = e.target.dataset.league;
+        const target = e.target.closest('.league-btn');
+        if (target) {
             document.querySelector('.league-btn.active').classList.remove('active');
-            e.target.classList.add('active');
+            target.classList.add('active');
             document.querySelector('.league-logo').classList.add('active');
-            loadLeagueData(league);
+            switchLeague(target.dataset.league);
         }
     });
 
     document.querySelector('.main-nav').addEventListener('click', (e) => {
-        if (e.target.matches('.nav-btn')) {
-            const page = e.target.dataset.page;
+        const target = e.target.closest('.nav-btn');
+        if (target) {
+            // Update button active state and ARIA attributes
             document.querySelector('.nav-btn.active').classList.remove('active');
-            e.target.classList.add('active');
+            document.querySelector('.nav-btn[aria-selected="true"]').setAttribute('aria-selected', 'false');
+            target.classList.add('active');
+            target.setAttribute('aria-selected', 'true');
+            
+            // Update page visibility
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
-            document.getElementById(`${page}-section`).classList.add('active');
+            const panelId = target.getAttribute('aria-controls');
+            document.getElementById(panelId.replace('panel-', '') + '-section').classList.add('active');
         }
     });
 
@@ -478,7 +532,7 @@ function setupEventListeners() {
         });
     }));
 
-    // Add event delegation for highlight images
+    // Event delegation for dynamically added highlight images
     dom.highlightsSection.addEventListener('click', (e) => {
         if (e.target.tagName === 'IMG' && e.target.closest('.screen-gallery')) {
             dom.modalImage.src = e.target.src;
@@ -499,11 +553,20 @@ function setupEventListeners() {
     dom.modal.addEventListener('click', (e) => {
         if (e.target === dom.modal) dom.modal.classList.remove('show');
     });
+
+    window.addEventListener('scroll', () => {
+      const header = document.querySelector('header');
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
 }
 
 window.onload = () => {
     initFirebase();
     setupEventListeners();
-    loadLeagueData(appState.currentLeague);
-    dom.loading.style.display = 'none';
+    // Initial load for the default league
+    switchLeague(appState.currentLeague);
 };
