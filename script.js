@@ -252,24 +252,19 @@ function updateTeamStats(teamName, gf, ga, isWin, isDraw) {
 function updateKnockoutStage(league) {
     const teams = Array.from(dom.leagueTableBody.querySelectorAll('tr:not(.separator)'));
     const config = appState.config[league];
-    if (!config || !config.knockoutPositions) {
-        dom.knockoutContainer.innerHTML = '';
+    const knockoutStagesConfig = config?.knockoutStages;
+
+    dom.knockoutContainer.innerHTML = ''; // Clear previous content
+
+    if (!knockoutStagesConfig) {
+        dom.knockoutContainer.innerHTML = '<p class="empty-state" style="display:block;">No knockout stages configured for this league.</p>';
         return;
     }
 
-    const positions = config.knockoutPositions;
-    dom.knockoutContainer.innerHTML = `<img src="images/${config.bracket}" alt="${config.name} Knockout Stage" class="knockout-bg">`;
-    
-    const logosContainer = document.createElement('div');
-    logosContainer.className = 'logos-container';
-
-    teams.forEach((teamRow, index) => {
-        if (index >= positions.length) return;
-        
-        const position = positions[index];
+    // A helper to create a logo element
+    const createLogoWrapper = (teamRow, position) => {
         const teamName = teamRow.dataset.team;
         const teamLogoName = teamName.toLowerCase().replace(/ /g, '-');
-        
         const wrapper = document.createElement('div');
         wrapper.className = 'logo-wrapper';
         wrapper.style.top = position.top;
@@ -281,10 +276,53 @@ function updateKnockoutStage(league) {
             <img src="images/logos/${teamLogoName}.png" alt="${teamName}">
           </picture>
         `;
-        logosContainer.appendChild(wrapper);
-    });
-    dom.knockoutContainer.appendChild(logosContainer);
+        return wrapper;
+    };
+
+    // Iterate over the stages defined in the config (e.g., 'playoff', 'round16')
+    for (const stageKey in knockoutStagesConfig) {
+        const stage = knockoutStagesConfig[stageKey];
+
+        // 1. Create the container for this stage
+        const stageContainer = document.createElement('div');
+        stageContainer.className = 'knockout-stage-item';
+
+        // 2. Create and add title, background image, and logo container
+        stageContainer.innerHTML = `
+          <h3>${stage.title}</h3>
+          <img src="images/${stage.bracket}" alt="${stage.title}" class="knockout-bg">
+          <div class="logos-container"></div>
+        `;
+        const logosContainer = stageContainer.querySelector('.logos-container');
+
+        // 3. Populate logos based on stage type
+        if (stageKey === 'playoff') {
+            stage.positions.forEach(pos => {
+                // Find the team row that has the matching rank in the first cell
+                const teamRow = teams.find(row => row.cells[0].textContent == pos.rank);
+                if (teamRow) {
+                    logosContainer.appendChild(createLogoWrapper(teamRow, pos));
+                }
+            });
+        } else if (stageKey === 'round16') {
+            const top8Teams = teams.slice(0, 8); // Assumes top 8 teams from the sorted table
+            stage.positions.forEach(pos => {
+                // We only populate 'seeded' slots from the top 8 teams.
+                // 'unseeded' slots are for playoff winners and remain empty for now.
+                if (pos.group === 'seeded' && pos.slot <= top8Teams.length) {
+                    const teamRow = top8Teams[pos.slot - 1]; // pos.slot is 1-based
+                    if(teamRow) {
+                      logosContainer.appendChild(createLogoWrapper(teamRow, pos));
+                    }
+                }
+            });
+        }
+
+        // 4. Append the completed stage container to the main knockout container
+        dom.knockoutContainer.appendChild(stageContainer);
+    }
 }
+
 
 function generateMatchDay(league) {
     const teams = [...(appState.config[league]?.teams || [])];
@@ -294,24 +332,29 @@ function generateMatchDay(league) {
     };
 
     const localFixtures = [];
-    const numDays = 8;
-    const n = teams.length;
-    for (let day = 1; day <= numDays; day++) {
+    const numDays = (teams.length - 1) * 2; // Full home and away fixtures
+    const half = teams.length / 2;
+    
+    // Generate pairings for the first half of the season
+    for (let day = 0; day < numDays / 2; day++) {
         const dayFixtures = [];
-        for (let i = 0; i < n / 2; i++) {
-            const home = teams[i];
-            const away = teams[n - 1 - i];
-            dayFixtures.push(day % 2 === 0 ? { home, away } : { home: away, away: home });
+        for (let i = 0; i < half; i++) {
+            dayFixtures.push({ home: teams[i], away: teams[teams.length - 1 - i] });
         }
         localFixtures.push(dayFixtures);
-        // Rotate teams for next round of fixtures
-        if (n > 1) {
-            teams.splice(1, 0, teams.pop());
-        }
+        // Rotate teams for the next day
+        teams.splice(1, 0, teams.pop());
     }
+    
+    // Generate return fixtures for the second half
+    const returnFixtures = localFixtures.map(day => {
+      return day.map(match => ({ home: match.away, away: match.home }));
+    });
+
+    const allFixtures = [...localFixtures, ...returnFixtures];
 
     let html = '';
-    localFixtures.forEach((dayFixtures, i) => {
+    allFixtures.forEach((dayFixtures, i) => {
         html += `<div class="match-day-card"><h3>Day ${i + 1}</h3>`;
         dayFixtures.forEach(match => {
             html += `<div class="match-card" data-home="${match.home}" data-away="${match.away}">
@@ -325,9 +368,17 @@ function generateMatchDay(league) {
 }
 
 function updateMatchDayResults(home, away, homeScore, awayScore) {
-    const matchCard = dom.matchDayContainer.querySelector(`.match-card[data-home="${home}"][data-away="${away}"]`);
-    if (matchCard) {
-        matchCard.querySelector('.match-result').textContent = `${homeScore} / ${awayScore}`;
+    // Check for home match first
+    let matchCard = dom.matchDayContainer.querySelector(`.match-card[data-home="${home}"][data-away="${away}"]`);
+    // If not found, check for the reverse fixture (away match)
+    if (!matchCard) {
+      matchCard = dom.matchDayContainer.querySelector(`.match-card[data-home="${away}"][data-away="${home}"]`);
+       // If found, we update its result, but the score is swapped for display if needed
+       if (matchCard) {
+         matchCard.querySelector('.match-result').textContent = `${awayScore} / ${homeScore}`;
+       }
+    } else {
+      matchCard.querySelector('.match-result').textContent = `${homeScore} / ${awayScore}`;
     }
 }
 
@@ -342,8 +393,10 @@ function renderHighlights(league) {
     const galleryContainer = dom.winGalleryContainer;
     galleryContainer.innerHTML = ''; // Clear previous league's gallery
     let allDaysHtml = '';
+    const numMatchDays = (config.teams?.length - 1) * 2 || 0;
 
-    for (let i = 1; i <= 8; i++) {
+
+    for (let i = 1; i <= numMatchDays; i++) {
         const dayImages = highlightsByDay[i] || [];
         let imagesHtml = dayImages.length > 0 
             ? dayImages.map(imagePath => `<img src="${imagePath}" loading="lazy" alt="Highlight for Day ${i}">`).join('')
@@ -395,7 +448,12 @@ async function handleMatchSubmission(e) {
         dom.matchForm.reset();
         checkFormValidity();
     } catch (error) {
-        showFeedback(`Error: ${error.message}.`, false);
+        // Provide a more helpful error message if it's a permission issue
+        if (error.code === 'permission-denied') {
+             showFeedback('Error: You must be logged in to add a match.', false);
+        } else {
+            showFeedback(`Error: ${error.message}.`, false);
+        }
         console.error(`Error adding ${league.toUpperCase()} match:`, error);
     } finally {
         submitButton.textContent = 'Add Match';
