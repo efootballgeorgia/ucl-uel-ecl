@@ -40,6 +40,7 @@ const dom = {
   highlightsTitle: document.getElementById('highlights-title'),
   winGalleryContainer: document.getElementById('win-gallery-container'),
   teamSearchInput: document.getElementById('teamSearch'),
+  noSearchResults: document.getElementById('no-search-results'),
   feedbackMessage: document.querySelector('.feedback-message')
 };
 
@@ -288,7 +289,7 @@ function updateKnockoutStage(league) {
 function generateMatchDay(league) {
     const teams = [...(appState.config[league]?.teams || [])];
     if (teams.length === 0) {
-        dom.matchDayContainer.innerHTML = '<p>No teams configured for this league.</p>';
+        dom.matchDayContainer.innerHTML = '<p class="empty-state" style="display:block;">No teams configured for this league.</p>';
         return;
     };
 
@@ -346,7 +347,7 @@ function renderHighlights(league) {
         const dayImages = highlightsByDay[i] || [];
         let imagesHtml = dayImages.length > 0 
             ? dayImages.map(imagePath => `<img src="${imagePath}" loading="lazy" alt="Highlight for Day ${i}">`).join('')
-            : '<p></p>';
+            : '<p class="empty-state">No highlights for this day yet.</p>';
 
         allDaysHtml += `
             <div class="wins">
@@ -519,6 +520,8 @@ function setupEventListeners() {
 
     dom.teamSearchInput.addEventListener('keyup', debounce(() => {
         const searchTerm = dom.teamSearchInput.value.toLowerCase();
+        let hasVisibleMatch = false;
+        
         dom.matchDayContainer.querySelectorAll('.match-day-card').forEach(day => {
             let dayHasVisibleMatch = false;
             day.querySelectorAll('.match-card').forEach(match => {
@@ -529,7 +532,15 @@ function setupEventListeners() {
                 if (isVisible) dayHasVisibleMatch = true;
             });
             day.style.display = dayHasVisibleMatch ? 'block' : 'none';
+            if (dayHasVisibleMatch) hasVisibleMatch = true;
         });
+
+        // Show or hide the "no results" message
+        if (hasVisibleMatch) {
+            dom.noSearchResults.style.display = 'none';
+        } else {
+            dom.noSearchResults.style.display = 'block';
+        }
     }));
 
     // Event delegation for dynamically added highlight images
