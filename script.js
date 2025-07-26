@@ -199,7 +199,7 @@ function renderTable(league) {
             <td>
               <picture>
                 <source srcset="images/logos/${teamLogoName}.png" type="image/png">
-                <img src="images/logos/${teamLogoName}.png" alt="${teamName}" loading="lazy" class="team-logo">
+                <img src="images/logos/${teamLogoName}.png" alt="${teamName}" loading="lazy" decoding="async" class="team-logo">
               </picture>
               <b>${teamName}</b>
             </td>
@@ -457,7 +457,7 @@ function renderHighlights(league) {
     for (let i = 1; i <= numMatchDays; i++) {
         const dayImages = highlightsByDay[i] || [];
         let imagesHtml = dayImages.length > 0
-            ? dayImages.map(imagePath => `<img src="${imagePath}" loading="lazy" alt="Highlight for Day ${i}">`).join('')
+            ? dayImages.map(imagePath => `<img src="${imagePath}" loading="lazy" decoding="async" alt="Highlight for Day ${i}">`).join('')
             : '<p class="empty-state">No highlights for this day yet.</p>';
 
         allDaysHtml += `
@@ -479,7 +479,7 @@ function renderHighlights(league) {
             const stageTitle = stageKey.charAt(0).toUpperCase() + stageKey.slice(1).replace(/([A-Z])/g, ' $1'); // Simple conversion like 'round16' to 'Round 16'
 
             let knockoutImagesHtml = stageImages.length > 0
-                ? stageImages.map(imagePath => `<img src="${imagePath}" loading="lazy" alt="Highlight for ${stageTitle}">`).join('')
+                ? stageImages.map(imagePath => `<img src="${imagePath}" loading="lazy" decoding="async" alt="Highlight for ${stageTitle}">`).join('')
                 : '<p class="empty-state">No highlights for this stage yet.</p>';
 
             allDaysHtml += `
@@ -547,9 +547,8 @@ async function handleMatchSubmission(e) {
 
 // New function to process matches and update the UI
 function processMatchesAndUpdateUI(matches, league) {
-    // Reset and render the base table and fixtures first
+    // Reset and render the base table first
     renderTable(league);
-    generateMatchDay(league);
 
     matches.forEach(match => {
         const isDraw = match.homeScore === match.awayScore;
@@ -613,6 +612,9 @@ async function switchLeague(league) {
             console.error(`No configuration found for league: ${league}`);
             showFeedback(`Configuration for ${league.toUpperCase()} is missing.`, false);
         }
+
+        // Generate the match day fixtures once per league switch for better performance
+        generateMatchDay(league);
 
         // Set up real-time listener for matches
         const matchesCollection = appState.db.collection(`${league}Matches`);
@@ -707,13 +709,21 @@ async function handleLogout() {
    7. Event Listeners & App Initialization
 ============================================ */
 function setupEventListeners() {
+    let lastFocusedElement;
+
+    function closeModal(modal) {
+        modal.classList.remove('show');
+        if (lastFocusedElement) {
+            lastFocusedElement.focus();
+        }
+    }
+
     document.querySelector('.league-selector-nav').addEventListener('click', (e) => {
         const target = e.target.closest('.league-btn');
         if (target) {
             document.querySelector('.league-btn.active').classList.remove('active');
             target.classList.add('active');
             document.querySelector('.league-logo').classList.add('active');
-            // Update URL without reloading page (for shareability)
             history.pushState(null, '', `?league=${target.dataset.league}`);
             switchLeague(target.dataset.league);
         }
@@ -722,13 +732,10 @@ function setupEventListeners() {
     document.querySelector('.main-nav').addEventListener('click', (e) => {
         const target = e.target.closest('.nav-btn');
         if (target) {
-            // Update button active state and ARIA attributes
             document.querySelector('.nav-btn.active').classList.remove('active');
             document.querySelector('.nav-btn[aria-selected="true"]').setAttribute('aria-selected', 'false');
             target.classList.add('active');
             target.setAttribute('aria-selected', 'true');
-
-            // Update page visibility
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
             const panelId = target.getAttribute('aria-controls');
             document.getElementById(panelId.replace('panel-', '') + '-section').classList.add('active');
@@ -762,66 +769,60 @@ function setupEventListeners() {
             if (dayHasVisibleMatch) hasVisibleMatch = true;
         });
 
-        // Show or hide the "no results" message
-        if (hasVisibleMatch) {
-            dom.noSearchResults.style.display = 'none';
-        } else {
-            dom.noSearchResults.style.display = 'block';
-        }
+        dom.noSearchResults.style.display = hasVisibleMatch ? 'none' : 'block';
     }));
 
     // Event delegation for dynamically added highlight images
     dom.highlightsSection.addEventListener('click', (e) => {
         if (e.target.tagName === 'IMG' && e.target.closest('.screen-gallery')) {
+            lastFocusedElement = e.target;
             dom.modalImage.src = e.target.src;
             dom.modal.classList.add('show');
+            dom.closeModalBtn.focus();
         }
     });
 
     dom.leagueSection.addEventListener('click', (e) => {
         if (e.target.matches('.team-logo')) {
+            lastFocusedElement = e.target;
             const teamName = e.target.closest('td').querySelector('b').textContent;
             const gameplanPath = `images/gameplans/${teamName.toLowerCase().replace(/ /g, '-')}.jpg`;
             dom.modalImage.src = gameplanPath;
             dom.modal.classList.add('show');
+            dom.closeModalBtn.focus();
         }
     });
 
-    dom.closeModalBtn.addEventListener('click', () => dom.modal.classList.remove('show'));
+    dom.closeModalBtn.addEventListener('click', () => closeModal(dom.modal));
     dom.modal.addEventListener('click', (e) => {
-        if (e.target === dom.modal) dom.modal.classList.remove('show');
+        if (e.target === dom.modal) closeModal(dom.modal);
     });
 
     // Auth Modal Event Listeners
-    dom.authBtn.addEventListener('click', () => dom.authModal.classList.add('show'));
-    dom.closeAuthModalBtn.addEventListener('click', () => dom.authModal.classList.remove('show'));
-    dom.authModal.addEventListener('click', (e) => {
-        if (e.target === dom.authModal) dom.authModal.classList.remove('show');
+    dom.authBtn.addEventListener('click', () => {
+        lastFocusedElement = dom.authBtn;
+        dom.authModal.classList.add('show');
+        dom.authEmailInput.focus();
     });
+    dom.closeAuthModalBtn.addEventListener('click', () => closeModal(dom.authModal));
+    dom.authModal.addEventListener('click', (e) => {
+        if (e.target === dom.authModal) closeModal(dom.authModal);
+    });
+
     dom.loginBtn.addEventListener('click', handleLogin);
     dom.signupBtn.addEventListener('click', handleSignup);
     dom.logoutBtn.addEventListener('click', handleLogout);
 
     window.addEventListener('scroll', () => {
       const header = document.querySelector('header');
-      if (window.scrollY > 50) {
-        header.classList.add('scrolled');
-      } else {
-        header.classList.remove('scrolled');
-      }
+      header.classList.toggle('scrolled', window.scrollY > 50);
     });
 
-    // Handle back/forward browser navigation for URL parameters
     window.addEventListener('popstate', () => {
         const urlParams = new URLSearchParams(window.location.search);
-        const leagueFromUrl = urlParams.get('league') || 'ucl'; // Default to 'ucl'
-        // Update active button state in the UI
+        const leagueFromUrl = urlParams.get('league') || 'ucl';
         document.querySelectorAll('.league-btn').forEach(btn => {
-            if (btn.dataset.league === leagueFromUrl) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
+            btn.classList.toggle('active', btn.dataset.league === leagueFromUrl);
         });
         if (leagueFromUrl !== appState.currentLeague) {
             switchLeague(leagueFromUrl);
@@ -832,16 +833,10 @@ function setupEventListeners() {
 window.onload = () => {
     initFirebase();
     setupEventListeners();
-    // Initial load: Check URL parameter first
     const urlParams = new URLSearchParams(window.location.search);
     const initialLeague = urlParams.get('league') || appState.currentLeague;
-    // Ensure the correct button is active on initial load
     document.querySelectorAll('.league-btn').forEach(btn => {
-        if (btn.dataset.league === initialLeague) {
-            btn.classList.add('active');
-        } else {
-            btn.classList.remove('active');
-        }
+        btn.classList.toggle('active', btn.dataset.league === initialLeague);
     });
     switchLeague(initialLeague);
 };
