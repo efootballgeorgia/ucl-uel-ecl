@@ -6,10 +6,15 @@ service cloud.firestore {
       allow read: if true;
     }
 
+    // Allow authenticated users to create/update their own user profile in a 'users' collection
+    match /users/{userId} {
+      allow read: if true; // Or restrict if profiles should be private
+      allow create, update: if request.auth.uid == userId;
+    }
+
     // Allow anyone to read match results
     match /{leagueCollection=**} { // This will match UCLMatches, UELMatches, etc.
       allow read: if true;
-
       // Only allow users whose UID exists in the 'admins' collection to write match results.
       // This protects your match data from unauthorized submissions.
       allow write: if request.auth.uid != null && get(/databases/$(database)/documents/admins/$(request.auth.uid)).exists();
