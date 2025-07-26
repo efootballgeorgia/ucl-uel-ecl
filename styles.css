@@ -28,6 +28,8 @@ body {
   position: relative;
   box-sizing: border-box;
   font-size: 16px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-color) var(--secondary-bg);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -363,10 +365,49 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
 ============================================ */
 .knockout-stage { margin: 2.5rem auto; max-width: 75rem; padding: 1.25rem; position: relative; }
 .knockout-container { position: relative; width: 100%; max-width: 75rem; margin: 0 auto; }
-.knockout-bg { width: 100%; height: auto; display: block; }
-.logo-wrapper { position: absolute; width: 5%; height: auto; cursor: pointer; transition: transform 0.3s ease; }
+.knockout-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.logo-wrapper { position: absolute; width: 6.5%; height: auto; cursor: pointer; transition: transform 0.3s ease; }
 .logo-wrapper img { width: 100%; height: auto; object-fit: contain; }
 .logo-wrapper:hover { transform: scale(1.1); z-index: 10; }
+
+#knockout-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem; /* Adds space between the playoff and R16 images */
+    align-items: center;
+}
+
+.knockout-stage-item {
+    width: 100%;
+    max-width: 75rem;
+    position: relative;
+    height: 0;
+    padding-bottom: 56.25%; /* This locks the aspect ratio */
+    margin: 0 auto; /* Ensures it's centered */
+}
+
+.knockout-stage-item h3 {
+    color: #fff;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    font-family: var(--font-primary);
+    font-weight: 700;
+}
+
+.knockout-stage-item .logos-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Ensure logos are on top of the background */
+}
 
 .win-images { margin: 2.5rem auto; padding: 1.25rem; text-align: center; color: #fff; }
 .win-gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
@@ -418,6 +459,7 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
   .match-form { width: 95%; padding: 1.5rem; }
   .form-group { flex-direction: column; gap: 0.8rem; }
   .knockout-container { max-width: 100%; }
+  .knockout-stage-item h3 { font-size: 1.5rem; }
   #match-day-container { display: flex; overflow-x: auto; padding-bottom: 1rem; gap: 0.8rem; }
   .win-gallery { flex-direction: column; align-items: center; }
   .wins { width: 100%; max-width: 100%; margin: 0.71rem 0; }
