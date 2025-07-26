@@ -286,11 +286,20 @@ tbody td {
 
 tbody td b.points { color: #fff; font-weight: 700; }
 tbody td img { height: 45px; width: 45px; vertical-align: middle; margin-right: 15px; cursor: pointer; border-radius: 50%; padding: 2px; }
-tbody tr { background-color: transparent; }
-tbody tr:hover td {
-    background-color: rgba(41, 41, 41, 0.8); /* More pronounced translucency */
-    box-shadow: 0 0 15px rgba(255, 215, 0, 0.1); /* Subtle glow on hover */
+tbody tr {
+    background-color: transparent;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; /* Added transform and box-shadow to transition */
 }
+tbody tr:hover { /* Combined rule for cleaner hover */
+    background-color: rgba(41, 41, 41, 0.9); /* More pronounced translucency */
+    transform: translateY(-3px); /* Lift effect */
+    box-shadow: 0 5px 20px rgba(255, 215, 0, 0.2); /* Enhanced glow */
+}
+/* Ensure cell content within the row also transitions smoothly */
+tbody tr:hover td {
+    background-color: transparent; /* Reset individual cell background as it's now on the row */
+}
+
 
 .form-box { display: inline-block; width: 1rem; height: 1rem; margin: 0 3px; border-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.1); }
 .form-box.victory { background-color: var(--win-color); }
@@ -503,8 +512,13 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
   .form-group { flex-direction: column; gap: 0.8rem; }
   .knockout-container { max-width: 100%; }
   .knockout-stage-item h3 { font-size: 1.5rem; }
-  .search-container-wrapper { margin: 1.5rem auto 0.8rem; padding: 1rem;}
-  .search-container::before { left: 8%; }
+  /* Adjust search container wrapper for mobile */
+  .search-container-wrapper {
+    margin: 1.5rem auto 0.8rem;
+    padding: 1rem;
+  }
+  .search-container::before { left: 8%; } /* Adjust icon position */
+
   #match-day-container { display: flex; overflow-x: auto; padding-bottom: 1rem; gap: 0.8rem; }
   .win-gallery { flex-direction: column; align-items: center; }
   .wins { width: 100%; max-width: 100%; margin: 0.71rem 0; }
