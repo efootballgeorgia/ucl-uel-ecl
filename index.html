@@ -64,7 +64,7 @@
       </div>
 
       <section class="match-form">
-        <h2 id="match-form-title">Add UCL Match Result</h2>
+        <h2 id="match-form-title"></h2>
         <form id="matchForm">
           <div class="form-group">
             <label for="homeTeam" class="visually-hidden">Home Team</label>
@@ -81,7 +81,7 @@
           <div class="feedback-message"></div>
           <button type="submit" class="btn">Add Match</button>
         </form>
-        <p class="auth-required-message" style="display:none;">You must be logged in to submit match results.</p>
+        <p class="auth-required-message" style="display:none;"></p>
       </section>
     </section>
 
@@ -123,7 +123,18 @@
       <div class="modal-content auth-modal-content">
         <h2>Login / Signup</h2>
         <div class="auth-feedback-message"></div>
-        <button type="button" id="google-login-btn" class="btn">Sign in with Google</button>
+        <form id="auth-form">
+          <div class="form-group">
+            <label for="auth-email" class="visually-hidden">Email</label>
+            <input type="email" id="auth-email" placeholder="Email" required>
+          </div>
+          <div class="form-group">
+            <label for="auth-password" class="visually-hidden">Password</label>
+            <input type="password" id="auth-password" placeholder="Password" required>
+          </div>
+          <button type="submit" id="login-btn" class="btn">Login</button>
+          <button type="button" id="signup-btn" class="btn">Signup</button>
+        </form>
       </div>
     </div>
   </main>
