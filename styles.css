@@ -36,6 +36,19 @@ h1, h2, h3, h4, h5, h6 {
     color: #fff;
 }
 
+/* Visually hidden class for accessibility */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+
 /* ============================================
    2. Animations & Keyframes
 ============================================ */
@@ -142,7 +155,8 @@ header {
   flex-wrap: wrap;
 }
 
-.league-btn, .nav-btn {
+/* Base button style */
+.btn {
   padding: 0.75rem 1.5rem;
   background: transparent;
   color: var(--text-color);
@@ -154,8 +168,7 @@ header {
   font-family: var(--font-primary);
 }
 
-.league-btn:hover, .nav-btn:hover,
-.league-btn:focus, .nav-btn:focus {
+.btn:hover, .btn:focus {
   background: var(--accent-color);
   color: var(--primary-bg);
   border-color: var(--accent-color);
@@ -163,7 +176,8 @@ header {
   box-shadow: 0 4px 20px rgba(255, 215, 0, 0.2);
 }
 
-.league-btn.active, .nav-btn.active {
+/* Active state for both league and nav buttons */
+.btn.active {
   background: var(--accent-color);
   color: var(--primary-bg);
   border-color: var(--accent-color);
@@ -266,7 +280,7 @@ tbody tr:hover td { background-color: rgba(41, 41, 41, 0.7); }
 /* ============================================
    6. Match & Form Elements
 ============================================ */
-.match-form {\
+.match-form {
   display: none !important;
   background: rgba(22, 27, 34, 0.8);
   backdrop-filter: blur(10px);
@@ -371,7 +385,7 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
   .header-content { gap: 1rem; }
   .league-logo { max-width: 100px; }
   .main-nav { gap: 0.5rem; }
-  .nav-btn { padding: 0.6rem 1rem; }
+  .btn { padding: 0.6rem 1rem; } /* Use .btn for responsive padding */
   .league-table { width: 98%; font-size: 0.75rem; }
   thead th, tbody td { padding: 0.5rem 0.3rem; }
   tbody td img { width: 20px; height: 20px; margin-right: 5px; }
