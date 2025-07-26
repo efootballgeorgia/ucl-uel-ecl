@@ -115,7 +115,6 @@ function renderTable(league) {
             <td>${index + 1}</td>
             <td>
               <picture>
-                <source srcset="images/logos/${teamLogoName}.webp" type="image/webp">
                 <source srcset="images/logos/${teamLogoName}.png" type="image/png">
                 <img src="images/logos/${teamLogoName}.png" alt="${teamName}" loading="lazy" class="team-logo">
               </picture>
@@ -271,7 +270,6 @@ function updateKnockoutStage(league) {
         wrapper.style.left = position.left;
         wrapper.innerHTML = `
           <picture>
-            <source srcset="images/logos/${teamLogoName}.webp" type="image/webp">
             <source srcset="images/logos/${teamLogoName}.png" type="image/png">
             <img src="images/logos/${teamLogoName}.png" alt="${teamName}">
           </picture>
