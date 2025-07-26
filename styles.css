@@ -28,8 +28,7 @@ body {
   position: relative;
   box-sizing: border-box;
   font-size: 16px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--accent-color) var(--secondary-bg);
+  /* scrollbar-width and scrollbar-color removed as agreed */
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -64,6 +63,21 @@ h1, h2, h3, h4, h5, h6 {
   0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
   50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.9); }
   100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse-color {
+  0% { border-top-color: var(--accent-color); }
+  50% { border-top-color: #ff5722; /* A complementary color */ }
+  100% { border-top-color: var(--accent-color); }
 }
 
 .team-logo:hover {
@@ -105,16 +119,7 @@ h1, h2, h3, h4, h5, h6 {
   border: 5px solid var(--border-color); /* A light ring */
   border-top-color: var(--accent-color); /* The colored spinning part */
   border-radius: 50%;
-  animation: spin 1s infinite linear;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  animation: spin 1s infinite linear, pulse-color 2s infinite alternate; /* Enhanced spinner */
 }
 
 /* ============================================
@@ -152,9 +157,11 @@ header {
   background-color: var(--accent-color);
   border-radius: 10px;
   border: 2px solid var(--secondary-bg);
+  transition: background-color 0.3s ease, width 0.3s ease; /* Added transition for hover effect */
 }
 ::-webkit-scrollbar-thumb:hover {
   background-color: #ffed4a;
+  width: 10px; /* Slightly wider on hover */
 }
 
 .league-logo {
@@ -224,7 +231,7 @@ header {
   -webkit-overflow-scrolling: touch;
   overflow-x: auto;
   font-size: 18px;
-  background: rgba(22, 27, 34, 0.8);
+  background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(33, 38, 45, 0.9)); /* Subtle gradient */
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
@@ -280,7 +287,10 @@ tbody td {
 tbody td b.points { color: #fff; font-weight: 700; }
 tbody td img { height: 45px; width: 45px; vertical-align: middle; margin-right: 15px; cursor: pointer; border-radius: 50%; padding: 2px; }
 tbody tr { background-color: transparent; }
-tbody tr:hover td { background-color: rgba(41, 41, 41, 0.7); }
+tbody tr:hover td {
+    background-color: rgba(41, 41, 41, 0.8); /* More pronounced translucency */
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.1); /* Subtle glow on hover */
+}
 
 .form-box { display: inline-block; width: 1rem; height: 1rem; margin: 0 3px; border-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.1); }
 .form-box.victory { background-color: var(--win-color); }
@@ -301,7 +311,7 @@ tbody tr:hover td { background-color: rgba(41, 41, 41, 0.7); }
 ============================================ */
 .match-form {
   display: none !important;
-  background: rgba(22, 27, 34, 0.8);
+  background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(33, 38, 45, 0.9)); /* Subtle gradient */
   backdrop-filter: blur(10px);
   padding: 2rem;
   border-radius: var(--border-radius);
@@ -332,7 +342,7 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
   margin: 2rem auto 1rem; /* Adjust margins to provide separation */
   width: 98%;
   max-width: 62.5rem;
-  background: rgba(22, 27, 34, 0.8);
+  background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(33, 38, 45, 0.9)); /* Subtle gradient */
   backdrop-filter: blur(10px);
   padding: 1.5rem;
   border-radius: var(--border-radius);
@@ -341,15 +351,14 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
 }
 
 .search-container-wrapper h2 {
-    margin-top: 0; /* Remove top margin */
+    /* margin-top: 0; removed as agreed */
     margin-bottom: 1.5rem;
     color: #fff;
     text-align: center;
 }
 
 .match-day {
-  /* Removed search-related styles as they are now in .search-container-wrapper */
-  background: rgba(22, 27, 34, 0.8);
+  background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(33, 38, 45, 0.9)); /* Subtle gradient */
   backdrop-filter: blur(10px);
   padding: 1.5rem;
   border-radius: var(--border-radius);
@@ -435,7 +444,7 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
 .win-gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
 
 .wins {
-  background: rgba(22, 27, 34, 0.8);
+  background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(33, 38, 45, 0.9)); /* Subtle gradient */
   backdrop-filter: blur(10px);
   border-radius: var(--border-radius);
   padding: 1.5rem;
@@ -451,9 +460,21 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
 
 .wins h3 { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.4rem; margin-bottom: 1rem; }
 .screen-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 1rem; max-height: 25rem; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--accent-color) var(--primary-bg); }
-.screen-gallery img { width: 100%; height: 80px; border-radius: 8px; border: 2px solid transparent; transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; object-fit: cover; cursor: pointer; }
-.screen-gallery img:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); border-color: var(--accent-color); }
-.screen-gallery .empty-state { padding: 0.5rem; } /* Less padding for this specific context */
+.screen-gallery img {
+    width: 100%;
+    height: 80px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, filter 0.3s ease; /* Added filter transition */
+    object-fit: cover;
+    cursor: pointer;
+}
+.screen-gallery img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(255, 215, 0, 0.7);
+    border-color: var(--accent-color);
+    filter: brightness(1.2) saturate(1.1); /* Added vibrancy */
+}
 
 /* ============================================
    8. Modal
@@ -482,13 +503,8 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
   .form-group { flex-direction: column; gap: 0.8rem; }
   .knockout-container { max-width: 100%; }
   .knockout-stage-item h3 { font-size: 1.5rem; }
-  /* Adjust search container wrapper for mobile */
-  .search-container-wrapper {
-    margin: 1.5rem auto 0.8rem;
-    padding: 1rem;
-  }
-  .search-container::before { left: 8%; } /* Adjust icon position */
-
+  .search-container-wrapper { margin: 1.5rem auto 0.8rem; padding: 1rem;}
+  .search-container::before { left: 8%; }
   #match-day-container { display: flex; overflow-x: auto; padding-bottom: 1rem; gap: 0.8rem; }
   .win-gallery { flex-direction: column; align-items: center; }
   .wins { width: 100%; max-width: 100%; margin: 0.71rem 0; }
