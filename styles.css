@@ -15,11 +15,10 @@
   --border-radius: 12px;
   --header-height: 80px;
   --font-primary: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  --font-secondary: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 body {
-  font-family: var(--font-secondary);
+  font-family: var(--font-primary);
   background: var(--primary-bg);
   color: var(--text-color);
   text-align: center;
@@ -28,7 +27,6 @@ body {
   position: relative;
   box-sizing: border-box;
   font-size: 16px;
-  /* scrollbar-width and scrollbar-color removed as agreed */
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -314,16 +312,12 @@ tbody td b.points { color: #fff; font-weight: 700; }
 tbody td img { height: 45px; width: 45px; vertical-align: middle; margin-right: 15px; cursor: pointer; border-radius: 50%; padding: 2px; }
 tbody tr {
     background-color: transparent;
-    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; /* Added transform and box-shadow to transition */
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
-tbody tr:hover { /* Combined rule for cleaner hover */
-    background-color: rgba(41, 41, 41, 0.9); /* More pronounced translucency */
-    transform: translateY(-3px); /* Lift effect */
-    box-shadow: 0 5px 20px rgba(255, 215, 0, 0.2); /* Enhanced glow */
-}
-/* Ensure cell content within the row also transitions smoothly */
-tbody tr:hover td {
-    background-color: transparent; /* Reset individual cell background as it's now on the row */
+tbody tr:hover {
+    background-color: rgba(41, 41, 41, 0.9);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(255, 215, 0, 0.2);
 }
 
 
@@ -370,12 +364,6 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
 .feedback-message.show { opacity: 1; max-height: 40px; }
 .feedback-message.success { background-color: var(--win-color); color: white; }
 .feedback-message.error { background-color: var(--loss-color); color: white; }
-
-.auth-required-message {
-    color: var(--text-color-secondary);
-    font-style: italic;
-    margin-top: 1rem;
-}
 
 /* ============================================
    Auth Modal Specific Styles
@@ -566,7 +554,7 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
   thead th, tbody td { padding: 0.5rem 0.3rem; }
   tbody td img { width: 30px; height: 30px; margin-right: 5px; }
   .form-box { width: 0.7rem; height: 0.7rem; }
-  .match-form { width: 95%; padding: 1.5rem;} /* Reverted display:none for auth */
+  .match-form { width: 95%; padding: 1.5rem;}
   .form-group { flex-direction: column; gap: 0.8rem; }
   .knockout-container { max-width: 100%; }
   .knockout-stage-item h3 { font-size: 1.5rem; }
