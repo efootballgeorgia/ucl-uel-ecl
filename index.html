@@ -33,6 +33,11 @@
         <button class="nav-btn btn" id="tab-knockout" role="tab" aria-selected="false" aria-controls="panel-knockout" data-page="knockout">Knockout</button>
         <button class="nav-btn btn" id="tab-highlights" role="tab" aria-selected="false" aria-controls="panel-highlights" data-page="highlights">Highlights</button>
       </nav>
+      <div class="auth-status">
+        <span id="user-status">Not logged in</span>
+        <button id="auth-btn" class="btn">Login / Signup</button>
+        <button id="logout-btn" class="btn" style="display:none;">Logout</button>
+      </div>
     </div>
   </header>
 
@@ -76,6 +81,7 @@
           <div class="feedback-message"></div>
           <button type="submit" class="btn">Add Match</button>
         </form>
+        <p class="auth-required-message" style="display:none;">You must be logged in to submit match results.</p>
       </section>
     </section>
 
@@ -111,9 +117,19 @@
       <span class="close" id="closeModal">&times;</span>
       <img class="modal-content" id="modalImage">
     </div>
+
+    <div class="modal auth-modal" id="auth-modal">
+      <span class="close" id="closeAuthModal">&times;</span>
+      <div class="modal-content auth-modal-content">
+        <h2>Login / Signup</h2>
+        <div class="auth-feedback-message"></div>
+        <button type="button" id="google-login-btn" class="btn">Sign in with Google</button>
+      </div>
+    </div>
   </main>
 
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
   <script src="script.js" defer></script>
 </body>
