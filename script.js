@@ -58,8 +58,6 @@ function initFirebase() {
   };
   firebase.initializeApp(firebaseConfig);
   appState.db = firebase.firestore();
-  // Removed firebase.auth() initialization as it's not used for current functionality.
-  // appState.auth = firebase.auth();
   console.log("Firebase initialized");
 }
 
@@ -104,6 +102,18 @@ function appendQualificationSeparators(fragment, position, qualificationZones) {
         separatorRow.innerHTML = `<td colspan="9" class="${qualificationZones[position]}"><span class="line"></span></td>`;
         fragment.appendChild(separatorRow);
     }
+}
+
+// New helper function to update UI elements based on loaded config
+function updateUIFromConfig(config) {
+    dom.leagueLogo.src = config.logo ? `images/logos/${config.logo}` : '';
+    dom.leagueLogo.alt = config.name ? `${config.name} Logo` : 'League Logo';
+    dom.matchFormTitle.textContent = `Add ${config.name || 'N/A'} Match Result`;
+    dom.matchDayTitle.textContent = `${config.name || 'N/A'} Match Day`;
+    dom.knockoutTitle.textContent = `${config.name || 'N/A'} Knockout Stage`;
+    dom.highlightsTitle.textContent = `${config.name || 'N/A'} Highlights`;
+    populateTeamDropdowns(appState.currentLeague);
+    renderHighlights(appState.currentLeague);
 }
 
 /* ============================================
@@ -321,8 +331,8 @@ function updateKnockoutStage(league) {
 
 
 function generateMatchDay(league) {
-    const config = appState.config[league]; // Get config for the current league
-    const teams = [...config.teams]; // Use teams from config
+    const config = appState.config[league];
+    const teams = [...config.teams];
     if (teams.length < 2) {
         dom.matchDayContainer.innerHTML = '<p>Not enough teams for fixtures.</p>';
         return;
@@ -459,6 +469,7 @@ async function handleMatchSubmission(e) {
         checkFormValidity();
     } catch (error) {
         // Simplified error handling, as auth errors are no longer expected if not using auth
+        // If Firestore rules deny write, this will catch the permission-denied error.
         showFeedback(`Error adding match: ${error.message}.`, false);
         console.error(`Error adding ${league.toUpperCase()} match:`, error);
     } finally {
@@ -499,30 +510,42 @@ async function switchLeague(league) {
         appState.unsubscribe();
     }
 
+    // Attempt to load from localStorage first for instant display (Client-side Caching)
+    const cachedConfig = localStorage.getItem(`leagueConfig_${league}`);
+    if (cachedConfig) {
+        try {
+            appState.config[league] = JSON.parse(cachedConfig);
+            updateUIFromConfig(appState.config[league]);
+            console.log(`Loaded ${league} config from cache.`);
+        } catch (e) {
+            console.error("Error parsing cached config, fetching fresh.", e);
+            localStorage.removeItem(`leagueConfig_${league}`); // Invalidate bad cache
+            appState.config[league] = {}; // Clear config if cache is bad
+        }
+    } else {
+        appState.config[league] = {}; // Clear config if no cache
+    }
+
+
     try {
-        // Fetch the league's configuration from Firestore
+        // Always attempt to fetch fresh config from Firestore in the background
+        // to ensure data is up-to-date and to prime the cache.
         const configDoc = await appState.db.collection('leagues').doc(league).get();
-        if (!configDoc.exists) {
+        if (configDoc.exists) {
+            const freshConfig = configDoc.data();
+            // Only update if fresh config is different or if there was no cached config
+            if (JSON.stringify(freshConfig) !== cachedConfig) {
+                appState.config[league] = freshConfig;
+                localStorage.setItem(`leagueConfig_${league}`, JSON.stringify(freshConfig)); // Update cache
+                updateUIFromConfig(freshConfig); // Update UI with fresh data
+                console.log(`Updated ${league} config from Firestore.`);
+            } else {
+                console.log(`Cached ${league} config is up-to-date.`);
+            }
+        } else {
             console.error(`No configuration found for league: ${league}`);
             showFeedback(`Configuration for ${league.toUpperCase()} is missing.`, false);
-            appState.config[league] = {}; // Clear config
-        } else {
-            appState.config[league] = configDoc.data();
         }
-
-        const config = appState.config[league] || {};
-
-        // Update UI elements based on the loaded config
-        dom.leagueLogo.src = config.logo ? `images/logos/${config.logo}` : '';
-        dom.leagueLogo.alt = config.name ? `${config.name} Logo` : 'League Logo';
-        dom.matchFormTitle.textContent = `Add ${config.name || 'N/A'} Match Result`;
-        dom.matchDayTitle.textContent = `${config.name || 'N/A'} Match Day`;
-        dom.knockoutTitle.textContent = `${config.name || 'N/A'} Knockout Stage`;
-        dom.highlightsTitle.textContent = `${config.name || 'N/A'} Highlights`;
-
-        // Populate UI components that depend on config
-        populateTeamDropdowns(league);
-        renderHighlights(league);
 
         // Set up real-time listener for matches
         const matchesCollection = appState.db.collection(`${league}Matches`);
@@ -552,6 +575,8 @@ function setupEventListeners() {
             document.querySelector('.league-btn.active').classList.remove('active');
             target.classList.add('active');
             document.querySelector('.league-logo').classList.add('active');
+            // Update URL without reloading page (for shareability)
+            history.pushState(null, '', `?league=${target.dataset.league}`);
             switchLeague(target.dataset.league);
         }
     });
@@ -637,11 +662,38 @@ function setupEventListeners() {
         header.classList.remove('scrolled');
       }
     });
+
+    // Handle back/forward browser navigation for URL parameters
+    window.addEventListener('popstate', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const leagueFromUrl = urlParams.get('league') || 'ucl'; // Default to 'ucl'
+        // Update active button state in the UI
+        document.querySelectorAll('.league-btn').forEach(btn => {
+            if (btn.dataset.league === leagueFromUrl) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        });
+        if (leagueFromUrl !== appState.currentLeague) {
+            switchLeague(leagueFromUrl);
+        }
+    });
 }
 
 window.onload = () => {
     initFirebase();
     setupEventListeners();
-    // Initial load for the default league
-    switchLeague(appState.currentLeague);
+    // Initial load: Check URL parameter first
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialLeague = urlParams.get('league') || appState.currentLeague;
+    // Ensure the correct button is active on initial load
+    document.querySelectorAll('.league-btn').forEach(btn => {
+        if (btn.dataset.league === initialLeague) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+    switchLeague(initialLeague);
 };
