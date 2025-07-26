@@ -58,6 +58,8 @@ function initFirebase() {
   };
   firebase.initializeApp(firebaseConfig);
   appState.db = firebase.firestore();
+  // Removed firebase.auth() initialization as it's not used for current functionality.
+  // appState.auth = firebase.auth();
   console.log("Firebase initialized");
 }
 
@@ -95,6 +97,15 @@ function checkFormValidity() {
   }
 }
 
+function appendQualificationSeparators(fragment, position, qualificationZones) {
+    if (qualificationZones && qualificationZones[position]) {
+        const separatorRow = document.createElement('tr');
+        separatorRow.className = 'separator';
+        separatorRow.innerHTML = `<td colspan="9" class="${qualificationZones[position]}"><span class="line"></span></td>`;
+        fragment.appendChild(separatorRow);
+    }
+}
+
 /* ============================================
    5. Core Application Logic
 ============================================ */
@@ -125,14 +136,7 @@ function renderTable(league) {
             <td><div class="form-container"></div></td>
         `;
         fragment.appendChild(row);
-
-        const position = index + 1;
-        if (qualificationZones && qualificationZones[position]) {
-            const separatorRow = document.createElement('tr');
-            separatorRow.className = 'separator';
-            separatorRow.innerHTML = `<td colspan="9" class="${qualificationZones[position]}"><span class="line"></span></td>`;
-            fragment.appendChild(separatorRow);
-        }
+        appendQualificationSeparators(fragment, index + 1, qualificationZones);
     });
     dom.leagueTableBody.appendChild(fragment);
 }
@@ -161,7 +165,7 @@ function sortTable(columnIndex, dataType) {
         // Default to descending for points, ascending for name
         sortConfig.isDescending = (columnIndex !== 1);
     }
-    
+
     rows.sort((a, b) => {
         let aVal, bVal;
         const aCell = a.cells[columnIndex];
@@ -193,7 +197,7 @@ function sortTable(columnIndex, dataType) {
                 return bPoints - aPoints; // Always sort by points descending
             }
         }
-        
+
         // Tertiary sort: goal difference (if points are equal)
         const [aGF, aGA] = a.cells[6].textContent.split(':').map(Number);
         const [bGF, bGA] = b.cells[6].textContent.split(':').map(Number);
@@ -213,13 +217,7 @@ function sortTable(columnIndex, dataType) {
         const position = index + 1;
         row.cells[0].textContent = position;
         fragment.appendChild(row);
-
-        if (qualificationZones[position]) {
-            const separatorRow = document.createElement('tr');
-            separatorRow.className = 'separator';
-            separatorRow.innerHTML = `<td colspan="9" class="${qualificationZones[position]}"><span class="line"></span></td>`;
-            fragment.appendChild(separatorRow);
-        }
+        appendQualificationSeparators(fragment, position, qualificationZones);
     });
     dom.leagueTableBody.appendChild(fragment);
 
@@ -323,14 +321,16 @@ function updateKnockoutStage(league) {
 
 
 function generateMatchDay(league) {
-    const teams = [...appState.config[league].teams];
+    const config = appState.config[league]; // Get config for the current league
+    const teams = [...config.teams]; // Use teams from config
     if (teams.length < 2) {
         dom.matchDayContainer.innerHTML = '<p>Not enough teams for fixtures.</p>';
         return;
     }
-    
+
     const localFixtures = [];
-    const numDays = 8;
+    // Dynamically retrieve numDays from config, with a fallback to 8 if not defined
+    const numDays = config.numberOfMatchDays || 8;
     const n = teams.length;
     for (let day = 1; day <= numDays; day++) {
         const dayFixtures = [];
@@ -373,13 +373,13 @@ function renderHighlights(league) {
 
     const logoFile = config.logo;
     const highlightsByDay = config.highlights || {};
-    // New: Get knockout highlights
     const knockoutHighlights = config.knockoutHighlights || {};
 
     const galleryContainer = dom.winGalleryContainer;
     galleryContainer.innerHTML = ''; // Clear previous league's gallery
     let allDaysHtml = '';
-    const numMatchDays = 8; // Assuming 8 regular match days
+    // Dynamically retrieve numMatchDays from config, with a fallback to 8 if not defined
+    const numMatchDays = config.numberOfMatchDays || 8;
 
     // --- Render Regular Match Day Highlights ---
     for (let i = 1; i <= numMatchDays; i++) {
@@ -442,7 +442,7 @@ async function handleMatchSubmission(e) {
     if (homeTeam === awayTeam) {
         return showFeedback('A team cannot play against itself.', false);
     }
-    
+
     submitButton.textContent = 'Adding...';
     submitButton.disabled = true;
     submitButton.classList.remove('ready');
@@ -458,12 +458,8 @@ async function handleMatchSubmission(e) {
         dom.matchForm.reset();
         checkFormValidity();
     } catch (error) {
-        // Provide a more helpful error message if it's a permission issue
-        if (error.code === 'permission-denied') {
-             showFeedback('Error: You must be logged in to add a match.', false);
-        } else {
-            showFeedback(`Error: ${error.message}.`, false);
-        }
+        // Simplified error handling, as auth errors are no longer expected if not using auth
+        showFeedback(`Error adding match: ${error.message}.`, false);
         console.error(`Error adding ${league.toUpperCase()} match:`, error);
     } finally {
         submitButton.textContent = 'Add Match';
@@ -476,7 +472,7 @@ function processMatchesAndUpdateUI(matches, league) {
     // Reset and render the base table and fixtures first
     renderTable(league);
     generateMatchDay(league);
-    
+
     matches.forEach(match => {
         const isDraw = match.homeScore === match.awayScore;
         const homeWin = match.homeScore > match.awayScore;
@@ -568,7 +564,7 @@ function setupEventListeners() {
             document.querySelector('.nav-btn[aria-selected="true"]').setAttribute('aria-selected', 'false');
             target.classList.add('active');
             target.setAttribute('aria-selected', 'true');
-            
+
             // Update page visibility
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
             const panelId = target.getAttribute('aria-controls');
@@ -582,14 +578,14 @@ function setupEventListeners() {
             sortTable(parseInt(header.dataset.columnIndex), header.dataset.type);
         }
     });
-    
+
     dom.matchForm.addEventListener('submit', handleMatchSubmission);
     dom.matchForm.addEventListener('input', checkFormValidity);
 
     dom.teamSearchInput.addEventListener('keyup', debounce(() => {
         const searchTerm = dom.teamSearchInput.value.toLowerCase();
         let hasVisibleMatch = false;
-        
+
         dom.matchDayContainer.querySelectorAll('.match-day-card').forEach(day => {
             let dayHasVisibleMatch = false;
             day.querySelectorAll('.match-card').forEach(match => {
@@ -627,7 +623,7 @@ function setupEventListeners() {
             dom.modal.classList.add('show');
         }
     });
-    
+
     dom.closeModalBtn.addEventListener('click', () => dom.modal.classList.remove('show'));
     dom.modal.addEventListener('click', (e) => {
         if (e.target === dom.modal) dom.modal.classList.remove('show');
