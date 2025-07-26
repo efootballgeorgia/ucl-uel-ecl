@@ -3,6 +3,10 @@
 ============================================ */
 const appState = {
   db: null,
+  auth: null, // Added for Firebase Auth
+  googleAuthProvider: null, // New: Google Auth Provider
+  currentUser: null, // To store current authenticated user
+  isAdmin: false, // New: To track if the current user is an admin
   currentLeague: 'ucl',
   // Unsubscribe function for the real-time listener
   unsubscribe: null,
@@ -41,7 +45,16 @@ const dom = {
   winGalleryContainer: document.getElementById('win-gallery-container'),
   teamSearchInput: document.getElementById('teamSearch'),
   noSearchResults: document.getElementById('no-search-results'),
-  feedbackMessage: document.querySelector('.feedback-message')
+  feedbackMessage: document.querySelector('.feedback-message'),
+  authRequiredMessage: document.querySelector('.auth-required-message'), // This message now applies to non-admins
+  // Auth Modal Elements
+  authModal: document.getElementById('auth-modal'),
+  closeAuthModalBtn: document.getElementById('closeAuthModal'),
+  googleLoginBtn: document.getElementById('google-login-btn'), // New: Google Login Button
+  authFeedbackMessage: document.querySelector('.auth-feedback-message'),
+  userStatusSpan: document.getElementById('user-status'),
+  authBtn: document.getElementById('auth-btn'),
+  logoutBtn: document.getElementById('logout-btn')
 };
 
 /* ============================================
@@ -58,7 +71,34 @@ function initFirebase() {
   };
   firebase.initializeApp(firebaseConfig);
   appState.db = firebase.firestore();
+  appState.auth = firebase.auth();
+  appState.googleAuthProvider = new firebase.auth.GoogleAuthProvider(); // Initialize Google Auth Provider
   console.log("Firebase initialized");
+
+  // Auth State Listener
+  appState.auth.onAuthStateChanged(async user => { // Made async to await admin check
+    appState.currentUser = user;
+    if (user) {
+        // Check if the logged-in user is an admin
+        const adminDoc = await appState.db.collection('admins').doc(user.uid).get();
+        appState.isAdmin = adminDoc.exists;
+
+        // Optionally store user data (like display name) in Firestore on first login
+        const userDocRef = appState.db.collection('users').doc(user.uid);
+        const userDoc = await userDocRef.get();
+        if (!userDoc.exists) {
+            await userDocRef.set({
+                displayName: user.displayName || user.email,
+                email: user.email,
+                photoURL: user.photoURL || null,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+        }
+    } else {
+        appState.isAdmin = false;
+    }
+    updateAuthUI();
+  });
 }
 
 /* ============================================
@@ -71,6 +111,16 @@ function showFeedback(message, isSuccess) {
         dom.feedbackMessage.classList.remove('show');
     }, 3000);
 }
+
+function showAuthFeedback(message, isSuccess) {
+    dom.authFeedbackMessage.textContent = message;
+    dom.authFeedbackMessage.style.backgroundColor = isSuccess ? 'var(--win-color)' : 'var(--loss-color)';
+    dom.authFeedbackMessage.classList.add('show');
+    setTimeout(() => {
+        dom.authFeedbackMessage.classList.remove('show');
+    }, 3000);
+}
+
 
 const debounce = (func, delay = 300) => {
     let timeout;
@@ -88,7 +138,8 @@ function checkFormValidity() {
   const homeScore = document.getElementById('homeScore').value;
   const awayScore = document.getElementById('awayScore').value;
 
-  if (homeTeam && awayTeam && homeTeam !== awayTeam && homeScore !== '' && awayScore !== '') {
+  // Form is valid only if an admin is logged in AND all fields are filled correctly
+  if (appState.isAdmin && homeTeam && awayTeam && homeTeam !== awayTeam && homeScore !== '' && awayScore !== '') {
     submitButton.classList.add('ready');
   } else {
     submitButton.classList.remove('ready');
@@ -104,7 +155,7 @@ function appendQualificationSeparators(fragment, position, qualificationZones) {
     }
 }
 
-// New helper function to update UI elements based on loaded config
+// Helper function to update UI elements based on loaded config
 function updateUIFromConfig(config) {
     dom.leagueLogo.src = config.logo ? `images/logos/${config.logo}` : '';
     dom.leagueLogo.alt = config.name ? `${config.name} Logo` : 'League Logo';
@@ -114,6 +165,40 @@ function updateUIFromConfig(config) {
     dom.highlightsTitle.textContent = `${config.name || 'N/A'} Highlights`;
     populateTeamDropdowns(appState.currentLeague);
     renderHighlights(appState.currentLeague);
+}
+
+// Function to update the UI based on authentication status and admin role
+async function updateAuthUI() {
+    const submitButton = dom.matchForm.querySelector('button[type="submit"]');
+
+    if (appState.currentUser) {
+        dom.userStatusSpan.textContent = `Logged in as: ${appState.currentUser.displayName || appState.currentUser.email}`;
+
+        dom.authBtn.style.display = 'none';
+        dom.logoutBtn.style.display = 'inline-block';
+
+        if (appState.isAdmin) {
+            dom.matchForm.style.display = 'flex'; // Show match form for admins
+            dom.authRequiredMessage.style.display = 'none'; // Hide message
+        } else {
+            dom.userStatusSpan.textContent = 'Not logged in';
+            dom.authBtn.style.display = 'inline-block';
+            dom.logoutBtn.style.display = 'none';
+            dom.matchForm.style.display = 'none'; // Ensure match form is hidden when logged out or not admin
+            dom.authRequiredMessage.style.display = 'block'; // Show "auth required" message for logged-out users
+            dom.authRequiredMessage.textContent = 'You must be logged in to submit match results.';
+            submitButton.classList.remove('ready'); // Ensure button is not ready
+        }
+        checkFormValidity(); // Re-check validity based on admin status
+    } else {
+        dom.userStatusSpan.textContent = 'Not logged in';
+        dom.authBtn.style.display = 'inline-block';
+        dom.logoutBtn.style.display = 'none';
+        dom.matchForm.style.display = 'none'; // Ensure match form is hidden when logged out or not admin
+        dom.authRequiredMessage.style.display = 'block'; // Show "auth required" message for logged-out users
+        dom.authRequiredMessage.textContent = 'You must be logged in to submit match results.';
+        submitButton.classList.remove('ready'); // Ensure button is not ready
+    }
 }
 
 /* ============================================
@@ -438,6 +523,13 @@ function renderHighlights(league) {
 
 async function handleMatchSubmission(e) {
     e.preventDefault();
+
+    // Only allow submission if the user is an admin
+    if (!appState.isAdmin) {
+        showFeedback('You do not have permission to submit match results.', false);
+        return;
+    }
+
     const homeTeam = dom.homeTeamSelect.value;
     const awayTeam = dom.awayTeamSelect.value;
     const homeScore = parseInt(document.getElementById('homeScore').value);
@@ -468,8 +560,6 @@ async function handleMatchSubmission(e) {
         dom.matchForm.reset();
         checkFormValidity();
     } catch (error) {
-        // Simplified error handling, as auth errors are no longer expected if not using auth
-        // If Firestore rules deny write, this will catch the permission-denied error.
         showFeedback(`Error adding match: ${error.message}.`, false);
         console.error(`Error adding ${league.toUpperCase()} match:`, error);
     } finally {
@@ -566,7 +656,41 @@ async function switchLeague(league) {
 }
 
 /* ============================================
-   6. Event Listeners & App Initialization
+   6. Authentication Functions
+============================================ */
+
+async function handleGoogleLogin() {
+    try {
+        await appState.auth.signInWithPopup(appState.googleAuthProvider);
+        showAuthFeedback('Logged in with Google successfully!', true);
+        dom.authModal.classList.remove('show');
+    } catch (error) {
+        let errorMessage = 'Google login failed.';
+        if (error.code === 'auth/popup-closed-by-user') {
+            errorMessage = 'Login cancelled by user.';
+        } else if (error.code === 'auth/cancelled-popup-request') {
+            errorMessage = 'Popup blocked or another request in progress.';
+        } else {
+            errorMessage = `Error: ${error.message}`;
+        }
+        showAuthFeedback(errorMessage, false);
+        console.error('Google login error:', error);
+    }
+}
+
+async function handleLogout() {
+    try {
+        await appState.auth.signOut();
+        showFeedback('Logged out successfully!', true);
+    } catch (error) {
+        showFeedback(`Logout error: ${error.message}`, false);
+        console.error('Logout error:', error);
+    }
+}
+
+
+/* ============================================
+   7. Event Listeners & App Initialization
 ============================================ */
 function setupEventListeners() {
     document.querySelector('.league-selector-nav').addEventListener('click', (e) => {
@@ -605,7 +729,7 @@ function setupEventListeners() {
     });
 
     dom.matchForm.addEventListener('submit', handleMatchSubmission);
-    dom.matchForm.addEventListener('input', checkFormValidity);
+    dom.matchForm.addEventListener('input', checkFormValidity); // Validity now depends on login state
 
     dom.teamSearchInput.addEventListener('keyup', debounce(() => {
         const searchTerm = dom.teamSearchInput.value.toLowerCase();
@@ -653,6 +777,15 @@ function setupEventListeners() {
     dom.modal.addEventListener('click', (e) => {
         if (e.target === dom.modal) dom.modal.classList.remove('show');
     });
+
+    // Auth Modal Event Listeners
+    dom.authBtn.addEventListener('click', () => dom.authModal.classList.add('show'));
+    dom.closeAuthModalBtn.addEventListener('click', () => dom.authModal.classList.remove('show'));
+    dom.authModal.addEventListener('click', (e) => {
+        if (e.target === dom.authModal) dom.authModal.classList.remove('show');
+    });
+    dom.googleLoginBtn.addEventListener('click', handleGoogleLogin); // Event listener for Google Login
+    dom.logoutBtn.addEventListener('click', handleLogout);
 
     window.addEventListener('scroll', () => {
       const header = document.querySelector('header');
