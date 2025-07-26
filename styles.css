@@ -278,7 +278,7 @@ tbody td {
 }
 
 tbody td b.points { color: #fff; font-weight: 700; }
-tbody td img { height: 35px; width: 35px; vertical-align: middle; margin-right: 15px; cursor: pointer; border-radius: 50%; padding: 2px; }
+tbody td img { height: 45px; width: 45px; vertical-align: middle; margin-right: 15px; cursor: pointer; border-radius: 50%; padding: 2px; }
 tbody tr { background-color: transparent; }
 tbody tr:hover td { background-color: rgba(41, 41, 41, 0.7); }
 
@@ -454,7 +454,7 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
   .btn { padding: 0.6rem 1rem; } /* Use .btn for responsive padding */
   .league-table { width: 98%; font-size: 0.75rem; }
   thead th, tbody td { padding: 0.5rem 0.3rem; }
-  tbody td img { width: 20px; height: 20px; margin-right: 5px; }
+  tbody td img { width: 30px; height: 30px; margin-right: 5px; }
   .form-box { width: 0.7rem; height: 0.7rem; }
   .match-form { width: 95%; padding: 1.5rem; }
   .form-group { flex-direction: column; gap: 0.8rem; }
