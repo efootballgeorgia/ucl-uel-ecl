@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,">
   <title>Football Leagues</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -80,14 +80,15 @@
     </section>
 
     <section id="matches-section" class="page-section" role="tabpanel" aria-labelledby="tab-matches">
-      <div class="match-day">
-        <h2 id="match-day-title">UCL Match Day</h2>
-        <div class="search-container">
-          <input type="text" id="teamSearch" class="team-search-input" placeholder="Search for a team...">
+        <div class="search-container-wrapper"> <h2 id="match-day-title">UCL Match Day</h2>
+            <div class="search-container">
+                <input type="text" id="teamSearch" class="team-search-input" placeholder="Search for a team...">
+            </div>
+            <div id="no-search-results" class="empty-state">No matches found for your search.</div>
         </div>
-        <div id="no-search-results" class="empty-state">No matches found for your search.</div>
-        <div id="match-day-container"></div>
-      </div>
+        <div class="match-day">
+            <div id="match-day-container"></div>
+        </div>
     </section>
 
     <section id="knockout-section" class="page-section" role="tabpanel" aria-labelledby="tab-knockout">
@@ -97,7 +98,7 @@
           </div>
       </div>
     </section>
-    
+
     <section id="highlights-section" class="page-section" role="tabpanel" aria-labelledby="tab-highlights">
         <div class="win-images">
             <h2 id="highlights-title">Highlights</h2>
@@ -113,7 +114,6 @@
   </main>
 
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
   <script src="script.js" defer></script>
 </body>
