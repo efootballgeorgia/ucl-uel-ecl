@@ -42,7 +42,8 @@ const dom = {
   knockoutContainer: document.getElementById('knockout-container'),
   highlightsTitle: document.getElementById('highlights-title'),
   winGalleryContainer: document.getElementById('win-gallery-container'),
-  teamSearchInput: document.getElementById('teamSearch'),
+  teamSearchSelect: document.getElementById('teamSearchSelect'),
+  clearSearchBtn: document.getElementById('clearSearchBtn'),
   noSearchResults: document.getElementById('no-search-results'),
   feedbackMessage: document.querySelector('.feedback-message'),
   // Auth Modal Elements
@@ -152,7 +153,16 @@ function updateUIFromConfig(config) {
     dom.knockoutTitle.textContent = `${config.name || 'N/A'} Knockout Stage`;
     dom.highlightsTitle.textContent = `${config.name || 'N/A'} Highlights`;
     populateTeamDropdowns(appState.currentLeague);
+    populateTeamSearchDropdown(appState.currentLeague); // Populate search dropdown
     renderHighlights(appState.currentLeague);
+}
+
+function populateTeamSearchDropdown(league) {
+    const teams = appState.config[league]?.teams || [];
+    dom.teamSearchSelect.innerHTML = '<option value="">All Teams</option>'; // Default option
+    teams.forEach(team => {
+        dom.teamSearchSelect.add(new Option(team, team));
+    });
 }
 
 // Function to update the UI based on authentication status and admin role
@@ -752,16 +762,21 @@ function setupEventListeners() {
     dom.matchForm.addEventListener('submit', handleMatchSubmission);
     dom.matchForm.addEventListener('input', checkFormValidity);
 
-    dom.teamSearchInput.addEventListener('keyup', debounce(() => {
-        const searchTerm = dom.teamSearchInput.value.toLowerCase();
+    function filterMatches() {
+        const selectedTeam = dom.teamSearchSelect.value;
         let hasVisibleMatch = false;
 
         dom.matchDayContainer.querySelectorAll('.match-day-card').forEach(day => {
             let dayHasVisibleMatch = false;
             day.querySelectorAll('.match-card').forEach(match => {
-                const home = match.dataset.home.toLowerCase();
-                const away = match.dataset.away.toLowerCase();
-                const isVisible = home.includes(searchTerm) || away.includes(searchTerm);
+                if (selectedTeam === "") {
+                    match.style.display = 'block';
+                    dayHasVisibleMatch = true;
+                    return; 
+                }
+                const home = match.dataset.home;
+                const away = match.dataset.away;
+                const isVisible = home === selectedTeam || away === selectedTeam;
                 match.style.display = isVisible ? 'block' : 'none';
                 if (isVisible) dayHasVisibleMatch = true;
             });
@@ -769,8 +784,16 @@ function setupEventListeners() {
             if (dayHasVisibleMatch) hasVisibleMatch = true;
         });
 
-        dom.noSearchResults.style.display = hasVisibleMatch ? 'none' : 'block';
-    }));
+        dom.noSearchResults.style.display = (hasVisibleMatch || selectedTeam === "") ? 'none' : 'block';
+        dom.clearSearchBtn.style.display = selectedTeam !== "" ? 'inline-block' : 'none';
+    }
+
+    dom.teamSearchSelect.addEventListener('change', filterMatches);
+
+    dom.clearSearchBtn.addEventListener('click', () => {
+        dom.teamSearchSelect.value = '';
+        filterMatches();
+    });
 
     // Event delegation for dynamically added highlight images
     dom.highlightsSection.addEventListener('click', (e) => {
