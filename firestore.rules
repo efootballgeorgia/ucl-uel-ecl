@@ -7,8 +7,14 @@ service cloud.firestore {
       allow read: if true;
     }
 
+    // NEW RULE ADDED:
+    // Allow a logged-in user to read their OWN document in the 'admins' collection.
+    // This is required for the app to check if a user has admin privileges after login.
+    match /admins/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+    }
+
     // Corrected rules for all match collections (uclMatches, uelMatches, eclMatches)
-    // The logic to check the collection name has been moved from the path to the 'if' condition.
     match /{matchCollection}/{matchId} {
       allow read: if matchCollection in ['uclMatches', 'uelMatches', 'eclMatches'];
       allow write: if matchCollection in ['uclMatches', 'uelMatches', 'eclMatches'] &&
