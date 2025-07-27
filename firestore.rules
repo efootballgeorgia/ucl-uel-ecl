@@ -1,16 +1,19 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Allow anyone to read all league data (tables, highlights etc.)
+
+    // Allow anyone to read all league configuration data
     match /leagues/{leagueId} {
       allow read: if true;
-}
+    }
 
-    // Allow anyone to read match results
-    match /{leagueCollection=**} { // This will match UCLMatches, UELMatches, etc.
-      allow read: if true;
-// Only allow users whose UID exists in the 'admins' collection to write match results.
-      allow write: if request.auth.uid != null && get(/databases/$(database)/documents/admins/$(request.auth.uid)).exists();
+    // Corrected rules for all match collections (uclMatches, uelMatches, eclMatches)
+    // The logic to check the collection name has been moved from the path to the 'if' condition.
+    match /{matchCollection}/{matchId} {
+      allow read: if matchCollection in ['uclMatches', 'uelMatches', 'eclMatches'];
+      allow write: if matchCollection in ['uclMatches', 'uelMatches', 'eclMatches'] &&
+                    request.auth != null &&
+                    exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
   }
 }
