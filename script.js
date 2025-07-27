@@ -147,7 +147,7 @@ function appendQualificationSeparators(fragment, position, qualificationZones) {
 function updateUIFromConfig(config) {
     dom.leagueLogo.src = config.logo ? `images/logos/${config.logo}` : '';
     dom.leagueLogo.alt = config.name ? `${config.name} Logo` : 'League Logo';
-    dom.matchFormTitle.textContent = `Champions League`;
+    dom.matchFormTitle.textContent = `${config.name || 'N/A'}`;
     dom.matchDayTitle.textContent = `${config.name || 'N/A'} Match Day`;
     dom.knockoutTitle.textContent = `${config.name || 'N/A'} Knockout Stage`;
     dom.highlightsTitle.textContent = `${config.name || 'N/A'} Highlights`;
