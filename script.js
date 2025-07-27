@@ -3,18 +3,16 @@
 ============================================ */
 const appState = {
   db: null,
-  auth: null, // Added for Firebase Auth
-  currentUser: null, // To store current authenticated user
-  isAdmin: false, // New: To track if the current user is an admin
+  auth: null,
+  currentUser: null,
+  isAdmin: false,
   currentLeague: 'ucl',
-  // Unsubscribe function for the real-time listener
   unsubscribe: null,
   currentSort: {
     ucl: { column: 7, isAscending: false },
     uel: { column: 7, isAscending: false },
     ecl: { column: 7, isAscending: false },
   },
-  // Config will now be loaded from Firestore
   config: {}
 };
 
@@ -49,6 +47,7 @@ const dom = {
   // Auth Modal Elements
   authModal: document.getElementById('auth-modal'),
   closeAuthModalBtn: document.getElementById('closeAuthModal'),
+  authForm: document.getElementById('auth-form'), // New: Auth form element
   authEmailInput: document.getElementById('auth-email'),
   authPasswordInput: document.getElementById('auth-password'),
   loginBtn: document.getElementById('login-btn'),
@@ -77,10 +76,9 @@ function initFirebase() {
   console.log("Firebase initialized");
 
   // Auth State Listener
-  appState.auth.onAuthStateChanged(async user => { // Made async to await admin check
+  appState.auth.onAuthStateChanged(async user => {
     appState.currentUser = user;
     if (user) {
-        // Check if the logged-in user is an admin
         const adminDoc = await appState.db.collection('admins').doc(user.uid).get();
         appState.isAdmin = adminDoc.exists;
     } else {
@@ -110,7 +108,6 @@ function showAuthFeedback(message, isSuccess) {
     }, 3000);
 }
 
-
 const debounce = (func, delay = 300) => {
     let timeout;
     return (...args) => {
@@ -127,7 +124,6 @@ function checkFormValidity() {
   const homeScore = document.getElementById('homeScore').value;
   const awayScore = document.getElementById('awayScore').value;
 
-  // Form is valid only if an admin is logged in AND all fields are filled correctly
   if (appState.isAdmin && homeTeam && awayTeam && homeTeam !== awayTeam && homeScore !== '' && awayScore !== '') {
     submitButton.classList.add('ready');
   } else {
@@ -144,7 +140,6 @@ function appendQualificationSeparators(fragment, position, qualificationZones) {
     }
 }
 
-// Helper function to update UI elements based on loaded config
 function updateUIFromConfig(config) {
     dom.leagueLogo.src = config.logo ? `images/logos/${config.logo}` : '';
     dom.leagueLogo.alt = config.name ? `${config.name} Logo` : 'League Logo';
@@ -153,19 +148,18 @@ function updateUIFromConfig(config) {
     dom.knockoutTitle.textContent = `${config.name || 'N/A'} Knockout Stage`;
     dom.highlightsTitle.textContent = `${config.name || 'N/A'} Highlights`;
     populateTeamDropdowns(appState.currentLeague);
-    populateTeamSearchDropdown(appState.currentLeague); // Populate search dropdown
+    populateTeamSearchDropdown(appState.currentLeague);
     renderHighlights(appState.currentLeague);
 }
 
 function populateTeamSearchDropdown(league) {
     const teams = appState.config[league]?.teams || [];
-    dom.teamSearchSelect.innerHTML = '<option value="">All Teams</option>'; // Default option
+    dom.teamSearchSelect.innerHTML = '<option value="">All Teams</option>';
     teams.forEach(team => {
         dom.teamSearchSelect.add(new Option(team, team));
     });
 }
 
-// Function to update the UI based on authentication status and admin role
 function updateAuthUI() {
     const submitButton = dom.matchForm.querySelector('button[type="submit"]');
 
@@ -175,16 +169,16 @@ function updateAuthUI() {
         dom.logoutBtn.style.display = 'inline-block';
 
         if (appState.isAdmin) {
-            dom.matchForm.style.display = 'flex'; // Show match form for admins
+            dom.matchForm.style.display = 'flex';
         } else {
-            dom.matchForm.style.display = 'none'; // Hide form for non-admins
+            dom.matchForm.style.display = 'none';
         }
     } else {
         dom.userStatusSpan.textContent = 'Not logged in';
         dom.authBtn.style.display = 'inline-block';
         dom.logoutBtn.style.display = 'none';
-        dom.matchForm.style.display = 'none'; // Ensure match form is hidden
-        submitButton.classList.remove('ready'); // Ensure button is not ready
+        dom.matchForm.style.display = 'none';
+        submitButton.classList.remove('ready');
     }
 }
 
@@ -208,7 +202,7 @@ function renderTable(league) {
             <td>${index + 1}</td>
             <td>
               <picture>
-                <source srcset="images/logos/${teamLogoName}.png" type="image/png">
+                <source src="images/logos/${teamLogoName}.png" type="image/png">
                 <img src="images/logos/${teamLogoName}.png" alt="${teamName}" loading="lazy" decoding="async" class="team-logo">
               </picture>
               <b>${teamName}</b>
@@ -221,6 +215,21 @@ function renderTable(league) {
         appendQualificationSeparators(fragment, index + 1, qualificationZones);
     });
     dom.leagueTableBody.appendChild(fragment);
+}
+
+// New (Optimization): Resets stats without rebuilding the table
+function resetTableStats() {
+    const rows = dom.leagueTableBody.querySelectorAll('tr:not(.separator)');
+    rows.forEach(row => {
+        const cells = row.cells;
+        cells[2].textContent = '0'; // P
+        cells[3].textContent = '0'; // W
+        cells[4].textContent = '0'; // D
+        cells[5].textContent = '0'; // L
+        cells[6].textContent = '0:0'; // +/-
+        cells[7].querySelector('.points').textContent = '0'; // Pts
+        cells[8].querySelector('.form-container').innerHTML = ''; // Form
+    });
 }
 
 function populateTeamDropdowns(league) {
@@ -239,12 +248,10 @@ function sortTable(columnIndex, dataType) {
     const rows = Array.from(dom.leagueTableBody.querySelectorAll('tr:not(.separator)'));
     const qualificationZones = appState.config[league]?.qualificationZones || {};
 
-    // Determine sort direction
     if (sortConfig.column === columnIndex) {
         sortConfig.isDescending = !sortConfig.isDescending;
     } else {
         sortConfig.column = columnIndex;
-        // Default to descending for points, ascending for name
         sortConfig.isDescending = (columnIndex !== 1);
     }
 
@@ -261,26 +268,23 @@ function sortTable(columnIndex, dataType) {
         } else if (dataType === 'number') {
             aVal = parseInt(aCell.textContent) || 0;
             bVal = parseInt(bCell.textContent) || 0;
-        } else { // string
+        } else {
             aVal = aCell.textContent.trim().toLowerCase();
             bVal = bCell.textContent.trim().toLowerCase();
         }
 
-        // Primary sort: by the selected column
         let comparison = 0;
         if (aVal < bVal) comparison = -1;
         if (aVal > bVal) comparison = 1;
 
-        // Secondary sort: points (if not sorting by points)
         if (columnIndex !== 7) {
             const aPoints = parseInt(a.cells[7].textContent);
             const bPoints = parseInt(b.cells[7].textContent);
             if (aPoints !== bPoints) {
-                return bPoints - aPoints; // Always sort by points descending
+                return bPoints - aPoints;
             }
         }
 
-        // Tertiary sort: goal difference (if points are equal)
         const [aGF, aGA] = a.cells[6].textContent.split(':').map(Number);
         const [bGF, bGA] = b.cells[6].textContent.split(':').map(Number);
         const aGD = aGF - aGA;
@@ -313,13 +317,13 @@ function updateTeamStats(teamName, gf, ga, isWin, isDraw) {
     if (!row) return;
 
     const cells = row.cells;
-    cells[2].textContent = parseInt(cells[2].textContent) + 1; // Played
-    cells[3].textContent = parseInt(cells[3].textContent) + (isWin ? 1 : 0); // Wins
-    cells[4].textContent = parseInt(cells[4].textContent) + (isDraw ? 1 : 0); // Draws
-    cells[5].textContent = parseInt(cells[5].textContent) + (!isWin && !isDraw ? 1 : 0); // Losses
+    cells[2].textContent = parseInt(cells[2].textContent) + 1;
+    cells[3].textContent = parseInt(cells[3].textContent) + (isWin ? 1 : 0);
+    cells[4].textContent = parseInt(cells[4].textContent) + (isDraw ? 1 : 0);
+    cells[5].textContent = parseInt(cells[5].textContent) + (!isWin && !isDraw ? 1 : 0);
     const [currF, currA] = cells[6].textContent.split(':').map(Number);
-    cells[6].textContent = `${currF + gf}:${currA + ga}`; // Goals
-    cells[7].querySelector('.points').textContent = (parseInt(cells[3].textContent) * 3) + parseInt(cells[4].textContent); // Points
+    cells[6].textContent = `${currF + gf}:${currA + ga}`;
+    cells[7].querySelector('.points').textContent = (parseInt(cells[3].textContent) * 3) + parseInt(cells[4].textContent);
 
     const formContainer = cells[8].querySelector('.form-container');
     if (formContainer.children.length >= 5) formContainer.removeChild(formContainer.lastChild);
@@ -333,14 +337,13 @@ function updateKnockoutStage(league) {
     const config = appState.config[league];
     const knockoutStagesConfig = config?.knockoutStages;
 
-    dom.knockoutContainer.innerHTML = ''; // Clear previous content
+    dom.knockoutContainer.innerHTML = '';
 
     if (!knockoutStagesConfig) {
         dom.knockoutContainer.innerHTML = '<p class="empty-state" style="display:block;">No knockout stages configured for this league.</p>';
         return;
     }
 
-    // A helper to create a logo element
     const createLogoWrapper = (teamRow, position) => {
         const teamName = teamRow.dataset.team;
         const teamLogoName = teamName.toLowerCase().replace(/ /g, '-');
@@ -350,22 +353,19 @@ function updateKnockoutStage(league) {
         wrapper.style.left = position.left;
         wrapper.innerHTML = `
           <picture>
-            <source srcset="images/logos/${teamLogoName}.png" type="image/png">
+            <source src="images/logos/${teamLogoName}.png" type="image/png">
             <img src="images/logos/${teamLogoName}.png" alt="${teamName}">
           </picture>
         `;
         return wrapper;
     };
 
-    // Iterate over the stages defined in the config (e.g., 'playoff', 'round16')
     for (const stageKey in knockoutStagesConfig) {
         const stage = knockoutStagesConfig[stageKey];
 
-        // 1. Create the container for this stage
         const stageContainer = document.createElement('div');
         stageContainer.className = 'knockout-stage-item';
 
-        // 2. Create and add title, background image, and logo container
         stageContainer.innerHTML = `
           <h3>${stage.title}</h3>
           <img src="images/${stage.bracket}" alt="${stage.title}" class="knockout-bg">
@@ -373,30 +373,24 @@ function updateKnockoutStage(league) {
         `;
         const logosContainer = stageContainer.querySelector('.logos-container');
 
-        // 3. Populate logos based on stage type
         if (stageKey === 'playoff') {
             stage.positions.forEach(pos => {
-                // Find the team row that has the matching rank in the first cell
                 const teamRow = teams.find(row => row.cells[0].textContent == pos.rank);
                 if (teamRow) {
                     logosContainer.appendChild(createLogoWrapper(teamRow, pos));
                 }
             });
         } else if (stageKey === 'round16') {
-            const top8Teams = teams.slice(0, 8); // Assumes top 8 teams from the sorted table
+            const top8Teams = teams.slice(0, 8);
             stage.positions.forEach(pos => {
-                // We only populate 'seeded' slots from the top 8 teams.
-                // 'unseeded' slots are for playoff winners and remain empty for now.
                 if (pos.group === 'seeded' && pos.slot <= top8Teams.length) {
-                    const teamRow = top8Teams[pos.slot - 1]; // pos.slot is 1-based
+                    const teamRow = top8Teams[pos.slot - 1];
                     if(teamRow) {
                       logosContainer.appendChild(createLogoWrapper(teamRow, pos));
                     }
                 }
             });
         }
-
-        // 4. Append the completed stage container to the main knockout container
         dom.knockoutContainer.appendChild(stageContainer);
     }
 }
@@ -411,7 +405,6 @@ function generateMatchDay(league) {
     }
 
     const localFixtures = [];
-    // Dynamically retrieve numDays from config, with a fallback to 8 if not defined
     const numDays = config.numberOfMatchDays || 8;
     const n = teams.length;
     for (let day = 1; day <= numDays; day++) {
@@ -458,17 +451,15 @@ function renderHighlights(league) {
     const knockoutHighlights = config.knockoutHighlights || {};
 
     const galleryContainer = dom.winGalleryContainer;
-    galleryContainer.innerHTML = ''; // Clear previous league's gallery
+    galleryContainer.innerHTML = '';
     let allDaysHtml = '';
-    // Dynamically retrieve numMatchDays from config, with a fallback to 8 if not defined
     const numMatchDays = config.numberOfMatchDays || 8;
 
-    // --- Render Regular Match Day Highlights ---
     for (let i = 1; i <= numMatchDays; i++) {
         const dayImages = highlightsByDay[i] || [];
         let imagesHtml = dayImages.length > 0
             ? dayImages.map(imagePath => `<img src="${imagePath}" loading="lazy" decoding="async" alt="Highlight for Day ${i}">`).join('')
-            : '<p class="empty-state">No highlights for this day yet.</p>';
+            : '<p class="empty-state" style="display: block;">No highlights for this day yet.</p>';
 
         allDaysHtml += `
             <div class="wins">
@@ -481,16 +472,14 @@ function renderHighlights(league) {
         `;
     }
 
-    // --- Render Knockout Stage Highlights ---
-    // Loop through each knockout stage defined in the config
     for (const stageKey in knockoutHighlights) {
         if (knockoutHighlights.hasOwnProperty(stageKey)) {
             const stageImages = knockoutHighlights[stageKey];
-            const stageTitle = stageKey.charAt(0).toUpperCase() + stageKey.slice(1).replace(/([A-Z])/g, ' $1'); // Simple conversion like 'round16' to 'Round 16'
+            const stageTitle = stageKey.charAt(0).toUpperCase() + stageKey.slice(1).replace(/([A-Z])/g, ' $1');
 
             let knockoutImagesHtml = stageImages.length > 0
                 ? stageImages.map(imagePath => `<img src="${imagePath}" loading="lazy" decoding="async" alt="Highlight for ${stageTitle}">`).join('')
-                : '<p class="empty-state">No highlights for this stage yet.</p>';
+                : '<p class="empty-state" style="display: block;">No highlights for this stage yet.</p>';
 
             allDaysHtml += `
                 <div class="wins">
@@ -511,7 +500,6 @@ function renderHighlights(league) {
 async function handleMatchSubmission(e) {
     e.preventDefault();
 
-    // Only allow submission if the user is an admin
     if (!appState.isAdmin) {
         showFeedback('You do not have permission to submit match results.', false);
         return;
@@ -527,7 +515,6 @@ async function handleMatchSubmission(e) {
     if (!homeTeam || !awayTeam || isNaN(homeScore) || isNaN(awayScore)) {
         return showFeedback('Please fill all fields.', false);
     }
-    // Updated Validation
     if (homeTeam === awayTeam) {
         return showFeedback('A team cannot play against itself.', false);
     }
@@ -555,11 +542,12 @@ async function handleMatchSubmission(e) {
     }
 }
 
-// New function to process matches and update the UI
+// Updated (Optimization): Now more efficient.
 function processMatchesAndUpdateUI(matches, league) {
-    // Reset and render the base table first
-    renderTable(league);
-
+    // 1. Reset stats on the existing table to 0
+    resetTableStats();
+    
+    // 2. Recalculate stats and form for all matches
     matches.forEach(match => {
         const isDraw = match.homeScore === match.awayScore;
         const homeWin = match.homeScore > match.awayScore;
@@ -569,51 +557,43 @@ function processMatchesAndUpdateUI(matches, league) {
         updateMatchDayResults(match.homeTeam, match.awayTeam, match.homeScore, match.awayScore);
     });
 
-    // Sort table and update knockout stage after all stats are processed
+    // 3. Sort table and update knockout stage based on new stats
     const currentSort = appState.currentSort[league];
     const sortDataType = document.querySelector(`#leagueTable thead th[data-column-index="${currentSort.column}"]`).dataset.type;
     sortTable(currentSort.column, sortDataType);
     updateKnockoutStage(league);
 }
 
-// Updated function to handle loading all league data
+// Updated (Optimization): Now calls renderTable only once.
 async function switchLeague(league) {
     dom.loading.style.display = 'flex';
     appState.currentLeague = league;
 
-    // Unsubscribe from the previous listener if it exists
     if (appState.unsubscribe) {
         appState.unsubscribe();
     }
 
-    // Attempt to load from localStorage first for instant display (Client-side Caching)
     const cachedConfig = localStorage.getItem(`leagueConfig_${league}`);
     if (cachedConfig) {
         try {
             appState.config[league] = JSON.parse(cachedConfig);
-            updateUIFromConfig(appState.config[league]);
-            console.log(`Loaded ${league} config from cache.`);
         } catch (e) {
             console.error("Error parsing cached config, fetching fresh.", e);
-            localStorage.removeItem(`leagueConfig_${league}`); // Invalidate bad cache
-            appState.config[league] = {}; // Clear config if cache is bad
+            localStorage.removeItem(`leagueConfig_${league}`);
+            appState.config[league] = {};
         }
     } else {
-        appState.config[league] = {}; // Clear config if no cache
+        appState.config[league] = {};
     }
 
 
     try {
-        // Always attempt to fetch fresh config from Firestore in the background
-        // to ensure data is up-to-date and to prime the cache.
         const configDoc = await appState.db.collection('leagues').doc(league).get();
         if (configDoc.exists) {
             const freshConfig = configDoc.data();
-            // Only update if fresh config is different or if there was no cached config
             if (JSON.stringify(freshConfig) !== cachedConfig) {
                 appState.config[league] = freshConfig;
-                localStorage.setItem(`leagueConfig_${league}`, JSON.stringify(freshConfig)); // Update cache
-                updateUIFromConfig(freshConfig); // Update UI with fresh data
+                localStorage.setItem(`leagueConfig_${league}`, JSON.stringify(freshConfig));
                 console.log(`Updated ${league} config from Firestore.`);
             } else {
                 console.log(`Cached ${league} config is up-to-date.`);
@@ -623,14 +603,18 @@ async function switchLeague(league) {
             showFeedback(`Configuration for ${league.toUpperCase()} is missing.`, false);
         }
 
-        // Generate the match day fixtures once per league switch for better performance
-        generateMatchDay(league);
+        // --- Optimization ---
+        // 1. Update UI and render the static parts of the page first.
+        updateUIFromConfig(appState.config[league]);
+        renderTable(league); // Build the table structure once
+        generateMatchDay(league); // Build the match day cards once
 
-        // Set up real-time listener for matches
+        // 2. Set up the real-time listener for matches.
         const matchesCollection = appState.db.collection(`${league}Matches`);
         appState.unsubscribe = matchesCollection.orderBy('timestamp', 'asc').onSnapshot(snapshot => {
             const matches = snapshot.docs.map(doc => doc.data());
-            processMatchesAndUpdateUI(matches, league);
+            // This will now efficiently update the table, not rebuild it.
+            processMatchesAndUpdateUI(matches, league); 
         }, error => {
             console.error(`Error listening to ${league} matches:`, error);
             showFeedback(`Could not load real-time data for ${league}.`, false);
@@ -648,8 +632,25 @@ async function switchLeague(league) {
    6. Authentication Functions
 ============================================ */
 
+// New (Refactor): Centralized auth error handling
+function handleAuthError(error) {
+    switch (error.code) {
+        case 'auth/user-not-found':
+        case 'auth/wrong-password':
+            return 'Invalid email or password.';
+        case 'auth/invalid-email':
+            return 'Please enter a valid email address.';
+        case 'auth/email-already-in-use':
+            return 'An account with this email already exists.';
+        case 'auth/weak-password':
+            return 'Password must be at least 6 characters long.';
+        default:
+            return `An unexpected error occurred: ${error.message}`;
+    }
+}
+
 async function handleLogin(e) {
-    e.preventDefault();
+    e.preventDefault(); // Prevent form from reloading the page
     const email = dom.authEmailInput.value;
     const password = dom.authPasswordInput.value;
 
@@ -657,23 +658,16 @@ async function handleLogin(e) {
         await appState.auth.signInWithEmailAndPassword(email, password);
         showAuthFeedback('Logged in successfully!', true);
         dom.authModal.classList.remove('show');
-        dom.authEmailInput.value = '';
-        dom.authPasswordInput.value = '';
+        dom.authForm.reset();
     } catch (error) {
-        let errorMessage = 'Login failed.';
-        if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-            errorMessage = 'Invalid email or password.';
-        } else if (error.code === 'auth/invalid-email') {
-            errorMessage = 'Invalid email format.';
-        } else {
-            errorMessage = `Error: ${error.message}`;
-        }
+        const errorMessage = handleAuthError(error);
         showAuthFeedback(errorMessage, false);
         console.error('Login error:', error);
     }
 }
 
-async function handleSignup() {
+async function handleSignup(e) {
+    e.preventDefault();
     const email = dom.authEmailInput.value;
     const password = dom.authPasswordInput.value;
 
@@ -684,21 +678,11 @@ async function handleSignup() {
 
     try {
         await appState.auth.createUserWithEmailAndPassword(email, password);
-        showAuthFeedback('Account created and logged in successfully!', true);
+        showAuthFeedback('Account created and logged in!', true);
         dom.authModal.classList.remove('show');
-        dom.authEmailInput.value = '';
-        dom.authPasswordInput.value = '';
+        dom.authForm.reset();
     } catch (error) {
-        let errorMessage = 'Signup failed.';
-        if (error.code === 'auth/email-already-in-use') {
-            errorMessage = 'Email already in use.';
-        } else if (error.code === 'auth/invalid-email') {
-            errorMessage = 'Invalid email format.';
-        } else if (error.code === 'auth/weak-password') {
-            errorMessage = 'Password is too weak.';
-        } else {
-            errorMessage = `Error: ${error.message}`;
-        }
+        const errorMessage = handleAuthError(error);
         showAuthFeedback(errorMessage, false);
         console.error('Signup error:', error);
     }
@@ -795,7 +779,6 @@ function setupEventListeners() {
         filterMatches();
     });
 
-    // Event delegation for dynamically added highlight images
     dom.highlightsSection.addEventListener('click', (e) => {
         if (e.target.tagName === 'IMG' && e.target.closest('.screen-gallery')) {
             lastFocusedElement = e.target;
@@ -821,7 +804,7 @@ function setupEventListeners() {
         if (e.target === dom.modal) closeModal(dom.modal);
     });
 
-    // Auth Modal Event Listeners
+    // --- Auth Modal Event Listeners ---
     dom.authBtn.addEventListener('click', () => {
         lastFocusedElement = dom.authBtn;
         dom.authModal.classList.add('show');
@@ -832,7 +815,8 @@ function setupEventListeners() {
         if (e.target === dom.authModal) closeModal(dom.authModal);
     });
 
-    dom.loginBtn.addEventListener('click', handleLogin);
+    // Updated: Listen to the form's submit event for login.
+    dom.authForm.addEventListener('submit', handleLogin);
     dom.signupBtn.addEventListener('click', handleSignup);
     dom.logoutBtn.addEventListener('click', handleLogout);
 
