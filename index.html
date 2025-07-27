@@ -88,9 +88,10 @@
     <section id="matches-section" class="page-section" role="tabpanel" aria-labelledby="tab-matches">
         <div class="search-container-wrapper"> <h2 id="match-day-title">UCL Match Day</h2>
             <div class="search-container">
-                <input type="text" id="teamSearch" class="team-search-input" placeholder="Search for a team...">
+                <select id="teamSearchSelect" class="team-search-select"></select>
+                <button id="clearSearchBtn" class="btn">Clear Filter</button>
             </div>
-            <div id="no-search-results" class="empty-state">No matches found for your search.</div>
+            <div id="no-search-results" class="empty-state">No matches found for your selection.</div>
         </div>
         <div class="match-day">
             <div id="match-day-container"></div>
