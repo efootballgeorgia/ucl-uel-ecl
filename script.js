@@ -44,10 +44,9 @@ const dom = {
   clearSearchBtn: document.getElementById('clearSearchBtn'),
   noSearchResults: document.getElementById('no-search-results'),
   feedbackMessage: document.querySelector('.feedback-message'),
-  // Auth Modal Elements
   authModal: document.getElementById('auth-modal'),
   closeAuthModalBtn: document.getElementById('closeAuthModal'),
-  authForm: document.getElementById('auth-form'), // New: Auth form element
+  authForm: document.getElementById('auth-form'), 
   authEmailInput: document.getElementById('auth-email'),
   authPasswordInput: document.getElementById('auth-password'),
   loginBtn: document.getElementById('login-btn'),
@@ -75,7 +74,6 @@ function initFirebase() {
   appState.auth = firebase.auth();
   console.log("Firebase initialized");
 
-  // Auth State Listener
   appState.auth.onAuthStateChanged(async user => {
     appState.currentUser = user;
     if (user) {
@@ -154,6 +152,7 @@ function updateUIFromConfig(config) {
 
 function populateTeamSearchDropdown(league) {
     const teams = appState.config[league]?.teams || [];
+    teams.sort();
     dom.teamSearchSelect.innerHTML = '<option value="">All Teams</option>';
     teams.forEach(team => {
         dom.teamSearchSelect.add(new Option(team, team));
@@ -217,18 +216,17 @@ function renderTable(league) {
     dom.leagueTableBody.appendChild(fragment);
 }
 
-// New (Optimization): Resets stats without rebuilding the table
 function resetTableStats() {
     const rows = dom.leagueTableBody.querySelectorAll('tr:not(.separator)');
     rows.forEach(row => {
         const cells = row.cells;
-        cells[2].textContent = '0'; // P
-        cells[3].textContent = '0'; // W
-        cells[4].textContent = '0'; // D
-        cells[5].textContent = '0'; // L
-        cells[6].textContent = '0:0'; // +/-
-        cells[7].querySelector('.points').textContent = '0'; // Pts
-        cells[8].querySelector('.form-container').innerHTML = ''; // Form
+        cells[2].textContent = '0'; 
+        cells[3].textContent = '0'; 
+        cells[4].textContent = '0'; 
+        cells[5].textContent = '0'; 
+        cells[6].textContent = '0:0'; 
+        cells[7].querySelector('.points').textContent = '0'; 
+        cells[8].querySelector('.form-container').innerHTML = ''; 
     });
 }
 
@@ -542,12 +540,11 @@ async function handleMatchSubmission(e) {
     }
 }
 
-// Updated (Optimization): Now more efficient.
+
 function processMatchesAndUpdateUI(matches, league) {
-    // 1. Reset stats on the existing table to 0
+
     resetTableStats();
     
-    // 2. Recalculate stats and form for all matches
     matches.forEach(match => {
         const isDraw = match.homeScore === match.awayScore;
         const homeWin = match.homeScore > match.awayScore;
@@ -557,14 +554,12 @@ function processMatchesAndUpdateUI(matches, league) {
         updateMatchDayResults(match.homeTeam, match.awayTeam, match.homeScore, match.awayScore);
     });
 
-    // 3. Sort table and update knockout stage based on new stats
     const currentSort = appState.currentSort[league];
     const sortDataType = document.querySelector(`#leagueTable thead th[data-column-index="${currentSort.column}"]`).dataset.type;
     sortTable(currentSort.column, sortDataType);
     updateKnockoutStage(league);
 }
 
-// Updated (Optimization): Now calls renderTable only once.
 async function switchLeague(league) {
     dom.loading.style.display = 'flex';
     appState.currentLeague = league;
@@ -603,17 +598,12 @@ async function switchLeague(league) {
             showFeedback(`Configuration for ${league.toUpperCase()} is missing.`, false);
         }
 
-        // --- Optimization ---
-        // 1. Update UI and render the static parts of the page first.
         updateUIFromConfig(appState.config[league]);
-        renderTable(league); // Build the table structure once
-        generateMatchDay(league); // Build the match day cards once
-
-        // 2. Set up the real-time listener for matches.
+        renderTable(league);
+        generateMatchDay(league); 
         const matchesCollection = appState.db.collection(`${league}Matches`);
         appState.unsubscribe = matchesCollection.orderBy('timestamp', 'asc').onSnapshot(snapshot => {
             const matches = snapshot.docs.map(doc => doc.data());
-            // This will now efficiently update the table, not rebuild it.
             processMatchesAndUpdateUI(matches, league); 
         }, error => {
             console.error(`Error listening to ${league} matches:`, error);
@@ -650,7 +640,7 @@ function handleAuthError(error) {
 }
 
 async function handleLogin(e) {
-    e.preventDefault(); // Prevent form from reloading the page
+    e.preventDefault();
     const email = dom.authEmailInput.value;
     const password = dom.authPasswordInput.value;
 
@@ -804,7 +794,6 @@ function setupEventListeners() {
         if (e.target === dom.modal) closeModal(dom.modal);
     });
 
-    // --- Auth Modal Event Listeners ---
     dom.authBtn.addEventListener('click', () => {
         lastFocusedElement = dom.authBtn;
         dom.authModal.classList.add('show');
@@ -815,7 +804,6 @@ function setupEventListeners() {
         if (e.target === dom.authModal) closeModal(dom.authModal);
     });
 
-    // Updated: Listen to the form's submit event for login.
     dom.authForm.addEventListener('submit', handleLogin);
     dom.signupBtn.addEventListener('click', handleSignup);
     dom.logoutBtn.addEventListener('click', handleLogout);
