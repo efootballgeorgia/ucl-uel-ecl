@@ -27,7 +27,6 @@ const dom = {
   leagueSection: document.getElementById('league-section'),
   matchesSection: document.getElementById('matches-section'),
   knockoutSection: document.getElementById('knockout-section'),
-  highlightsSection: document.getElementById('highlights-section'),
   leagueLogo: document.getElementById('league-logo'),
   leagueTableBody: document.querySelector('#leagueTable tbody'),
   matchForm: document.getElementById('matchForm'),
@@ -38,7 +37,6 @@ const dom = {
   matchDayContainer: document.getElementById('match-day-container'),
   knockoutTitle: document.getElementById('knockout-title'),
   knockoutContainer: document.getElementById('knockout-container'),
-  highlightsTitle: document.getElementById('highlights-title'),
   winGalleryContainer: document.getElementById('win-gallery-container'),
   teamSearchSelect: document.getElementById('teamSearchSelect'),
   clearSearchBtn: document.getElementById('clearSearchBtn'),
@@ -144,10 +142,8 @@ function updateUIFromConfig(config) {
     dom.matchFormTitle.textContent = `${config.name || 'N/A'}`;
     dom.matchDayTitle.textContent = `${config.name || 'N/A'} Match Day`;
     dom.knockoutTitle.textContent = `${config.name || 'N/A'} Knockout Stage`;
-    dom.highlightsTitle.textContent = `${config.name || 'N/A'} Highlights`;
     populateTeamDropdowns(appState.currentLeague);
     populateTeamSearchDropdown(appState.currentLeague);
-    renderHighlights(appState.currentLeague);
 }
 
 function populateTeamSearchDropdown(league) {
@@ -437,63 +433,6 @@ function updateMatchDayResults(home, away, homeScore, awayScore) {
     }
 }
 
-function renderHighlights(league) {
-    const config = appState.config[league];
-    if (!config) {
-      dom.winGalleryContainer.innerHTML = '';
-      return;
-    }
-
-    const logoFile = config.logo;
-    const highlightsByDay = config.highlights || {};
-    const knockoutHighlights = config.knockoutHighlights || {};
-
-    const galleryContainer = dom.winGalleryContainer;
-    galleryContainer.innerHTML = '';
-    let allDaysHtml = '';
-    const numMatchDays = config.numberOfMatchDays || 8;
-
-    for (let i = 1; i <= numMatchDays; i++) {
-        const dayImages = highlightsByDay[i] || [];
-        let imagesHtml = dayImages.length > 0
-            ? dayImages.map(imagePath => `<img src="${imagePath}" loading="lazy" decoding="async" alt="Highlight for Day ${i}">`).join('')
-            : '<p class="empty-state" style="display: block;">No highlights for this day yet.</p>';
-
-        allDaysHtml += `
-            <div class="wins">
-              <h3>
-                <img src="images/logos/${logoFile}" style="height: 40px; vertical-align: middle; margin-right: 10px;" alt="${league.toUpperCase()} Day ${i} Logo">
-                <b>Day ${i}</b>
-              </h3>
-              <div class="screen-gallery">${imagesHtml}</div>
-            </div>
-        `;
-    }
-
-    for (const stageKey in knockoutHighlights) {
-        if (knockoutHighlights.hasOwnProperty(stageKey)) {
-            const stageImages = knockoutHighlights[stageKey];
-            const stageTitle = stageKey.charAt(0).toUpperCase() + stageKey.slice(1).replace(/([A-Z])/g, ' $1');
-
-            let knockoutImagesHtml = stageImages.length > 0
-                ? stageImages.map(imagePath => `<img src="${imagePath}" loading="lazy" decoding="async" alt="Highlight for ${stageTitle}">`).join('')
-                : '<p class="empty-state" style="display: block;">No highlights for this stage yet.</p>';
-
-            allDaysHtml += `
-                <div class="wins">
-                  <h3>
-                    <img src="images/logos/${logoFile}" style="height: 40px; vertical-align: middle; margin-right: 10px;" alt="${league.toUpperCase()} ${stageTitle} Logo">
-                    <b>${stageTitle}</b>
-                  </h3>
-                  <div class="screen-gallery">${knockoutImagesHtml}</div>
-                </div>
-            `;
-        }
-    }
-
-    galleryContainer.innerHTML = allDaysHtml;
-}
-
 
 async function handleMatchSubmission(e) {
     e.preventDefault();
@@ -622,7 +561,6 @@ async function switchLeague(league) {
    6. Authentication Functions
 ============================================ */
 
-// New (Refactor): Centralized auth error handling
 function handleAuthError(error) {
     switch (error.code) {
         case 'auth/user-not-found':
@@ -767,15 +705,6 @@ function setupEventListeners() {
     dom.clearSearchBtn.addEventListener('click', () => {
         dom.teamSearchSelect.value = '';
         filterMatches();
-    });
-
-    dom.highlightsSection.addEventListener('click', (e) => {
-        if (e.target.tagName === 'IMG' && e.target.closest('.screen-gallery')) {
-            lastFocusedElement = e.target;
-            dom.modalImage.src = e.target.src;
-            dom.modal.classList.add('show');
-            dom.closeModalBtn.focus();
-        }
     });
 
     dom.leagueSection.addEventListener('click', (e) => {
