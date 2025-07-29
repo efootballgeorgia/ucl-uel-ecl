@@ -526,7 +526,7 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
 }
 
 /* ============================================
-   7. Knockout Stage & Highlights
+   7. Knockout Stage
 ============================================ */
 .knockout-stage { margin: 2.5rem auto; max-width: 75rem; padding: 1.25rem; position: relative; }
 .knockout-container { position: relative; width: 100%; max-width: 75rem; margin: 0 auto; }
@@ -574,42 +574,6 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
     z-index: 1; /* Ensure logos are on top of the background */
 }
 
-.win-images { margin: 2.5rem auto; padding: 1.25rem; text-align: center; color: #fff; }
-.win-gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
-
-.wins {
-  background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(33, 38, 45, 0.9)); /* Subtle gradient */
-  backdrop-filter: blur(10px);
-  border-radius: var(--border-radius);
-  padding: 1.5rem;
-  flex: 1 1 20rem;
-  max-width: 22rem;
-  text-align: center;
-  box-sizing: border-box;
-  position: relative;
-  animation: fadeIn 0.5s ease-out;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
-}
-
-.wins h3 { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.4rem; margin-bottom: 1rem; }
-.screen-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 1rem; max-height: 25rem; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--accent-color) var(--primary-bg); }
-.screen-gallery img {
-    width: 100%;
-    height: 80px;
-    border-radius: 8px;
-    border: 2px solid transparent;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, filter 0.3s ease; /* Added filter transition */
-    object-fit: cover;
-    cursor: pointer;
-}
-.screen-gallery img:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 25px rgba(255, 215, 0, 0.7);
-    border-color: var(--accent-color);
-    filter: brightness(1.2) saturate(1.1); /* Added vibrancy */
-}
-
 /* ============================================
    8. Modal
 ============================================ */
@@ -652,9 +616,6 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
   }
 
   #match-day-container { display: flex; overflow-x: auto; padding-bottom: 1rem; gap: 0.8rem; }
-  .win-gallery { flex-direction: column; align-items: center; }
-  .wins { width: 100%; max-width: 100%; margin: 0.71rem 0; }
-  .screen-gallery { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
   .match-day-card { min-width: 9rem; padding: 0.8rem; flex-shrink: 0; }
   .match-day-card h3 { font-size: 0.7em; margin-bottom: 0.8rem; }
   .match-card { padding: 0.4rem; font-size: 0.8em; }
