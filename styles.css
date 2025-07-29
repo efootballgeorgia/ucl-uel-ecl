@@ -35,7 +35,6 @@ h1, h2, h3, h4, h5, h6 {
     color: #fff;
 }
 
-/* Visually hidden class for accessibility */
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -56,7 +55,6 @@ h1, h2, h3, h4, h5, h6 {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Keyframe animation for the button glow */
 @keyframes glow {
   0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
   50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.9); }
@@ -149,7 +147,6 @@ header {
 }
 
 
-/* General Scrollbar Styling */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -186,7 +183,6 @@ header {
   flex-wrap: wrap;
 }
 
-/* Base button style */
 .btn {
   padding: 0.75rem 1.5rem;
   background: transparent;
@@ -207,7 +203,6 @@ header {
   box-shadow: 0 4px 20px rgba(255, 215, 0, 0.2);
 }
 
-/* Active state for both league and nav buttons */
 .btn.active {
   background: var(--accent-color);
   color: var(--primary-bg);
@@ -224,7 +219,6 @@ header {
   display: block;
 }
 
-/* Auth status styling */
 .auth-status {
     display: flex;
     align-items: center;
@@ -365,9 +359,6 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
 .feedback-message.success { background-color: var(--win-color); color: white; }
 .feedback-message.error { background-color: var(--loss-color); color: white; }
 
-/* ============================================
-   Auth Modal Specific Styles
-============================================ */
 .auth-modal {
     z-index: 99999; /* Higher than other modals */
 }
@@ -445,7 +436,6 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
     display: block;
 }
 
-/* New styling for the search container wrapper */
 .search-container-wrapper {
   margin: 2rem auto 1rem; /* Adjust margins to provide separation */
   width: 98%;
@@ -647,7 +637,6 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
   .form-group { flex-direction: column; gap: 0.8rem; }
   .knockout-container { max-width: 100%; }
   .knockout-stage-item h3 { font-size: 1.5rem; }
-  /* Adjust search container wrapper for mobile */
   .search-container-wrapper {
     margin: 1.5rem auto 0.8rem;
     padding: 1rem;
