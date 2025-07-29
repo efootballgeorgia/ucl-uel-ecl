@@ -656,7 +656,7 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
   .wins { width: 100%; max-width: 100%; margin: 0.71rem 0; }
   .screen-gallery { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
   .match-day-card { min-width: 9rem; padding: 0.8rem; flex-shrink: 0; }
-  .match-day-card h3 { font-size: 1em; margin-bottom: 0.8rem; }
-  .match-card { padding: 0.4rem; font-size: 0.9em; }
-  .match-result { font-size: 1em; }
+  .match-day-card h3 { font-size: 0.7em; margin-bottom: 0.8rem; }
+  .match-card { padding: 0.4rem; font-size: 0.8em; }
+  .match-result { font-size: 0.5em; }
 }
