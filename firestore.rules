@@ -1,20 +1,12 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // Allow anyone to read all league configuration data
     match /leagues/{leagueId} {
       allow read: if true;
     }
-
-    // NEW RULE ADDED:
-    // Allow a logged-in user to read their OWN document in the 'admins' collection.
-    // This is required for the app to check if a user has admin privileges after login.
     match /admins/{userId} {
       allow read: if request.auth != null && request.auth.uid == userId;
     }
-
-    // Corrected rules for all match collections (uclMatches, uelMatches, eclMatches)
     match /{matchCollection}/{matchId} {
       allow read: if matchCollection in ['uclMatches', 'uelMatches', 'eclMatches'];
       allow write: if matchCollection in ['uclMatches', 'uelMatches', 'eclMatches'] &&
