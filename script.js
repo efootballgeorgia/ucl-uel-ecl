@@ -37,7 +37,6 @@ const dom = {
   matchDayContainer: document.getElementById('match-day-container'),
   knockoutTitle: document.getElementById('knockout-title'),
   knockoutContainer: document.getElementById('knockout-container'),
-  winGalleryContainer: document.getElementById('win-gallery-container'),
   teamSearchSelect: document.getElementById('teamSearchSelect'),
   clearSearchBtn: document.getElementById('clearSearchBtn'),
   noSearchResults: document.getElementById('no-search-results'),
@@ -103,14 +102,6 @@ function showAuthFeedback(message, isSuccess) {
         dom.authFeedbackMessage.classList.remove('show');
     }, 3000);
 }
-
-const debounce = (func, delay = 300) => {
-    let timeout;
-    return (...args) => {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => func.apply(this, args), delay);
-    };
-};
 
 function checkFormValidity() {
   const form = dom.matchForm;
@@ -427,7 +418,12 @@ function generateMatchDay(league) {
 }
 
 function updateMatchDayResults(home, away, homeScore, awayScore) {
-    const matchCard = dom.matchDayContainer.querySelector(`.match-card[data-home="${home.trim()}"][data-away="${away.trim()}"]`);
+    const trimmedHome = home.trim();
+    const trimmedAway = away.trim();
+    let matchCard = dom.matchDayContainer.querySelector(`.match-card[data-home="${trimmedHome}"][data-away="${trimmedAway}"]`);
+    if (!matchCard) {
+        matchCard = dom.matchDayContainer.querySelector(`.match-card[data-home="${trimmedAway}"][data-away="${trimmedHome}"]`);
+    }
     if (matchCard) {
         matchCard.querySelector('.match-result').textContent = `${homeScore} / ${awayScore}`;
     }
