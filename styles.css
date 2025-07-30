@@ -70,12 +70,6 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-@keyframes pulse-color {
-  0% { border-top-color: var(--accent-color); }
-  50% { border-top-color: #ff5722; /* A complementary color */ }
-  100% { border-top-color: var(--accent-color); }
-}
-
 .team-logo:hover {
   transform: scale(1.1);
   transition: transform 0.2s ease-in-out;
@@ -115,7 +109,7 @@ h1, h2, h3, h4, h5, h6 {
   border: 5px solid var(--border-color); /* A light ring */
   border-top-color: var(--accent-color); /* The colored spinning part */
   border-radius: 50%;
-  animation: spin 1s infinite linear, pulse-color 2s infinite alternate; /* Enhanced spinner */
+  animation: spin 1s infinite linear;
 }
 
 /* ============================================
