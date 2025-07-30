@@ -619,5 +619,5 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
   .match-day-card { min-width: 9rem; padding: 0.8rem; flex-shrink: 0; }
   .match-day-card h3 { font-size: 0.7em; margin-bottom: 0.8rem; }
   .match-card { padding: 0.4rem; font-size: 0.8em; }
-  .match-result { font-size: 0.5em; }
+  .match-result { font-size: 0.9em; }
 }
