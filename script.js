@@ -8,6 +8,7 @@ const appState = {
   isAdmin: false,
   currentLeague: 'ucl',
   unsubscribe: null,
+  fixtures: {},
   currentSort: {
     ucl: { column: 7, isAscending: false },
     uel: { column: 7, isAscending: false },
@@ -37,6 +38,7 @@ const dom = {
   matchDayContainer: document.getElementById('match-day-container'),
   knockoutTitle: document.getElementById('knockout-title'),
   knockoutContainer: document.getElementById('knockout-container'),
+  daySelector: document.getElementById('daySelector'),
   teamSearchSelect: document.getElementById('teamSearchSelect'),
   clearSearchBtn: document.getElementById('clearSearchBtn'),
   noSearchResults: document.getElementById('no-search-results'),
@@ -140,7 +142,7 @@ function updateUIFromConfig(config) {
 function populateTeamSearchDropdown(league) {
     const teams = appState.config[league]?.teams || [];
     teams.sort();
-    dom.teamSearchSelect.innerHTML = '<option value="">All Teams</option>';
+    dom.teamSearchSelect.innerHTML = '<option value="">Filter by Team</option>';
     teams.forEach(team => {
         dom.teamSearchSelect.add(new Option(team, team));
     });
@@ -383,6 +385,10 @@ function updateKnockoutStage(league) {
 
 function generateMatchDay(league) {
     const config = appState.config[league];
+    if (!config || !config.teams) {
+        dom.matchDayContainer.innerHTML = '<p>League configuration not loaded.</p>';
+        return;
+    }
     const teams = [...config.teams];
     if (teams.length < 2) {
         dom.matchDayContainer.innerHTML = '<p>Not enough teams for fixtures.</p>';
@@ -402,20 +408,43 @@ function generateMatchDay(league) {
         localFixtures.push(dayFixtures);
         teams.splice(1, 0, teams.pop());
     }
+    appState.fixtures[league] = localFixtures;
+
+    dom.daySelector.innerHTML = '';
+    for (let i = 1; i <= numDays; i++) {
+        dom.daySelector.add(new Option(`Day ${i}`, i));
+    }
+
+    displayMatchesForDay(1);
+    filterMatches();
+}
+
+function displayMatchesForDay(dayNumber, allMatches) {
+    const league = appState.currentLeague;
+    const dayIndex = dayNumber - 1;
+    const fixturesForDay = appState.fixtures[league]?.[dayIndex];
+
+    if (!fixturesForDay) {
+        dom.matchDayContainer.innerHTML = '<p class="empty-state" style="display:block;">No matches scheduled for this day.</p>';
+        return;
+    }
 
     let html = '';
-    localFixtures.forEach((dayFixtures, i) => {
-        html += `<div class="match-day-card"><h3>Day ${i + 1}</h3>`;
-        dayFixtures.forEach(match => {
-            html += `<div class="match-card" data-home="${match.home}" data-away="${match.away}">
-                        ${match.home} vs ${match.away}
-                        <div class="match-result">- / -</div>
-                     </div>`;
-        });
-        html += '</div>';
+    fixturesForDay.forEach(match => {
+        html += `<div class="match-card" data-home="${match.home}" data-away="${match.away}">
+                    ${match.home} vs ${match.away}
+                    <div class="match-result">- / -</div>
+                 </div>`;
     });
     dom.matchDayContainer.innerHTML = html;
+
+    if (allMatches) {
+        allMatches.forEach(match => {
+            updateMatchDayResults(match.homeTeam, match.awayTeam, match.homeScore, match.awayScore);
+        });
+    }
 }
+
 
 function updateMatchDayResults(home, away, homeScore, awayScore) {
     const trimmedHome = home.trim();
@@ -488,12 +517,61 @@ function processMatchesAndUpdateUI(matches, league) {
         updateTeamStats(match.awayTeam, match.awayScore, match.homeScore, awayWin, isDraw);
         updateMatchDayResults(match.homeTeam, match.awayTeam, match.homeScore, match.awayScore);
     });
+    
+    filterMatches(matches);
 
     const currentSort = appState.currentSort[league];
     const sortDataType = document.querySelector(`#leagueTable thead th[data-column-index="${currentSort.column}"]`).dataset.type;
     sortTable(currentSort.column, sortDataType);
     updateKnockoutStage(league);
 }
+
+// *** MOVED filterMatches function here, to the global scope ***
+function filterMatches(allMatches) {
+    const selectedTeam = dom.teamSearchSelect.value;
+    const league = appState.currentLeague;
+    const allFixtures = appState.fixtures[league];
+
+    if (selectedTeam === "") {
+        dom.daySelector.disabled = false;
+        const selectedDay = parseInt(dom.daySelector.value);
+        displayMatchesForDay(selectedDay, allMatches);
+        dom.noSearchResults.style.display = 'none';
+        dom.clearSearchBtn.style.display = 'none';
+        return;
+    }
+
+    dom.daySelector.disabled = true;
+    dom.clearSearchBtn.style.display = 'inline-block';
+    let html = '';
+    let hasVisibleMatch = false;
+
+    if (allFixtures) {
+        allFixtures.forEach((dayFixtures, dayIndex) => {
+            const matchesForTeamInDay = dayFixtures.filter(m => m.home === selectedTeam || m.away === selectedTeam);
+            if (matchesForTeamInDay.length > 0) {
+                hasVisibleMatch = true;
+                html += `<h3 class="match-day-header">Day ${dayIndex + 1}</h3>`;
+                matchesForTeamInDay.forEach(match => {
+                    html += `<div class="match-card" data-home="${match.home}" data-away="${match.away}">
+                                ${match.home} vs ${match.away}
+                                <div class="match-result">- / -</div>
+                                </div>`;
+                });
+            }
+        });
+    }
+    
+    dom.matchDayContainer.innerHTML = html;
+    dom.noSearchResults.style.display = hasVisibleMatch ? 'none' : 'block';
+
+    if (hasVisibleMatch && allMatches) {
+        allMatches.forEach(match => {
+            updateMatchDayResults(match.homeTeam, match.awayTeam, match.homeScore, match.awayScore);
+        });
+    }
+}
+
 
 async function switchLeague(league) {
     dom.loading.style.display = 'flex';
@@ -670,33 +748,12 @@ function setupEventListeners() {
     dom.matchForm.addEventListener('submit', handleMatchSubmission);
     dom.matchForm.addEventListener('input', checkFormValidity);
 
-    function filterMatches() {
-        const selectedTeam = dom.teamSearchSelect.value;
-        let hasVisibleMatch = false;
+    dom.daySelector.addEventListener('change', () => {
+        dom.teamSearchSelect.value = '';
+        filterMatches();
+    });
 
-        dom.matchDayContainer.querySelectorAll('.match-day-card').forEach(day => {
-            let dayHasVisibleMatch = false;
-            day.querySelectorAll('.match-card').forEach(match => {
-                if (selectedTeam === "") {
-                    match.style.display = 'block';
-                    dayHasVisibleMatch = true;
-                    return; 
-                }
-                const home = match.dataset.home;
-                const away = match.dataset.away;
-                const isVisible = home === selectedTeam || away === selectedTeam;
-                match.style.display = isVisible ? 'block' : 'none';
-                if (isVisible) dayHasVisibleMatch = true;
-            });
-            day.style.display = dayHasVisibleMatch ? 'block' : 'none';
-            if (dayHasVisibleMatch) hasVisibleMatch = true;
-        });
-
-        dom.noSearchResults.style.display = (hasVisibleMatch || selectedTeam === "") ? 'none' : 'block';
-        dom.clearSearchBtn.style.display = selectedTeam !== "" ? 'inline-block' : 'none';
-    }
-
-    dom.teamSearchSelect.addEventListener('change', filterMatches);
+    dom.teamSearchSelect.addEventListener('change', () => filterMatches());
 
     dom.clearSearchBtn.addEventListener('click', () => {
         dom.teamSearchSelect.value = '';
