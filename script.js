@@ -307,7 +307,7 @@ function sortTable(columnIndex, dataType) {
 
 
 function updateTeamStats(teamName, gf, ga, isWin, isDraw) {
-    const row = dom.leagueTableBody.querySelector(`tr[data-team="${teamName}"]`);
+    const row = dom.leagueTableBody.querySelector(`tr[data-team="${teamName.trim()}"]`);
     if (!row) return;
 
     const cells = row.cells;
@@ -427,7 +427,7 @@ function generateMatchDay(league) {
 }
 
 function updateMatchDayResults(home, away, homeScore, awayScore) {
-    const matchCard = dom.matchDayContainer.querySelector(`.match-card[data-home="${home}"][data-away="${away}"]`);
+    const matchCard = dom.matchDayContainer.querySelector(`.match-card[data-home="${home.trim()}"][data-away="${away.trim()}"]`);
     if (matchCard) {
         matchCard.querySelector('.match-result').textContent = `${homeScore} / ${awayScore}`;
     }
