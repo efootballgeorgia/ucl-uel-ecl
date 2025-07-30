@@ -147,7 +147,7 @@ function updateUIFromConfig(config) {
 }
 
 function populateTeamSearchDropdown(league) {
-    const teams = appState.config[league]?.teams || [];
+    const teams = [...(appState.config[league]?.teams || [])];
     teams.sort();
     dom.teamSearchSelect.innerHTML = '<option value="">All Teams</option>';
     teams.forEach(team => {
