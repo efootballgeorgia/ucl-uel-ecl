@@ -756,10 +756,7 @@ function setupEventListeners() {
 
     dom.teamSearchSelect.addEventListener('change', () => filterMatches(appState.currentLeagueMatches));
 
-    dom.clearSearchBtn.addEventListener('click', () => {
-        dom.teamSearchSelect.value = '';
-        filterMatches(appState.currentLeagueMatches);
-    });
+dom.clearSearchBtn.addEventListener('click', () => { dom.teamSearchSelect.value = ''; filterMatches(appState.currentLeagueMatches); });
 
     dom.leagueSection.addEventListener('click', (e) => {
         if (e.target.matches('.team-logo')) {
