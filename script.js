@@ -2,7 +2,6 @@
    1. App Configuration & State
 ============================================ */
 
-// Import Firebase functions
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 import { getFirestore, collection, doc, getDoc, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -582,11 +581,10 @@ function filterMatches(allMatches) {
 
 
 async function switchLeague(league) {
-    // MODIFICATION START: Show skeleton loader instead of full-page spinner
-    dom.loading.style.display = 'none'; // Hide full page spinner
+    dom.loading.style.display = 'none';
     const config = appState.config[league];
     if (config && config.teams) {
-        dom.leagueTableBody.innerHTML = ''; // Clear existing table
+        dom.leagueTableBody.innerHTML = ''; 
         const skeletonRows = new Array(config.teams.length).fill(0).map(() => `
             <tr class="skeleton">
                 <td><div></div></td> <td><div></div></td> <td><div></div></td>
@@ -596,7 +594,6 @@ async function switchLeague(league) {
         `).join('');
         dom.leagueTableBody.innerHTML = skeletonRows;
     }
-    // MODIFICATION END
 
     appState.currentLeague = league;
     if (appState.unsubscribe) appState.unsubscribe();
