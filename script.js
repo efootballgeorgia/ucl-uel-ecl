@@ -1,13 +1,5 @@
 /* ============================================
-   1. Firebase SDK Imports
-============================================ */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-import { getFirestore, collection, doc, getDoc, addDoc, serverTimestamp, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-
-/* ============================================
-   2. App Configuration & State
+   1. App Configuration & State
 ============================================ */
 const appState = {
   db: null,
@@ -27,7 +19,7 @@ const appState = {
 };
 
 /* ============================================
-   3. DOM Elements
+   2. DOM Elements
 ============================================ */
 const dom = {
   loading: document.getElementById('loading'),
@@ -54,7 +46,7 @@ const dom = {
   feedbackMessage: document.querySelector('.feedback-message'),
   authModal: document.getElementById('auth-modal'),
   closeAuthModalBtn: document.getElementById('closeAuthModal'),
-  authForm: document.getElementById('auth-form'),
+  authForm: document.getElementById('auth-form'), 
   authEmailInput: document.getElementById('auth-email'),
   authPasswordInput: document.getElementById('auth-password'),
   loginBtn: document.getElementById('login-btn'),
@@ -66,7 +58,7 @@ const dom = {
 };
 
 /* ============================================
-   4. Firebase Initialization
+   3. Firebase Initialization
 ============================================ */
 function initFirebase() {
   const firebaseConfig = {
@@ -77,17 +69,16 @@ function initFirebase() {
     messagingSenderId: "721371342919",
     appId: "1:721371342919:web:217f325dadb42db4a8e962"
   };
-  const app = initializeApp(firebaseConfig);
-  appState.db = getFirestore(app);
-  appState.auth = getAuth(app);
-  console.log("Firebase initialized with modular SDK");
+  firebase.initializeApp(firebaseConfig);
+  appState.db = firebase.firestore();
+  appState.auth = firebase.auth();
+  console.log("Firebase initialized");
 
-  onAuthStateChanged(appState.auth, async user => {
+  appState.auth.onAuthStateChanged(async user => {
     appState.currentUser = user;
     if (user) {
-        const adminDocRef = doc(appState.db, 'admins', user.uid);
-        const adminDocSnap = await getDoc(adminDocRef);
-        appState.isAdmin = adminDocSnap.exists();
+        const adminDoc = await appState.db.collection('admins').doc(user.uid).get();
+        appState.isAdmin = adminDoc.exists;
     } else {
         appState.isAdmin = false;
     }
@@ -96,7 +87,7 @@ function initFirebase() {
 }
 
 /* ============================================
-   5. Utility & Helper Functions
+   4. Utility & Helper Functions
 ============================================ */
 function showFeedback(message, isSuccess) {
     dom.feedbackMessage.textContent = message;
@@ -180,9 +171,8 @@ function updateAuthUI() {
     }
 }
 
-
 /* ============================================
-   6. Core Application Logic
+   5. Core Application Logic
 ============================================ */
 function renderTable(league) {
     const config = appState.config[league];
@@ -220,14 +210,13 @@ function resetTableStats() {
     const rows = dom.leagueTableBody.querySelectorAll('tr:not(.separator)');
     rows.forEach(row => {
         const cells = row.cells;
-        cells[2].textContent = '0';
-        cells[3].textContent = '0';
-        cells[4].textContent = '0';
-        cells[5].textContent = '0';
-        cells[6].textContent = '0:0';
-        cells[7].querySelector('.points').textContent = '0';
-        cells[8].querySelector('.form-container').innerHTML = '';
-        row.dataset.gd = 0;
+        cells[2].textContent = '0'; 
+        cells[3].textContent = '0'; 
+        cells[4].textContent = '0'; 
+        cells[5].textContent = '0'; 
+        cells[6].textContent = '0:0'; 
+        cells[7].querySelector('.points').textContent = '0'; 
+        cells[8].querySelector('.form-container').innerHTML = ''; 
     });
 }
 
@@ -260,8 +249,10 @@ function sortTable(columnIndex, dataType) {
         const bCell = b.cells[columnIndex];
 
         if (dataType === 'goals') {
-            aVal = parseInt(a.dataset.gd) || 0;
-            bVal = parseInt(b.dataset.gd) || 0;
+            const [aF, aA] = aCell.textContent.split(':').map(Number);
+            const [bF, bA] = bCell.textContent.split(':').map(Number);
+            aVal = aF - aA;
+            bVal = bF - bA;
         } else if (dataType === 'number') {
             aVal = parseInt(aCell.textContent) || 0;
             bVal = parseInt(bCell.textContent) || 0;
@@ -282,13 +273,13 @@ function sortTable(columnIndex, dataType) {
             }
         }
 
-        if (comparison === 0) {
-            const aGD = parseInt(a.dataset.gd) || 0;
-            const bGD = parseInt(b.dataset.gd) || 0;
-            if (aGD !== bGD) {
-                return bGD - aGD;
-            }
-        }
+    if (comparison === 0) { 
+      const aGD = parseInt(a.dataset.gd) || 0; 
+      const bGD = parseInt(b.dataset.gd) || 0; 
+      if (aGD !== bGD) {
+        return bGD - aGD; 
+      }
+    }
 
         return sortConfig.isDescending ? -comparison : comparison;
     });
@@ -312,7 +303,7 @@ function updateTeamStats(teamName, gf, ga, isWin, isDraw) {
     const row = dom.leagueTableBody.querySelector(`tr[data-team="${teamName.trim()}"]`);
     if (!row) return;
 
-    const cells = row.cells;
+    const         cells = row.cells;
     cells[2].textContent = parseInt(cells[2].textContent) + 1;
     cells[3].textContent = parseInt(cells[3].textContent) + (isWin ? 1 : 0);
     cells[4].textContent = parseInt(cells[4].textContent) + (isDraw ? 1 : 0);
@@ -322,7 +313,7 @@ function updateTeamStats(teamName, gf, ga, isWin, isDraw) {
     const newGA = currA + ga;
     cells[6].textContent = `${newGF}:${newGA}`;
     cells[7].querySelector('.points').textContent = (parseInt(cells[3].textContent) * 3) + parseInt(cells[4].textContent);
-    row.dataset.gd = newGF - newGA;
+    row.dataset.gd = newGF - newGA; // <-- ADD THIS LINE
 
     const formContainer = cells[8].querySelector('.form-container');
     if (formContainer.children.length >= 5) formContainer.removeChild(formContainer.lastChild);
@@ -342,6 +333,7 @@ function updateKnockoutStage(league) {
         dom.knockoutContainer.innerHTML = '<p class="empty-state" style="display:block;">No knockout stages configured for this league.</p>';
         return;
     }
+
     const createLogoWrapper = (teamRow, position) => {
         const teamName = teamRow.dataset.team;
         const teamLogoName = teamName.toLowerCase().replace(/ /g, '-');
@@ -360,6 +352,7 @@ function updateKnockoutStage(league) {
 
     for (const stageKey in knockoutStagesConfig) {
         const stage = knockoutStagesConfig[stageKey];
+
         const stageContainer = document.createElement('div');
         stageContainer.className = 'knockout-stage-item';
 
@@ -373,14 +366,18 @@ function updateKnockoutStage(league) {
         if (stageKey === 'playoff') {
             stage.positions.forEach(pos => {
                 const teamRow = teams.find(row => row.cells[0].textContent == pos.rank);
-                if (teamRow) logosContainer.appendChild(createLogoWrapper(teamRow, pos));
+                if (teamRow) {
+                    logosContainer.appendChild(createLogoWrapper(teamRow, pos));
+                }
             });
         } else if (stageKey === 'round16') {
             const top8Teams = teams.slice(0, 8);
             stage.positions.forEach(pos => {
                 if (pos.group === 'seeded' && pos.slot <= top8Teams.length) {
                     const teamRow = top8Teams[pos.slot - 1];
-                    if(teamRow) logosContainer.appendChild(createLogoWrapper(teamRow, pos));
+                    if(teamRow) {
+                      logosContainer.appendChild(createLogoWrapper(teamRow, pos));
+                    }
                 }
             });
         }
@@ -391,10 +388,15 @@ function updateKnockoutStage(league) {
 
 function generateMatchDay(league) {
     const config = appState.config[league];
-    if (!config || !config.teams) return;
-
+    if (!config || !config.teams) {
+        dom.matchDayContainer.innerHTML = '<p>League configuration not loaded.</p>';
+        return;
+    }
     const teams = [...config.teams];
-    if (teams.length < 2) return;
+    if (teams.length < 2) {
+        dom.matchDayContainer.innerHTML = '<p>Not enough teams for fixtures.</p>';
+        return;
+    }
 
     const localFixtures = [];
     const numDays = config.numberOfMatchDays || 8;
@@ -415,6 +417,7 @@ function generateMatchDay(league) {
     for (let i = 1; i <= numDays; i++) {
         dom.daySelector.add(new Option(`Day ${i}`, i));
     }
+
     displayMatchesForDay(1);
     filterMatches();
 }
@@ -428,6 +431,7 @@ function displayMatchesForDay(dayNumber, allMatches) {
         dom.matchDayContainer.innerHTML = '<p class="empty-state" style="display:block;">No matches scheduled for this day.</p>';
         return;
     }
+
     let html = '';
     fixturesForDay.forEach(match => {
         html += `<div class="match-card" data-home="${match.home}" data-away="${match.away}">
@@ -444,6 +448,7 @@ function displayMatchesForDay(dayNumber, allMatches) {
     }
 }
 
+
 function updateMatchDayResults(home, away, homeScore, awayScore) {
     const trimmedHome = home.trim();
     const trimmedAway = away.trim();
@@ -456,21 +461,28 @@ function updateMatchDayResults(home, away, homeScore, awayScore) {
     }
 }
 
+
 async function handleMatchSubmission(e) {
     e.preventDefault();
-    if (!appState.isAdmin) return showFeedback('You do not have permission to submit match results.', false);
+
+    if (!appState.isAdmin) {
+        showFeedback('You do not have permission to submit match results.', false);
+        return;
+    }
 
     const homeTeam = dom.homeTeamSelect.value;
     const awayTeam = dom.awayTeamSelect.value;
-    const homeScoreInput = document.getElementById('homeScore');
-    const awayScoreInput = document.getElementById('awayScore');
-    const homeScore = parseInt(homeScoreInput.value);
-    const awayScore = parseInt(awayScoreInput.value);
+    const homeScore = parseInt(document.getElementById('homeScore').value);
+    const awayScore = parseInt(document.getElementById('awayScore').value);
     const league = appState.currentLeague;
     const submitButton = dom.matchForm.querySelector('button[type="submit"]');
 
-    if (!homeTeam || !awayTeam || isNaN(homeScore) || isNaN(awayScore)) return showFeedback('Please fill all fields.', false);
-    if (homeTeam === awayTeam) return showFeedback('A team cannot play against itself.', false);
+    if (!homeTeam || !awayTeam || isNaN(homeScore) || isNaN(awayScore)) {
+        return showFeedback('Please fill all fields.', false);
+    }
+    if (homeTeam === awayTeam) {
+        return showFeedback('A team cannot play against itself.', false);
+    }
 
     submitButton.textContent = 'Adding...';
     submitButton.disabled = true;
@@ -478,17 +490,13 @@ async function handleMatchSubmission(e) {
 
     const matchData = {
         homeTeam, awayTeam, homeScore, awayScore,
-        timestamp: serverTimestamp()
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
     };
 
     try {
-        const collectionRef = collection(appState.db, `${league}Matches`);
-        await addDoc(collectionRef, matchData);
+        await appState.db.collection(`${league}Matches`).add(matchData);
         showFeedback('Match added successfully!', true);
-
-        homeScoreInput.value = '';
-        awayScoreInput.value = '';
-
+        dom.matchForm.reset();
         checkFormValidity();
     } catch (error) {
         showFeedback(`Error adding match: ${error.message}.`, false);
@@ -502,17 +510,17 @@ async function handleMatchSubmission(e) {
 
 function processMatchesAndUpdateUI(matches, league) {
     appState.currentLeagueMatches = matches;
-    renderTable(league);
     resetTableStats();
-
+    
     matches.forEach(match => {
         const isDraw = match.homeScore === match.awayScore;
         const homeWin = match.homeScore > match.awayScore;
+        const awayWin = match.awayScore > match.homeScore;
         updateTeamStats(match.homeTeam, match.homeScore, match.awayScore, homeWin, isDraw);
-        updateTeamStats(match.awayTeam, match.awayScore, match.homeScore, !homeWin, isDraw);
+        updateTeamStats(match.awayTeam, match.awayScore, match.homeScore, awayWin, isDraw);
         updateMatchDayResults(match.homeTeam, match.awayTeam, match.homeScore, match.awayScore);
     });
-
+    
     filterMatches(matches);
 
     const currentSort = appState.currentSort[league];
@@ -521,6 +529,7 @@ function processMatchesAndUpdateUI(matches, league) {
     updateKnockoutStage(league);
 }
 
+// *** MOVED filterMatches function here, to the global scope ***
 function filterMatches(allMatches) {
     const selectedTeam = dom.teamSearchSelect.value;
     const league = appState.currentLeague;
@@ -555,7 +564,7 @@ function filterMatches(allMatches) {
             }
         });
     }
-
+    
     dom.matchDayContainer.innerHTML = html;
     dom.noSearchResults.style.display = hasVisibleMatch ? 'none' : 'block';
 
@@ -568,22 +577,12 @@ function filterMatches(allMatches) {
 
 
 async function switchLeague(league) {
-    dom.loading.style.display = 'none';
-    const config = appState.config[league];
-    if (config && config.teams) {
-        dom.leagueTableBody.innerHTML = '';
-        const skeletonRows = new Array(config.teams.length).fill(0).map(() => `
-            <tr class="skeleton">
-                <td><div></div></td> <td><div></div></td> <td><div></div></td>
-                <td><div></div></td> <td><div></div></td> <td><div></div></td>
-                <td><div></div></td> <td><div></div></td> <td><div></div></td>
-            </tr>
-        `).join('');
-        dom.leagueTableBody.innerHTML = skeletonRows;
-    }
-
+    dom.loading.style.display = 'flex';
     appState.currentLeague = league;
-    if (appState.unsubscribe) appState.unsubscribe();
+
+    if (appState.unsubscribe) {
+        appState.unsubscribe();
+    }
 
     const cachedConfig = localStorage.getItem(`leagueConfig_${league}`);
     if (cachedConfig) {
@@ -598,15 +597,17 @@ async function switchLeague(league) {
         appState.config[league] = {};
     }
 
-    try {
-        const configDocRef = doc(appState.db, 'leagues', league);
-        const configDocSnap = await getDoc(configDocRef);
 
-        if (configDocSnap.exists()) {
-            const freshConfig = configDocSnap.data();
+    try {
+        const configDoc = await appState.db.collection('leagues').doc(league).get();
+        if (configDoc.exists) {
+            const freshConfig = configDoc.data();
             if (JSON.stringify(freshConfig) !== cachedConfig) {
                 appState.config[league] = freshConfig;
                 localStorage.setItem(`leagueConfig_${league}`, JSON.stringify(freshConfig));
+                console.log(`Updated ${league} config from Firestore.`);
+            } else {
+                console.log(`Cached ${league} config is up-to-date.`);
             }
         } else {
             console.error(`No configuration found for league: ${league}`);
@@ -614,38 +615,33 @@ async function switchLeague(league) {
         }
 
         updateUIFromConfig(appState.config[league]);
-        if (!dom.leagueTableBody.querySelector('.skeleton')) {
-            renderTable(league);
-        }
-        generateMatchDay(league);
-        
-        const matchesCollectionRef = collection(appState.db, `${league}Matches`);
-        const q = query(matchesCollectionRef, orderBy('timestamp', 'asc'));
-
-        appState.unsubscribe = onSnapshot(q, snapshot => {
+        renderTable(league);
+        generateMatchDay(league); 
+        const matchesCollection = appState.db.collection(`${league}Matches`);
+        appState.unsubscribe = matchesCollection.orderBy('timestamp', 'asc').onSnapshot(snapshot => {
             const matches = snapshot.docs.map(doc => doc.data());
-            processMatchesAndUpdateUI(matches, league);
+            processMatchesAndUpdateUI(matches, league); 
         }, error => {
             console.error(`Error listening to ${league} matches:`, error);
             showFeedback(`Could not load real-time data for ${league}.`, false);
-            dom.leagueTableBody.innerHTML = '<tr><td colspan="9">Error loading data.</td></tr>';
         });
 
     } catch (error) {
         console.error(`Error loading data for ${league}:`, error);
         showFeedback(`Could not load data for ${league}.`, false);
+    } finally {
+        dom.loading.style.display = 'none';
     }
 }
 
-
 /* ============================================
-   7. Authentication Functions
+   6. Authentication Functions
 ============================================ */
+
 function handleAuthError(error) {
     switch (error.code) {
         case 'auth/user-not-found':
         case 'auth/wrong-password':
-        case 'auth/invalid-credential':
             return 'Invalid email or password.';
         case 'auth/invalid-email':
             return 'Please enter a valid email address.';
@@ -662,13 +658,15 @@ async function handleLogin(e) {
     e.preventDefault();
     const email = dom.authEmailInput.value;
     const password = dom.authPasswordInput.value;
+
     try {
-        await signInWithEmailAndPassword(appState.auth, email, password);
+        await appState.auth.signInWithEmailAndPassword(email, password);
         showAuthFeedback('Logged in successfully!', true);
         dom.authModal.classList.remove('show');
         dom.authForm.reset();
     } catch (error) {
-        showAuthFeedback(handleAuthError(error), false);
+        const errorMessage = handleAuthError(error);
+        showAuthFeedback(errorMessage, false);
         console.error('Login error:', error);
     }
 }
@@ -677,21 +675,27 @@ async function handleSignup(e) {
     e.preventDefault();
     const email = dom.authEmailInput.value;
     const password = dom.authPasswordInput.value;
-    if (password.length < 6) return showAuthFeedback('Password must be at least 6 characters long.', false);
+
+    if (password.length < 6) {
+        showAuthFeedback('Password must be at least 6 characters long.', false);
+        return;
+    }
+
     try {
-        await createUserWithEmailAndPassword(appState.auth, email, password);
+        await appState.auth.createUserWithEmailAndPassword(email, password);
         showAuthFeedback('Account created and logged in!', true);
         dom.authModal.classList.remove('show');
         dom.authForm.reset();
     } catch (error) {
-        showAuthFeedback(handleAuthError(error), false);
+        const errorMessage = handleAuthError(error);
+        showAuthFeedback(errorMessage, false);
         console.error('Signup error:', error);
     }
 }
 
 async function handleLogout() {
     try {
-        await signOut(appState.auth);
+        await appState.auth.signOut();
         showFeedback('Logged out successfully!', true);
     } catch (error) {
         showFeedback(`Logout error: ${error.message}`, false);
@@ -699,15 +703,20 @@ async function handleLogout() {
     }
 }
 
+
 /* ============================================
-   8. Event Listeners & App Initialization
+   7. Event Listeners & App Initialization
 ============================================ */
 function setupEventListeners() {
     let lastFocusedElement;
+
     function closeModal(modal) {
         modal.classList.remove('show');
-        if (lastFocusedElement) lastFocusedElement.focus();
+        if (lastFocusedElement) {
+            lastFocusedElement.focus();
+        }
     }
+
     document.querySelector('.league-selector-nav').addEventListener('click', (e) => {
         const target = e.target.closest('.league-btn');
         if (target) {
@@ -718,6 +727,7 @@ function setupEventListeners() {
             switchLeague(target.dataset.league);
         }
     });
+
     document.querySelector('.main-nav').addEventListener('click', (e) => {
         const target = e.target.closest('.nav-btn');
         if (target) {
@@ -730,20 +740,26 @@ function setupEventListeners() {
             document.getElementById(panelId.replace('panel-', '') + '-section').classList.add('active');
         }
     });
+
     document.querySelector('#leagueTable thead').addEventListener('click', (e) => {
         const header = e.target.closest('th');
         if (header && header.dataset.columnIndex) {
             sortTable(parseInt(header.dataset.columnIndex), header.dataset.type);
         }
     });
+
     dom.matchForm.addEventListener('submit', handleMatchSubmission);
     dom.matchForm.addEventListener('input', checkFormValidity);
+
     dom.daySelector.addEventListener('change', () => {
         dom.teamSearchSelect.value = '';
         filterMatches(appState.currentLeagueMatches);
     });
+
     dom.teamSearchSelect.addEventListener('change', () => filterMatches(appState.currentLeagueMatches));
-    dom.clearSearchBtn.addEventListener('click', () => { dom.teamSearchSelect.value = ''; filterMatches(appState.currentLeagueMatches); });
+
+dom.clearSearchBtn.addEventListener('click', () => { dom.teamSearchSelect.value = ''; filterMatches(appState.currentLeagueMatches); });
+
     dom.leagueSection.addEventListener('click', (e) => {
         if (e.target.matches('.team-logo')) {
             lastFocusedElement = e.target;
@@ -754,10 +770,12 @@ function setupEventListeners() {
             dom.closeModalBtn.focus();
         }
     });
+
     dom.closeModalBtn.addEventListener('click', () => closeModal(dom.modal));
     dom.modal.addEventListener('click', (e) => {
         if (e.target === dom.modal) closeModal(dom.modal);
     });
+
     dom.authBtn.addEventListener('click', () => {
         lastFocusedElement = dom.authBtn;
         dom.authModal.classList.add('show');
@@ -767,9 +785,11 @@ function setupEventListeners() {
     dom.authModal.addEventListener('click', (e) => {
         if (e.target === dom.authModal) closeModal(dom.authModal);
     });
+
     dom.authForm.addEventListener('submit', handleLogin);
     dom.signupBtn.addEventListener('click', handleSignup);
     dom.logoutBtn.addEventListener('click', handleLogout);
+
     window.addEventListener('popstate', () => {
         const urlParams = new URLSearchParams(window.location.search);
         const leagueFromUrl = urlParams.get('league') || 'ucl';
