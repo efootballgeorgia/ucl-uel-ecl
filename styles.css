@@ -7,7 +7,7 @@
   --tertiary-bg: #21262d;
   --text-color: #c9d1d9;
   --text-color-secondary: #8b949e;
-  --accent-color: #ffd700; /* Gold */
+  --accent-color: #ffd700;
   --win-color: #238636;
   --loss-color: #da3633;
   --draw-color: #8b949e;
@@ -95,7 +95,7 @@ h1, h2, h3, h4, h5, h6 {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(13, 17, 23, 0.9); /* Dark semi-transparent background */
+  background: rgba(13, 17, 23, 0.9); 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -106,8 +106,8 @@ h1, h2, h3, h4, h5, h6 {
 .spinner {
   width: 50px;
   height: 50px;
-  border: 5px solid var(--border-color); /* A light ring */
-  border-top-color: var(--accent-color); /* The colored spinning part */
+  border: 5px solid var(--border-color); 
+  border-top-color: var(--accent-color); 
   border-radius: 50%;
   animation: spin 1s infinite linear;
 }
@@ -123,9 +123,9 @@ header {
   background: rgba(13, 17, 23, 0.7);
   border-bottom: 1px solid var(--border-color);
   transition: padding 0.3s ease, background 0.3s ease;
-  display: flex; /* Added for alignment of auth-status */
-  flex-direction: column; /* To stack items if needed */
-  align-items: center; /* Center horizontally */
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
 }
 
 .header-content {
@@ -135,9 +135,9 @@ header {
   gap: 1.5rem;
   max-width: 1200px;
   margin: 0 auto;
-  width: 100%; /* Ensure it takes full width */
-  padding: 0 1rem; /* Add some padding */
-  box-sizing: border-box; /* Include padding in width */
+  width: 100%;
+  padding: 0 1rem; 
+  box-sizing: border-box; 
 }
 
 
@@ -153,11 +153,11 @@ header {
   background-color: var(--accent-color);
   border-radius: 10px;
   border: 2px solid var(--secondary-bg);
-  transition: background-color 0.3s ease, width 0.3s ease; /* Added transition for hover effect */
+  transition: background-color 0.3s ease, width 0.3s ease;
 }
 ::-webkit-scrollbar-thumb:hover {
   background-color: #ffed4a;
-  width: 10px; /* Slightly wider on hover */
+  width: 10px;
 }
 
 .league-logo {
@@ -219,14 +219,14 @@ header {
     gap: 1rem;
     color: var(--text-color-secondary);
     font-size: 0.9em;
-    margin-top: 1rem; /* Space from navigation */
+    margin-top: 1rem; 
 }
 .auth-status #user-status {
     font-weight: 600;
     color: var(--accent-color);
 }
 .auth-status .btn {
-    padding: 0.5rem 1rem; /* Smaller padding for auth buttons */
+    padding: 0.5rem 1rem; 
     font-size: 0.9em;
 }
 
@@ -243,7 +243,7 @@ header {
   -webkit-overflow-scrolling: touch;
   overflow-x: auto;
   font-size: 18px;
-  background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(33, 38, 45, 0.9)); /* Subtle gradient */
+  background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(33, 38, 45, 0.9));
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
@@ -327,7 +327,7 @@ tbody tr:hover {
    6. Match & Form Elements
 ============================================ */
 .match-form {
-  background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(33, 38, 45, 0.9)); /* Subtle gradient */
+  background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(33, 38, 45, 0.9)); 
   backdrop-filter: blur(10px);
   padding: 2rem;
   border-radius: var(--border-radius);
@@ -354,7 +354,7 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
 .feedback-message.error { background-color: var(--loss-color); color: white; }
 
 .auth-modal {
-    z-index: 99999; /* Higher than other modals */
+    z-index: 99999; 
 }
 
 .auth-modal-content {
@@ -385,9 +385,9 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
 
 #auth-form .form-group {
     display: flex;
-    flex-direction: column; /* Stack label and input */
+    flex-direction: column; 
     gap: 0.5rem;
-    align-items: stretch; /* Stretch inputs to full width */
+    align-items: stretch; 
 }
 
 #auth-form input[type="email"],
@@ -399,7 +399,7 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
     color: var(--text-color);
     font-size: 1rem;
     width: 100%;
-    box-sizing: border-box; /* Include padding in width */
+    box-sizing: border-box;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -424,17 +424,17 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
     font-weight: bold;
     color: white;
     background-color: var(--loss-color);
-    display: none; /* Hidden by default */
+    display: none;
 }
 .auth-feedback-message.show {
     display: block;
 }
 
 .search-container-wrapper {
-  margin: 2rem auto 1rem; /* Adjust margins to provide separation */
+  margin: 2rem auto 1rem; 
   width: 98%;
   max-width: 62.5rem;
-  background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(33, 38, 45, 0.9)); /* Subtle gradient */
+  background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(33, 38, 45, 0.9)); 
   backdrop-filter: blur(10px);
   padding: 1.5rem;
   border-radius: var(--border-radius);
@@ -449,11 +449,11 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
 }
 
 .match-day {
-  background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(33, 38, 45, 0.9)); /* Subtle gradient */
+  background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(33, 38, 45, 0.9));
   backdrop-filter: blur(10px);
   padding: 1.5rem;
   border-radius: var(--border-radius);
-  margin: 1rem auto; /* Adjusted margin to separate from the search box */
+  margin: 1rem auto; 
   width: 98%;
   max-width: 62.5rem;
   position: relative;
@@ -470,7 +470,7 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
 }
 
 .match-day-header {
-    grid-column: 1 / -1; /* Make header span all columns */
+    grid-column: 1 / -1; 
     text-align: left;
     color: var(--accent-color);
     margin-bottom: 0;
@@ -541,7 +541,7 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
 }
 
 .empty-state {
-  display: none; /* Hidden by default */
+  display: none; 
   padding: 2rem;
   color: var(--text-color-secondary);
   font-style: italic;
@@ -566,7 +566,7 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
 #knockout-container {
     display: flex;
     flex-direction: column;
-    gap: 3rem; /* Adds space between the playoff and R16 images */
+    gap: 3rem; 
     align-items: center;
 }
 
@@ -575,8 +575,8 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
     max-width: 75rem;
     position: relative;
     height: 0;
-    padding-bottom: 56.25%; /* This locks the aspect ratio */
-    margin: 0 auto; /* Ensures it's centered */
+    padding-bottom: 56.25%; 
+    margin: 0 auto; 
 }
 
 .knockout-stage-item h3 {
