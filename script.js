@@ -273,14 +273,13 @@ function sortTable(columnIndex, dataType) {
             }
         }
 
-        const [aGF, aGA] = a.cells[6].textContent.split(':').map(Number);
-        const [bGF, bGA] = b.cells[6].textContent.split(':').map(Number);
-        const aGD = aGF - aGA;
-        const bGD = bGF - bGA;
-
-        if (comparison === 0 && aGD !== bGD) {
-            return bGD - aGD;
-        }
+    if (comparison === 0) { 
+      const aGD = parseInt(a.dataset.gd) || 0; 
+      const bGD = parseInt(b.dataset.gd) || 0; 
+      if (aGD !== bGD) {
+        return bGD - aGD; 
+      }
+    }
 
         return sortConfig.isDescending ? -comparison : comparison;
     });
@@ -304,14 +303,17 @@ function updateTeamStats(teamName, gf, ga, isWin, isDraw) {
     const row = dom.leagueTableBody.querySelector(`tr[data-team="${teamName.trim()}"]`);
     if (!row) return;
 
-    const cells = row.cells;
+    const         cells = row.cells;
     cells[2].textContent = parseInt(cells[2].textContent) + 1;
     cells[3].textContent = parseInt(cells[3].textContent) + (isWin ? 1 : 0);
     cells[4].textContent = parseInt(cells[4].textContent) + (isDraw ? 1 : 0);
     cells[5].textContent = parseInt(cells[5].textContent) + (!isWin && !isDraw ? 1 : 0);
     const [currF, currA] = cells[6].textContent.split(':').map(Number);
-    cells[6].textContent = `${currF + gf}:${currA + ga}`;
+    const newGF = currF + gf;
+    const newGA = currA + ga;
+    cells[6].textContent = `${newGF}:${newGA}`;
     cells[7].querySelector('.points').textContent = (parseInt(cells[3].textContent) * 3) + parseInt(cells[4].textContent);
+    row.dataset.gd = newGF - newGA; // <-- ADD THIS LINE
 
     const formContainer = cells[8].querySelector('.form-container');
     if (formContainer.children.length >= 5) formContainer.removeChild(formContainer.lastChild);
@@ -787,11 +789,6 @@ dom.clearSearchBtn.addEventListener('click', () => { dom.teamSearchSelect.value 
     dom.authForm.addEventListener('submit', handleLogin);
     dom.signupBtn.addEventListener('click', handleSignup);
     dom.logoutBtn.addEventListener('click', handleLogout);
-
-    window.addEventListener('scroll', () => {
-      const header = document.querySelector('header');
-      header.classList.toggle('scrolled', window.scrollY > 50);
-    });
 
     window.addEventListener('popstate', () => {
         const urlParams = new URLSearchParams(window.location.search);
