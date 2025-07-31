@@ -7,35 +7,28 @@ service cloud.firestore {
     }
 
     match /leagues/{leagueId} {
-      // Only authenticated users can read league configurations.
-      allow read: if request.auth != null;
+      allow read: if true;
     }
 
     match /admins/{userId} {
-      // An authenticated user can only read their own admin status.
       allow read: if request.auth != null && request.auth.uid == userId;
     }
 
     match /{matchCollection}/{matchId} {
 
-      allow read: if request.auth != null &&
-                     matchCollection in ['uclMatches', 'uelMatches', 'eclMatches'];
+     allow read: if matchCollection in ['uclMatches', 'uelMatches', 'eclMatches'];
 
       allow write: if isAdmin() &&
                       matchCollection in ['uclMatches', 'uelMatches', 'eclMatches'] &&
-                      // 1. Data Structure Validation
                       request.resource.data.keys().hasAll(['homeTeam', 'awayTeam', 'homeScore', 'awayScore', 'timestamp']) &&
                       request.resource.data.keys().size() == 5 &&
-                      // 2. Data Type & Content Validation
                       request.resource.data.homeTeam is string &&
                       request.resource.data.awayTeam is string &&
                       request.resource.data.homeScore is number &&
                       request.resource.data.awayScore is number &&
-                      // 3. Logic Validation
                       request.resource.data.homeScore >= 0 &&
                       request.resource.data.awayScore >= 0 &&
                       request.resource.data.homeTeam != request.resource.data.awayTeam &&
-                      // 4. Timestamp Validation
                       request.resource.data.timestamp == request.time;
     }
   }
