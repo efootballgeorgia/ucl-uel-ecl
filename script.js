@@ -7,6 +7,7 @@ const appState = {
   currentUser: null,
   isAdmin: false,
   currentLeague: 'ucl',
+  currentLeagueMatches: [],
   unsubscribe: null,
   fixtures: {},
   currentSort: {
@@ -506,7 +507,7 @@ async function handleMatchSubmission(e) {
 
 
 function processMatchesAndUpdateUI(matches, league) {
-
+    appState.currentLeagueMatches = matches;
     resetTableStats();
     
     matches.forEach(match => {
@@ -750,14 +751,14 @@ function setupEventListeners() {
 
     dom.daySelector.addEventListener('change', () => {
         dom.teamSearchSelect.value = '';
-        filterMatches();
+        filterMatches(appState.currentLeagueMatches);
     });
 
-    dom.teamSearchSelect.addEventListener('change', () => filterMatches());
+    dom.teamSearchSelect.addEventListener('change', () => filterMatches(appState.currentLeagueMatches));
 
     dom.clearSearchBtn.addEventListener('click', () => {
         dom.teamSearchSelect.value = '';
-        filterMatches();
+        filterMatches(appState.currentLeagueMatches);
     });
 
     dom.leagueSection.addEventListener('click', (e) => {
