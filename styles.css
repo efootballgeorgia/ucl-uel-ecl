@@ -462,8 +462,6 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
 }
 
-.match-day h2 { display: none; } /* Hide the match day title in the match-day box itself, as it's now in the wrapper */
-
 #match-day-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
