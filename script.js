@@ -1,5 +1,5 @@
 /* ============================================
-   1. Firebase SDK Imports 
+   1. Firebase SDK Imports
 ============================================ */
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
@@ -66,7 +66,7 @@ const dom = {
 };
 
 /* ============================================
-   4. Firebase Initialization (REFACTORED)
+   4. Firebase Initialization
 ============================================ */
 function initFirebase() {
   const firebaseConfig = {
@@ -77,17 +77,14 @@ function initFirebase() {
     messagingSenderId: "721371342919",
     appId: "1:721371342919:web:217f325dadb42db4a8e962"
   };
-  // Initialize app and services
   const app = initializeApp(firebaseConfig);
   appState.db = getFirestore(app);
   appState.auth = getAuth(app);
   console.log("Firebase initialized with modular SDK");
 
-  // Auth state listener remains mostly the same, just passing auth object
   onAuthStateChanged(appState.auth, async user => {
     appState.currentUser = user;
     if (user) {
-        // REFACTORED: Use doc() and getDoc()
         const adminDocRef = doc(appState.db, 'admins', user.uid);
         const adminDocSnap = await getDoc(adminDocRef);
         appState.isAdmin = adminDocSnap.exists();
@@ -230,7 +227,7 @@ function resetTableStats() {
         cells[6].textContent = '0:0';
         cells[7].querySelector('.points').textContent = '0';
         cells[8].querySelector('.form-container').innerHTML = '';
-        row.dataset.gd = 0; // Reset data attribute
+        row.dataset.gd = 0;
     });
 }
 
@@ -465,8 +462,10 @@ async function handleMatchSubmission(e) {
 
     const homeTeam = dom.homeTeamSelect.value;
     const awayTeam = dom.awayTeamSelect.value;
-    const homeScore = parseInt(document.getElementById('homeScore').value);
-    const awayScore = parseInt(document.getElementById('awayScore').value);
+    const homeScoreInput = document.getElementById('homeScore');
+    const awayScoreInput = document.getElementById('awayScore');
+    const homeScore = parseInt(homeScoreInput.value);
+    const awayScore = parseInt(awayScoreInput.value);
     const league = appState.currentLeague;
     const submitButton = dom.matchForm.querySelector('button[type="submit"]');
 
@@ -479,15 +478,17 @@ async function handleMatchSubmission(e) {
 
     const matchData = {
         homeTeam, awayTeam, homeScore, awayScore,
-        timestamp: serverTimestamp() // REFACTORED: Use imported function
+        timestamp: serverTimestamp()
     };
 
     try {
-        // REFACTORED: Use collection() and addDoc()
         const collectionRef = collection(appState.db, `${league}Matches`);
         await addDoc(collectionRef, matchData);
         showFeedback('Match added successfully!', true);
-        dom.matchForm.reset();
+
+        homeScoreInput.value = '';
+        awayScoreInput.value = '';
+
         checkFormValidity();
     } catch (error) {
         showFeedback(`Error adding match: ${error.message}.`, false);
@@ -501,6 +502,7 @@ async function handleMatchSubmission(e) {
 
 function processMatchesAndUpdateUI(matches, league) {
     appState.currentLeagueMatches = matches;
+    renderTable(league);
     resetTableStats();
 
     matches.forEach(match => {
@@ -566,9 +568,21 @@ function filterMatches(allMatches) {
 
 
 async function switchLeague(league) {
-    dom.loading.style.display = 'flex';
-    appState.currentLeague = league;
+    dom.loading.style.display = 'none';
+    const config = appState.config[league];
+    if (config && config.teams) {
+        dom.leagueTableBody.innerHTML = '';
+        const skeletonRows = new Array(config.teams.length).fill(0).map(() => `
+            <tr class="skeleton">
+                <td><div></div></td> <td><div></div></td> <td><div></div></td>
+                <td><div></div></td> <td><div></div></td> <td><div></div></td>
+                <td><div></div></td> <td><div></div></td> <td><div></div></td>
+            </tr>
+        `).join('');
+        dom.leagueTableBody.innerHTML = skeletonRows;
+    }
 
+    appState.currentLeague = league;
     if (appState.unsubscribe) appState.unsubscribe();
 
     const cachedConfig = localStorage.getItem(`leagueConfig_${league}`);
@@ -585,7 +599,6 @@ async function switchLeague(league) {
     }
 
     try {
-        // REFACTORED: getDoc for config
         const configDocRef = doc(appState.db, 'leagues', league);
         const configDocSnap = await getDoc(configDocRef);
 
@@ -601,10 +614,11 @@ async function switchLeague(league) {
         }
 
         updateUIFromConfig(appState.config[league]);
-        renderTable(league);
+        if (!dom.leagueTableBody.querySelector('.skeleton')) {
+            renderTable(league);
+        }
         generateMatchDay(league);
         
-        // REFACTORED: Use query(), orderBy(), onSnapshot()
         const matchesCollectionRef = collection(appState.db, `${league}Matches`);
         const q = query(matchesCollectionRef, orderBy('timestamp', 'asc'));
 
@@ -614,25 +628,24 @@ async function switchLeague(league) {
         }, error => {
             console.error(`Error listening to ${league} matches:`, error);
             showFeedback(`Could not load real-time data for ${league}.`, false);
+            dom.leagueTableBody.innerHTML = '<tr><td colspan="9">Error loading data.</td></tr>';
         });
 
     } catch (error) {
         console.error(`Error loading data for ${league}:`, error);
         showFeedback(`Could not load data for ${league}.`, false);
-    } finally {
-        dom.loading.style.display = 'none';
     }
 }
 
 
 /* ============================================
-   7. Authentication Functions (REFACTORED)
+   7. Authentication Functions
 ============================================ */
 function handleAuthError(error) {
     switch (error.code) {
         case 'auth/user-not-found':
         case 'auth/wrong-password':
-        case 'auth/invalid-credential': // New error code in v9+
+        case 'auth/invalid-credential':
             return 'Invalid email or password.';
         case 'auth/invalid-email':
             return 'Please enter a valid email address.';
