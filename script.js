@@ -454,8 +454,6 @@ function displayMatchesForDay(dayNumber, allMatches) {
     }
 }
 
-
-function updateMatchDayResults(home, away, homeScore, awayScore) {
 function updateMatchDayResults(home, away, homeScore, awayScore) {
     const trimmedHome = home.trim();
     const trimmedAway = away.trim();
@@ -836,4 +834,5 @@ window.onload = () => {
     });
     switchLeague(initialLeague);
 };
+
 
