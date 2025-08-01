@@ -51,7 +51,7 @@ const dom = {
   feedbackMessage: document.querySelector('.feedback-message'),
   authModal: document.getElementById('auth-modal'),
   closeAuthModalBtn: document.getElementById('closeAuthModal'),
-  authForm: document.getElementById('auth-form'), 
+  authForm: document.getElementById('auth-form'),
   authEmailInput: document.getElementById('auth-email'),
   authPasswordInput: document.getElementById('auth-password'),
   loginBtn: document.getElementById('login-btn'),
@@ -216,13 +216,13 @@ function resetTableStats() {
     const rows = dom.leagueTableBody.querySelectorAll('tr:not(.separator)');
     rows.forEach(row => {
         const cells = row.cells;
-        cells[2].textContent = '0'; 
-        cells[3].textContent = '0'; 
-        cells[4].textContent = '0'; 
-        cells[5].textContent = '0'; 
-        cells[6].textContent = '0:0'; 
-        cells[7].querySelector('.points').textContent = '0'; 
-        cells[8].querySelector('.form-container').innerHTML = ''; 
+        cells[2].textContent = '0';
+        cells[3].textContent = '0';
+        cells[4].textContent = '0';
+        cells[5].textContent = '0';
+        cells[6].textContent = '0:0';
+        cells[7].querySelector('.points').textContent = '0';
+        cells[8].querySelector('.form-container').innerHTML = '';
     });
 }
 
@@ -279,11 +279,11 @@ function sortTable(columnIndex, dataType) {
             }
         }
 
-    if (comparison === 0) { 
-      const aGD = parseInt(a.dataset.gd) || 0; 
-      const bGD = parseInt(b.dataset.gd) || 0; 
+    if (comparison === 0) {
+      const aGD = parseInt(a.dataset.gd) || 0;
+      const bGD = parseInt(b.dataset.gd) || 0;
       if (aGD !== bGD) {
-        return bGD - aGD; 
+        return bGD - aGD;
       }
     }
 
@@ -454,6 +454,7 @@ function displayMatchesForDay(dayNumber, allMatches) {
     }
 }
 
+
 function updateMatchDayResults(home, away, homeScore, awayScore) {
     const trimmedHome = home.trim();
     const trimmedAway = away.trim();
@@ -510,329 +511,4 @@ async function handleMatchSubmission(e) {
         checkFormValidity();
     } catch (error) {
         showFeedback(`Error adding match: ${error.message}.`, false);
-        console.error(`Error adding ${league.toUpperCase()} match:`, error);
-    } finally {
-        submitButton.textContent = 'Add Match';
-        submitButton.disabled = false;
-    }
-}
-
-
-function processMatchesAndUpdateUI(matches, league) {
-    appState.currentLeagueMatches = matches;
-    resetTableStats();
-    renderTable(league);
-    
-    matches.forEach(match => {
-        const isDraw = match.homeScore === match.awayScore;
-        const homeWin = match.homeScore > match.awayScore;
-        const awayWin = match.awayScore > match.homeScore;
-        updateTeamStats(match.homeTeam, match.homeScore, match.awayScore, homeWin, isDraw);
-        updateTeamStats(match.awayTeam, match.awayScore, match.homeScore, awayWin, isDraw);
-        updateMatchDayResults(match.homeTeam, match.awayTeam, match.homeScore, match.awayScore);
-    });
-    
-    filterMatches(matches);
-
-    const currentSort = appState.currentSort[league];
-    const sortDataType = document.querySelector(`#leagueTable thead th[data-column-index="${currentSort.column}"]`).dataset.type;
-    sortTable(currentSort.column, sortDataType);
-    updateKnockoutStage(league);
-}
-
-// *** MOVED filterMatches function here, to the global scope ***
-function filterMatches(allMatches) {
-    const selectedTeam = dom.teamSearchSelect.value;
-    const league = appState.currentLeague;
-    const allFixtures = appState.fixtures[league];
-
-    if (selectedTeam === "") {
-        dom.daySelector.disabled = false;
-        const selectedDay = parseInt(dom.daySelector.value);
-        displayMatchesForDay(selectedDay, allMatches);
-        dom.noSearchResults.style.display = 'none';
-        dom.clearSearchBtn.style.display = 'none';
-        return;
-    }
-
-    dom.daySelector.disabled = true;
-    dom.clearSearchBtn.style.display = 'inline-block';
-    let html = '';
-    let hasVisibleMatch = false;
-
-    if (allFixtures) {
-        allFixtures.forEach((dayFixtures, dayIndex) => {
-            const matchesForTeamInDay = dayFixtures.filter(m => m.home === selectedTeam || m.away === selectedTeam);
-            if (matchesForTeamInDay.length > 0) {
-                hasVisibleMatch = true;
-                html += `<h3 class="match-day-header">Day ${dayIndex + 1}</h3>`;
-                matchesForTeamInDay.forEach(match => {
-                    html += `<div class="match-card" data-home="${match.home}" data-away="${match.away}">
-                                ${match.home} vs ${match.away}
-                                <div class="match-result">- / -</div>
-                                </div>`;
-                });
-            }
-        });
-    }
-    
-    dom.matchDayContainer.innerHTML = html;
-    dom.noSearchResults.style.display = hasVisibleMatch ? 'none' : 'block';
-
-    if (hasVisibleMatch && allMatches) {
-        allMatches.forEach(match => {
-            updateMatchDayResults(match.homeTeam, match.awayTeam, match.homeScore, match.awayScore);
-        });
-    }
-}
-
-
-async function switchLeague(league) {
-    dom.loading.style.display = 'none';
-    const config = appState.config[league];
-    if (config && config.teams) {
-        dom.leagueTableBody.innerHTML = ''; 
-        const skeletonRows = new Array(config.teams.length).fill(0).map(() => `
-            <tr class="skeleton">
-                <td><div></div></td> <td><div></div></td> <td><div></div></td>
-                <td><div></div></td> <td><div></div></td> <td><div></div></td>
-                <td><div></div></td> <td><div></div></td> <td><div></div></td>
-            </tr>
-        `).join('');
-        dom.leagueTableBody.innerHTML = skeletonRows;
-    }
-
-    appState.currentLeague = league;
-    if (appState.unsubscribe) appState.unsubscribe();
-
-    const cachedConfig = localStorage.getItem(`leagueConfig_${league}`);
-    if (cachedConfig) {
-        try {
-            appState.config[league] = JSON.parse(cachedConfig);
-        } catch (e) {
-            console.error("Error parsing cached config, fetching fresh.", e);
-            localStorage.removeItem(`leagueConfig_${league}`);
-            appState.config[league] = {};
-        }
-    } else {
-        appState.config[league] = {};
-    }
-
-    try {
-        const configDocRef = doc(appState.db, 'leagues', league);
-        const configDocSnap = await getDoc(configDocRef);
-
-        if (configDocSnap.exists()) {
-            const freshConfig = configDocSnap.data();
-            if (JSON.stringify(freshConfig) !== cachedConfig) {
-                appState.config[league] = freshConfig;
-                localStorage.setItem(`leagueConfig_${league}`, JSON.stringify(freshConfig));
-            }
-        } else {
-            console.error(`No configuration found for league: ${league}`);
-            showFeedback(`Configuration for ${league.toUpperCase()} is missing.`, false);
-        }
-
-        updateUIFromConfig(appState.config[league]);
-        if (!dom.leagueTableBody.querySelector('.skeleton')) {
-        }
-        generateMatchDay(league);
-        
-        const matchesCollectionRef = collection(appState.db, `${league}Matches`);
-        const q = query(matchesCollectionRef, orderBy('timestamp', 'asc'));
-
-        appState.unsubscribe = onSnapshot(q, snapshot => {
-            const matches = snapshot.docs.map(doc => doc.data());
-            processMatchesAndUpdateUI(matches, league);
-        }, error => {
-            console.error(`Error listening to ${league} matches:`, error);
-            showFeedback(`Could not load real-time data for ${league}.`, false);
-            dom.leagueTableBody.innerHTML = '<tr><td colspan="9">Error loading data.</td></tr>'; 
-        });
-
-    } catch (error) {
-        console.error(`Error loading data for ${league}:`, error);
-        showFeedback(`Could not load data for ${league}.`, false);
-    }
-}
-
-/* ============================================
-   6. Authentication Functions
-============================================ */
-
-function handleAuthError(error) {
-    switch (error.code) {
-        case 'auth/user-not-found':
-        case 'auth/wrong-password':
-            return 'Invalid email or password.';
-        case 'auth/invalid-email':
-            return 'Please enter a valid email address.';
-        case 'auth/email-already-in-use':
-            return 'An account with this email already exists.';
-        case 'auth/weak-password':
-            return 'Password must be at least 6 characters long.';
-        default:
-            return `An unexpected error occurred: ${error.message}`;
-    }
-}
-
-async function handleLogin(e) {
-    e.preventDefault();
-    const email = dom.authEmailInput.value;
-    const password = dom.authPasswordInput.value;
-
-    try {
-        await signInWithEmailAndPassword(appState.auth, email, password);
-        showAuthFeedback('Logged in successfully!', true);
-        dom.authModal.classList.remove('show');
-        dom.authForm.reset();
-    } catch (error) {
-        const errorMessage = handleAuthError(error);
-        showAuthFeedback(errorMessage, false);
-        console.error('Login error:', error);
-    }
-}
-
-async function handleSignup(e) {
-    e.preventDefault();
-    const email = dom.authEmailInput.value;
-    const password = dom.authPasswordInput.value;
-
-    if (password.length < 6) {
-        showAuthFeedback('Password must be at least 6 characters long.', false);
-        return;
-    }
-
-    try {
-        await createUserWithEmailAndPassword(appState.auth, email, password);
-        showAuthFeedback('Account created and logged in!', true);
-        dom.authModal.classList.remove('show');
-        dom.authForm.reset();
-    } catch (error) {
-        const errorMessage = handleAuthError(error);
-        showAuthFeedback(errorMessage, false);
-        console.error('Signup error:', error);
-    }
-}
-
-async function handleLogout() {
-    try {
-        await signOut(appState.auth);
-        showFeedback('Logged out successfully!', true);
-    } catch (error) {
-        showFeedback(`Logout error: ${error.message}`, false);
-        console.error('Logout error:', error);
-    }
-}
-
-
-/* ============================================
-   7. Event Listeners & App Initialization
-============================================ */
-function setupEventListeners() {
-    let lastFocusedElement;
-
-    function closeModal(modal) {
-        modal.classList.remove('show');
-        if (lastFocusedElement) {
-            lastFocusedElement.focus();
-        }
-    }
-
-    document.querySelector('.league-selector-nav').addEventListener('click', (e) => {
-        const target = e.target.closest('.league-btn');
-        if (target) {
-            document.querySelector('.league-btn.active').classList.remove('active');
-            target.classList.add('active');
-            document.querySelector('.league-logo').classList.add('active');
-            history.pushState(null, '', `?league=${target.dataset.league}`);
-            switchLeague(target.dataset.league);
-        }
-    });
-
-    document.querySelector('.main-nav').addEventListener('click', (e) => {
-        const target = e.target.closest('.nav-btn');
-        if (target) {
-            document.querySelector('.nav-btn.active').classList.remove('active');
-            document.querySelector('.nav-btn[aria-selected="true"]').setAttribute('aria-selected', 'false');
-            target.classList.add('active');
-            target.setAttribute('aria-selected', 'true');
-            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
-            const panelId = target.getAttribute('aria-controls');
-            document.getElementById(panelId.replace('panel-', '') + '-section').classList.add('active');
-        }
-    });
-
-    document.querySelector('#leagueTable thead').addEventListener('click', (e) => {
-        const header = e.target.closest('th');
-        if (header && header.dataset.columnIndex) {
-            sortTable(parseInt(header.dataset.columnIndex), header.dataset.type);
-        }
-    });
-
-    dom.matchForm.addEventListener('submit', handleMatchSubmission);
-    dom.matchForm.addEventListener('input', checkFormValidity);
-
-    dom.daySelector.addEventListener('change', () => {
-        dom.teamSearchSelect.value = '';
-        filterMatches(appState.currentLeagueMatches);
-    });
-
-    dom.teamSearchSelect.addEventListener('change', () => filterMatches(appState.currentLeagueMatches));
-
-    dom.clearSearchBtn.addEventListener('click', () => { dom.teamSearchSelect.value = ''; filterMatches(appState.currentLeagueMatches); });
-
-    dom.leagueSection.addEventListener('click', (e) => {
-        if (e.target.matches('.team-logo')) {
-            lastFocusedElement = e.target;
-            const teamName = e.target.closest('td').querySelector('b').textContent;
-            const gameplanPath = `images/gameplans/${teamName.toLowerCase().replace(/ /g, '-')}.jpg`;
-            dom.modalImage.src = gameplanPath;
-            dom.modal.classList.add('show');
-            dom.closeModalBtn.focus();
-        }
-    });
-
-    dom.closeModalBtn.addEventListener('click', () => closeModal(dom.modal));
-    dom.modal.addEventListener('click', (e) => {
-        if (e.target === dom.modal) closeModal(dom.modal);
-    });
-
-    dom.authBtn.addEventListener('click', () => {
-        lastFocusedElement = dom.authBtn;
-        dom.authModal.classList.add('show');
-        dom.authEmailInput.focus();
-    });
-    dom.closeAuthModalBtn.addEventListener('click', () => closeModal(dom.authModal));
-    dom.authModal.addEventListener('click', (e) => {
-        if (e.target === dom.authModal) closeModal(dom.authModal);
-    });
-
-    dom.authForm.addEventListener('submit', handleLogin);
-    dom.signupBtn.addEventListener('click', handleSignup);
-    dom.logoutBtn.addEventListener('click', handleLogout);
-
-    window.addEventListener('popstate', () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const leagueFromUrl = urlParams.get('league') || 'ucl';
-        document.querySelectorAll('.league-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.league === leagueFromUrl);
-        });
-        if (leagueFromUrl !== appState.currentLeague) {
-            switchLeague(leagueFromUrl);
-        }
-    });
-}
-
-window.onload = () => {
-    initFirebase();
-    setupEventListeners();
-    const urlParams = new URLSearchParams(window.location.search);
-    const initialLeague = urlParams.get('league') || appState.currentLeague;
-    document.querySelectorAll('.league-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.league === initialLeague);
-    });
-    switchLeague(initialLeague);
-};
-
-
+        console.error(`Error adding ${league.toUpperCase(
