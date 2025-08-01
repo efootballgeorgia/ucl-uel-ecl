@@ -456,14 +456,23 @@ function displayMatchesForDay(dayNumber, allMatches) {
 
 
 function updateMatchDayResults(home, away, homeScore, awayScore) {
+function updateMatchDayResults(home, away, homeScore, awayScore) {
     const trimmedHome = home.trim();
     const trimmedAway = away.trim();
     let matchCard = dom.matchDayContainer.querySelector(`.match-card[data-home="${trimmedHome}"][data-away="${trimmedAway}"]`);
+    let isSwapped = false;
+
     if (!matchCard) {
         matchCard = dom.matchDayContainer.querySelector(`.match-card[data-home="${trimmedAway}"][data-away="${trimmedHome}"]`);
+        if (matchCard) {
+            isSwapped = true;
+        }
     }
+
     if (matchCard) {
-        matchCard.querySelector('.match-result').textContent = `${homeScore} / ${awayScore}`;
+        const displayHomeScore = isSwapped ? awayScore : homeScore;
+        const displayAwayScore = isSwapped ? homeScore : awayScore;
+        matchCard.querySelector('.match-result').textContent = `${displayHomeScore} / ${displayAwayScore}`;
     }
 }
 
@@ -827,3 +836,4 @@ window.onload = () => {
     });
     switchLeague(initialLeague);
 };
+
