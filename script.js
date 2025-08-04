@@ -197,8 +197,8 @@ function renderTable(league) {
             <td>${index + 1}</td>
             <td>
               <picture>
-                <source src="images/logos/${teamLogoName}.png" type="image/png">
-                <img src="images/logos/${teamLogoName}.png" alt="${teamName}" loading="lazy" decoding="async" class="team-logo">
+                <source src="images/logos/${teamLogoName}.webp" type="image/webp">
+                <img src="images/logos/${teamLogoName}.webp" alt="${teamName}" loading="lazy" decoding="async" class="team-logo">
               </picture>
               <b>${teamName}</b>
             </td>
@@ -349,8 +349,8 @@ function updateKnockoutStage(league) {
         wrapper.style.left = position.left;
         wrapper.innerHTML = `
           <picture>
-            <source src="images/logos/${teamLogoName}.png" type="image/png">
-            <img src="images/logos/${teamLogoName}.png" alt="${teamName}">
+            <source src="images/logos/${teamLogoName}.webp" type="image/webp">
+            <img src="images/logos/${teamLogoName}.webp" alt="${teamName}">
           </picture>
         `;
         return wrapper;
@@ -459,22 +459,13 @@ function updateMatchDayResults(home, away, homeScore, awayScore) {
     const trimmedHome = home.trim();
     const trimmedAway = away.trim();
     let matchCard = dom.matchDayContainer.querySelector(`.match-card[data-home="${trimmedHome}"][data-away="${trimmedAway}"]`);
-    let isSwapped = false;
-
     if (!matchCard) {
         matchCard = dom.matchDayContainer.querySelector(`.match-card[data-home="${trimmedAway}"][data-away="${trimmedHome}"]`);
-        if (matchCard) {
-            isSwapped = true;
-        }
     }
-
     if (matchCard) {
-        const displayHomeScore = isSwapped ? awayScore : homeScore;
-        const displayAwayScore = isSwapped ? homeScore : awayScore;
-        matchCard.querySelector('.match-result').textContent = `${displayHomeScore} / ${displayAwayScore}`;
+        matchCard.querySelector('.match-result').textContent = `${homeScore} / ${awayScore}`;
     }
 }
-
 
 
 async function handleMatchSubmission(e) {
@@ -522,7 +513,6 @@ async function handleMatchSubmission(e) {
 
 function processMatchesAndUpdateUI(matches, league) {
     appState.currentLeagueMatches = matches;
-    resetTableStats();
     renderTable(league);
     
     matches.forEach(match => {
@@ -836,4 +826,3 @@ window.onload = () => {
     });
     switchLeague(initialLeague);
 };
-
