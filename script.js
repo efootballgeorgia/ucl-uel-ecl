@@ -458,12 +458,17 @@ function displayMatchesForDay(dayNumber, allMatches) {
 function updateMatchDayResults(home, away, homeScore, awayScore) {
     const trimmedHome = home.trim();
     const trimmedAway = away.trim();
-    let matchCard = dom.matchDayContainer.querySelector(`.match-card[data-home="${trimmedHome}"][data-away="${trimmedAway}"]`);
-    if (!matchCard) {
-        matchCard = dom.matchDayContainer.querySelector(`.match-card[data-home="${trimmedAway}"][data-away="${trimmedHome}"]`);
-    }
+    const matchCard = dom.matchDayContainer.querySelector(
+        `.match-card[data-home="${trimmedHome}"][data-away="${trimmedAway}"], .match-card[data-home="${trimmedAway}"][data-away="${trimmedHome}"]`
+    );
+
     if (matchCard) {
-        matchCard.querySelector('.match-result').textContent = `${homeScore} / ${awayScore}`;
+        const cardHomeTeam = matchCard.dataset.home;
+        if (cardHomeTeam === trimmedHome) {
+            matchCard.querySelector('.match-result').textContent = `${homeScore} / ${awayScore}`;
+        } else {
+            matchCard.querySelector('.match-result').textContent = `${awayScore} / ${homeScore}`;
+        }
     }
 }
 
