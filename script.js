@@ -15,11 +15,6 @@ const appState = {
   currentLeagueMatches: [],
   unsubscribe: null,
   fixtures: {},
-  currentSort: {
-    ucl: { column: 7, isAscending: false },
-    uel: { column: 7, isAscending: false },
-    ecl: { column: 7, isAscending: false },
-  },
   config: {}
 };
 
@@ -51,7 +46,7 @@ const dom = {
   feedbackMessage: document.querySelector('.feedback-message'),
   authModal: document.getElementById('auth-modal'),
   closeAuthModalBtn: document.getElementById('closeAuthModal'),
-  authForm: document.getElementById('auth-form'), 
+  authForm: document.getElementById('auth-form'),
   authEmailInput: document.getElementById('auth-email'),
   authPasswordInput: document.getElementById('auth-password'),
   loginBtn: document.getElementById('login-btn'),
@@ -112,21 +107,6 @@ function showAuthFeedback(message, isSuccess) {
     }, 3000);
 }
 
-function checkFormValidity() {
-  const form = dom.matchForm;
-  const submitButton = form.querySelector('button[type="submit"]');
-  const homeTeam = dom.homeTeamSelect.value;
-  const awayTeam = dom.awayTeamSelect.value;
-  const homeScore = document.getElementById('homeScore').value;
-  const awayScore = document.getElementById('awayScore').value;
-
-  if (appState.isAdmin && homeTeam && awayTeam && homeTeam !== awayTeam && homeScore !== '' && awayScore !== '') {
-    submitButton.classList.add('ready');
-  } else {
-    submitButton.classList.remove('ready');
-  }
-}
-
 function appendQualificationSeparators(fragment, position, qualificationZones) {
     if (qualificationZones && qualificationZones[position]) {
         const separatorRow = document.createElement('tr');
@@ -156,8 +136,6 @@ function populateTeamSearchDropdown(league) {
 }
 
 function updateAuthUI() {
-    const submitButton = dom.matchForm.querySelector('button[type="submit"]');
-
     if (appState.currentUser) {
         dom.userStatusSpan.textContent = `Logged in`;
         dom.authBtn.style.display = 'none';
@@ -173,7 +151,6 @@ function updateAuthUI() {
         dom.authBtn.style.display = 'inline-block';
         dom.logoutBtn.style.display = 'none';
         dom.matchForm.style.display = 'none';
-        submitButton.classList.remove('ready');
     }
 }
 
@@ -212,20 +189,6 @@ function renderTable(league) {
     dom.leagueTableBody.appendChild(fragment);
 }
 
-function resetTableStats() {
-    const rows = dom.leagueTableBody.querySelectorAll('tr:not(.separator)');
-    rows.forEach(row => {
-        const cells = row.cells;
-        cells[2].textContent = '0'; 
-        cells[3].textContent = '0'; 
-        cells[4].textContent = '0'; 
-        cells[5].textContent = '0'; 
-        cells[6].textContent = '0:0'; 
-        cells[7].querySelector('.points').textContent = '0'; 
-        cells[8].querySelector('.form-container').innerHTML = ''; 
-    });
-}
-
 function populateTeamDropdowns(league) {
     const teams = appState.config[league]?.teams || [];
     dom.homeTeamSelect.innerHTML = '<option value="">Home Team</option>';
@@ -236,80 +199,11 @@ function populateTeamDropdowns(league) {
     });
 }
 
-function sortTable(columnIndex, dataType) {
-    const league = appState.currentLeague;
-    const sortConfig = appState.currentSort[league];
-    const rows = Array.from(dom.leagueTableBody.querySelectorAll('tr:not(.separator)'));
-    const qualificationZones = appState.config[league]?.qualificationZones || {};
-
-    if (sortConfig.column === columnIndex) {
-        sortConfig.isDescending = !sortConfig.isDescending;
-    } else {
-        sortConfig.column = columnIndex;
-        sortConfig.isDescending = (columnIndex !== 1);
-    }
-
-    rows.sort((a, b) => {
-        let aVal, bVal;
-        const aCell = a.cells[columnIndex];
-        const bCell = b.cells[columnIndex];
-
-        if (dataType === 'goals') {
-            const [aF, aA] = aCell.textContent.split(':').map(Number);
-            const [bF, bA] = bCell.textContent.split(':').map(Number);
-            aVal = aF - aA;
-            bVal = bF - bA;
-        } else if (dataType === 'number') {
-            aVal = parseInt(aCell.textContent) || 0;
-            bVal = parseInt(bCell.textContent) || 0;
-        } else {
-            aVal = aCell.textContent.trim().toLowerCase();
-            bVal = bCell.textContent.trim().toLowerCase();
-        }
-
-        let comparison = 0;
-        if (aVal < bVal) comparison = -1;
-        if (aVal > bVal) comparison = 1;
-
-        if (columnIndex !== 7) {
-            const aPoints = parseInt(a.cells[7].textContent);
-            const bPoints = parseInt(b.cells[7].textContent);
-            if (aPoints !== bPoints) {
-                return bPoints - aPoints;
-            }
-        }
-
-    if (comparison === 0) { 
-      const aGD = parseInt(a.dataset.gd) || 0; 
-      const bGD = parseInt(b.dataset.gd) || 0; 
-      if (aGD !== bGD) {
-        return bGD - aGD; 
-      }
-    }
-
-        return sortConfig.isDescending ? -comparison : comparison;
-    });
-
-    dom.leagueTableBody.innerHTML = '';
-    const fragment = document.createDocumentFragment();
-    rows.forEach((row, index) => {
-        const position = index + 1;
-        row.cells[0].textContent = position;
-        fragment.appendChild(row);
-        appendQualificationSeparators(fragment, position, qualificationZones);
-    });
-    dom.leagueTableBody.appendChild(fragment);
-
-    document.querySelectorAll('#leagueTable thead th').forEach(th => th.removeAttribute('data-sort'));
-    document.querySelector(`#leagueTable thead th[data-column-index="${columnIndex}"]`).dataset.sort = sortConfig.isDescending ? 'desc' : 'asc';
-}
-
-
 function updateTeamStats(teamName, gf, ga, isWin, isDraw) {
     const row = dom.leagueTableBody.querySelector(`tr[data-team="${teamName.trim()}"]`);
     if (!row) return;
 
-    const         cells = row.cells;
+    const cells = row.cells;
     cells[2].textContent = parseInt(cells[2].textContent) + 1;
     cells[3].textContent = parseInt(cells[3].textContent) + (isWin ? 1 : 0);
     cells[4].textContent = parseInt(cells[4].textContent) + (isDraw ? 1 : 0);
@@ -319,7 +213,10 @@ function updateTeamStats(teamName, gf, ga, isWin, isDraw) {
     const newGA = currA + ga;
     cells[6].textContent = `${newGF}:${newGA}`;
     cells[7].querySelector('.points').textContent = (parseInt(cells[3].textContent) * 3) + parseInt(cells[4].textContent);
-    row.dataset.gd = newGF - newGA; // <-- ADD THIS LINE
+    
+    // Calculate and store goal difference in the row's dataset for sorting
+    const goalDifference = newGF - newGA;
+    row.dataset.gd = goalDifference;
 
     const formContainer = cells[8].querySelector('.form-container');
     if (formContainer.children.length >= 5) formContainer.removeChild(formContainer.lastChild);
@@ -491,7 +388,6 @@ async function handleMatchSubmission(e) {
 
     submitButton.textContent = 'Adding...';
     submitButton.disabled = true;
-    submitButton.classList.remove('ready');
 
     const matchData = {
         homeTeam, awayTeam, homeScore, awayScore,
@@ -505,7 +401,6 @@ async function handleMatchSubmission(e) {
         homeScoreInput.value = '';
         awayScoreInput.value = '';
 
-        checkFormValidity();
     } catch (error) {
         showFeedback(`Error adding match: ${error.message}.`, false);
         console.error(`Error adding ${league.toUpperCase()} match:`, error);
@@ -519,7 +414,7 @@ async function handleMatchSubmission(e) {
 function processMatchesAndUpdateUI(matches, league) {
     appState.currentLeagueMatches = matches;
     renderTable(league);
-    
+
     matches.forEach(match => {
         const isDraw = match.homeScore === match.awayScore;
         const homeWin = match.homeScore > match.awayScore;
@@ -528,16 +423,42 @@ function processMatchesAndUpdateUI(matches, league) {
         updateTeamStats(match.awayTeam, match.awayScore, match.homeScore, awayWin, isDraw);
         updateMatchDayResults(match.homeTeam, match.awayTeam, match.homeScore, match.awayScore);
     });
-    
+
     filterMatches(matches);
 
-    const currentSort = appState.currentSort[league];
-    const sortDataType = document.querySelector(`#leagueTable thead th[data-column-index="${currentSort.column}"]`).dataset.type;
-    sortTable(currentSort.column, sortDataType);
+    // --- New built-in sorting logic ---
+    const rows = Array.from(dom.leagueTableBody.querySelectorAll('tr:not(.separator)'));
+    const qualificationZones = appState.config[league]?.qualificationZones || {};
+
+    rows.sort((a, b) => {
+        // 1. Sort by Points (descending)
+        const aPoints = parseInt(a.cells[7].textContent) || 0;
+        const bPoints = parseInt(b.cells[7].textContent) || 0;
+        if (aPoints !== bPoints) {
+            return bPoints - aPoints;
+        }
+
+        // 2. Tie-breaker: Goal Difference (descending)
+        const aGD = parseInt(a.dataset.gd) || 0;
+        const bGD = parseInt(b.dataset.gd) || 0;
+        return bGD - aGD;
+    });
+
+    // Re-render the table body with sorted rows
+    dom.leagueTableBody.innerHTML = '';
+    const fragment = document.createDocumentFragment();
+    rows.forEach((row, index) => {
+        const position = index + 1;
+        row.cells[0].textContent = position;
+        fragment.appendChild(row);
+        appendQualificationSeparators(fragment, position, qualificationZones);
+    });
+    dom.leagueTableBody.appendChild(fragment);
+    // --- End of new sorting logic ---
+
     updateKnockoutStage(league);
 }
 
-// *** MOVED filterMatches function here, to the global scope ***
 function filterMatches(allMatches) {
     const selectedTeam = dom.teamSearchSelect.value;
     const league = appState.currentLeague;
@@ -572,7 +493,7 @@ function filterMatches(allMatches) {
             }
         });
     }
-    
+
     dom.matchDayContainer.innerHTML = html;
     dom.noSearchResults.style.display = hasVisibleMatch ? 'none' : 'block';
 
@@ -588,7 +509,7 @@ async function switchLeague(league) {
     dom.loading.style.display = 'none';
     const config = appState.config[league];
     if (config && config.teams) {
-        dom.leagueTableBody.innerHTML = ''; 
+        dom.leagueTableBody.innerHTML = '';
         const skeletonRows = new Array(config.teams.length).fill(0).map(() => `
             <tr class="skeleton">
                 <td><div></div></td> <td><div></div></td> <td><div></div></td>
@@ -634,7 +555,7 @@ async function switchLeague(league) {
         if (!dom.leagueTableBody.querySelector('.skeleton')) {
         }
         generateMatchDay(league);
-        
+
         const matchesCollectionRef = collection(appState.db, `${league}Matches`);
         const q = query(matchesCollectionRef, orderBy('timestamp', 'asc'));
 
@@ -644,7 +565,7 @@ async function switchLeague(league) {
         }, error => {
             console.error(`Error listening to ${league} matches:`, error);
             showFeedback(`Could not load real-time data for ${league}.`, false);
-            dom.leagueTableBody.innerHTML = '<tr><td colspan="9">Error loading data.</td></tr>'; 
+            dom.leagueTableBody.innerHTML = '<tr><td colspan="9">Error loading data.</td></tr>';
         });
 
     } catch (error) {
@@ -760,15 +681,7 @@ function setupEventListeners() {
         }
     });
 
-    document.querySelector('#leagueTable thead').addEventListener('click', (e) => {
-        const header = e.target.closest('th');
-        if (header && header.dataset.columnIndex) {
-            sortTable(parseInt(header.dataset.columnIndex), header.dataset.type);
-        }
-    });
-
     dom.matchForm.addEventListener('submit', handleMatchSubmission);
-    dom.matchForm.addEventListener('input', checkFormValidity);
 
     dom.daySelector.addEventListener('change', () => {
         dom.teamSearchSelect.value = '';
