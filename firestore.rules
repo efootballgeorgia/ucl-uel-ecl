@@ -1,44 +1,63 @@
 rules_version = '2';
  
- service cloud.firestore {
-   match /databases/{database}/documents {
-     // This function securely checks if the logged-in user is an admin 
-     function isAdmin() {
-       return exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // This function securely checks if the logged-in user is an admin.
+    function isAdmin() {
+      return exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+    
+    // This function validates the data for a standard league phase match.
+    function isLeagueMatchData(data) {
+      return data.keys().hasAll(['homeTeam', 'awayTeam', 'homeScore', 'awayScore', 'timestamp']) &&
+             data.keys().size() == 5 &&
+             data.homeTeam is string &&
+             data.awayTeam is string &&
+             data.homeScore is number &&
+             data.awayScore is number &&
+             data.homeScore >= 0 &&
+             data.awayScore >= 0 &&
+             data.homeTeam != data.awayTeam &&
+             data.timestamp == request.time;
+    }
+    
+    // This function validates the data for a knockout stage match.
+    function isKnockoutMatchData(data) {
+      return data.keys().hasAll(['stage', 'homeTeam', 'awayTeam', 'homeScore', 'awayScore']) &&
+             data.keys().size() == 5 &&
+             data.stage is string &&
+             data.homeTeam is string &&
+             data.awayTeam is string &&
+             data.homeScore is number &&
+             data.awayScore is number &&
+             data.homeScore >= 0 &&
+             data.awayScore >= 0 &&
+             data.homeTeam != data.awayTeam;
+    }
+
+    match /leagues/{leagueId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /admins/{userId} {
+      // An authenticated user can only read their own admin status.
+      allow read: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // This single block now handles all match collections.
+    match /{matchCollection}/{matchId} {
+      // Allow public read access to all match and knockout collections.
+      allow read: if matchCollection in [
+                      'uclMatches', 'uelMatches', 'eclMatches',
+                      'uclKnockoutMatches', 'uelKnockoutMatches', 'eclKnockoutMatches'
+                    ];
+
+      // Use conditional logic for write operations based on the collection name.
+      allow write: if isAdmin() && (
+        (matchCollection in ['uclMatches', 'uelMatches', 'eclMatches'] && isLeagueMatchData(request.resource.data)) ||
+        (matchCollection in ['uclKnockoutMatches', 'uelKnockoutMatches', 'eclKnockoutMatches'] && isKnockoutMatchData(request.resource.data))
+      );
+    }
+  }
 }
- 
-     match /leagues/{leagueId} {
-       // FIX: Changed rule to allow public read access for league configurations.
-allow read: if true;
-       // Writes are still disallowed for everyone for this collection.
-       allow write: if false;
-}
- 
-     match /admins/{userId} {
-       // An authenticated user can only read their own admin status 
-       allow read: if request.auth != null && request.auth.uid == userId;
-}
- 
-     match /{matchCollection}/{matchId} {
-       // FIX: Changed rule to allow public read access for match data in specified collections.
-allow read: if matchCollection in ['uclMatches', 'uelMatches', 'eclMatches'];
- 
-       // Write rule remains unchanged: only admins can write valid match data 
-       allow write: if isAdmin() &&
-                       matchCollection in ['uclMatches', 'uelMatches', 'eclMatches'] &&
-                       request.resource.data.keys().hasAll(['homeTeam', 'awayTeam', 'homeScore', 'awayScore', 'timestamp']) &&
-                
-       request.resource.data.keys().size() == 5 &&
-                       request.resource.data.homeTeam is string &&
-                       request.resource.data.awayTeam is string &&
-                       request.resource.data.homeScore is number &&
-                
-       request.resource.data.awayScore is number &&
-                       request.resource.data.homeScore >= 0 &&
-                       request.resource.data.awayScore >= 0 &&
-                       request.resource.data.homeTeam != request.resource.data.awayTeam &&
-                
-       request.resource.data.timestamp == request.time;
-     }
-   }
- }
