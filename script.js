@@ -560,44 +560,10 @@ function getWinner(matchId) {
 }
 
 function renderKnockoutBracket() {
-    // If the league phase is not complete, display a waiting message but keep the container structure.
     if (appState.sortedTeams.length < 24) {
-        dom.knockoutMasterContainer.innerHTML = `
-            <h2 id="knockout-title">${appState.config[appState.currentLeague]?.name || 'N/A'} Knockout Stage</h2>
-            <p class="empty-state" style="display:block;">Awaiting completion of the league phase. At least 24 teams must be ranked.</p>
-            
-            <div id="knockout-playoffs-container" class="knockout-stage-container" style="display:none;">
-                <h3>Knockout Play-offs</h3>
-                <div class="knockout-stage-grid"></div>
-            </div>
-            <div id="knockout-round16-container" class="knockout-stage-container" style="display:none;">
-                <h3>Round of 16</h3>
-                <div class="knockout-stage-grid"></div>
-            </div>
-            <div id="knockout-quarterfinals-container" class="knockout-stage-container" style="display:none;">
-                <h3>Quarter-finals</h3>
-                <div class="knockout-stage-grid"></div>
-            </div>
-            <div id="knockout-semifinals-container" class="knockout-stage-container" style="display:none;">
-                <h3>Semi-finals</h3>
-                <div class="knockout-stage-grid"></div>
-            </div>
-            <div id="knockout-final-container" class="knockout-stage-container" style="display:none;">
-                <h3>Final</h3>
-                <div class="knockout-stage-grid"></div>
-            </div>
-        `;
+        dom.knockoutMasterContainer.innerHTML = '<h2>Knockout Stage</h2><p class="empty-state" style="display:block;">Awaiting completion of the league phase. At least 24 teams must be ranked.</p>';
         return;
     }
-
-    // Restore visibility of containers if they were hidden
-    const containers = dom.knockoutMasterContainer.querySelectorAll('.knockout-stage-container');
-    containers.forEach(c => c.style.display = 'block');
-    const waitingMessage = dom.knockoutMasterContainer.querySelector('.empty-state');
-    if (waitingMessage) {
-      waitingMessage.style.display = 'none';
-    }
-
 
     const winners = {
       playoffs: {}, round16: {}, quarterfinals: {}, semifinals: {}, final: {}
@@ -616,7 +582,7 @@ function renderKnockoutBracket() {
 
         const createTeamHtml = (team, isLoser) => {
             if (!team) {
-                return '<div class="knockout-team"><span class="knockout-placeholder">TBD</span></div>';
+                return '<div class="knockout-team"></div>'; // Return a blank div if no team
             }
             const logoSrc = `images/logos/${team.toLowerCase().replace(/ /g, '-')}.webp`;
             const loserClass = isLoser ? 'loser' : '';
@@ -720,6 +686,43 @@ function renderKnockoutBracket() {
     const homeTeamFinal = winners.semifinals[finalPairing.homeWinnerFrom];
     const awayTeamFinal = winners.semifinals[finalPairing.awayWinnerFrom];
     finalGrid.innerHTML = renderMatchCard('final-0', 'final', homeTeamFinal, awayTeamFinal);
+}
+
+
+async function handleKnockoutMatchSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    const { matchId, stage, home, away } = form.dataset;
+    const homeScore = parseInt(form.elements[0].value);
+    const awayScore = parseInt(form.elements[1].value);
+
+    if (isNaN(homeScore) || isNaN(awayScore)) {
+        showFeedback('Please enter valid scores.', false);
+        return;
+    }
+    
+    const submitButton = form.querySelector('button[type="submit"]');
+    submitButton.textContent = 'Saving...';
+    submitButton.disabled = true;
+
+    const matchData = {
+        stage,
+        homeTeam: home,
+        awayTeam: away,
+        homeScore,
+        awayScore
+    };
+
+    try {
+        const docRef = doc(appState.db, `${appState.currentLeague}KnockoutMatches`, matchId);
+        await setDoc(docRef, matchData);
+        // The onSnapshot listener will automatically re-render the bracket
+    } catch (error) {
+        console.error("Error saving knockout match:", error);
+        showFeedback(`Error: ${error.message}`, false);
+        submitButton.textContent = 'Save';
+        submitButton.disabled = false;
+    }
 }
 
 
