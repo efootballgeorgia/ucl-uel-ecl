@@ -605,6 +605,7 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
     gap: 0.5rem;
     position: relative;
     width: 45%;
+    min-height: 90px; /* Ensures layout stability for blank slots */
 }
 
 .knockout-team.loser .team-logo-container::after {
