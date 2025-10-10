@@ -230,129 +230,6 @@ header {
     font-size: 0.9em;
 }
 
-
-/* ============================================
-   5. League Table
-============================================ */
-.league-table {
-  width: 95%;
-  max-width: 1200px;
-  margin: 2rem auto;
-  border-radius: var(--border-radius);
-  overflow: hidden;
-  -webkit-overflow-scrolling: touch;
-  overflow-x: auto;
-  font-size: 18px;
-  background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(33, 38, 45, 0.9));
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-thead th {
-  background-color: rgba(33, 38, 45, 0.9);
-  color: #fff;
-  padding: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease;
-  white-space: nowrap;
-  font-family: var(--font-primary);
-  text-transform: uppercase;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-}
-
-thead th[data-column-index]:hover {
-  background-color: var(--tertiary-bg);
-  color: var(--accent-color);
-}
-
-th[data-sort]::after {
-  font-size: 1rem;
-  padding-left: 8px;
-  font-weight: bold;
-}
-
-th[data-sort="asc"]::after {
-  content: " ▲";
-  color: var(--accent-color);
-}
-
-th[data-sort="desc"]::after {
-  content: " ▼";
-  color: var(--accent-color);
-}
-
-tbody td {
-  padding: 0.8rem 1rem;
-  text-align: center;
-  transition: background-color 0.3s ease;
-  white-space: nowrap;
-  border-bottom: 1px solid var(--border-color);
-}
-
-tbody td b.points { color: #fff; font-weight: 700; }
-tbody td img { height: 45px; width: 45px; vertical-align: middle; margin-right: 15px; cursor: pointer; border-radius: 50%; padding: 2px; }
-tbody tr {
-    background-color: transparent;
-    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-}
-tbody tr:hover {
-    background-color: rgba(41, 41, 41, 0.9);
-    transform: translateY(-3px);
-    box-shadow: 0 5px 20px rgba(255, 215, 0, 0.2);
-}
-
-
-.form-box { display: inline-block; width: 1rem; height: 1rem; margin: 0 3px; border-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.1); }
-.form-box.victory { background-color: var(--win-color); }
-.form-box.loss { background-color: var(--loss-color); }
-.form-box.draw { background-color: var(--draw-color); }
-
-.separator td { background-color: transparent !important; padding: 0 !important; height: 25px; position: relative; border: 0; }
-.separator .line { display: block; height: 2px; margin: 0 10px; }
-.round16 .line { background-color: #0de41c; }
-.knockout-seeded .line { background-color: #157736; }
-.knockout-unseeded .line { background-color: #d72811; }
-.uel-round16 .line { background-color: var(--accent-color); }
-.ecl-round16 .line { background-color: #FFA500; }
-.separator .label { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 0.75rem; font-weight: bold; }
-
-/* ============================================
-   6. Match & Form Elements
-============================================ */
-.match-form {
-  background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(33, 38, 45, 0.9)); 
-  backdrop-filter: blur(10px);
-  padding: 2rem;
-  border-radius: var(--border-radius);
-  margin: 2rem auto;
-  width: 90%;
-  max-width: 600px;
-  position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
-}
-
-#matchForm { display: flex; flex-direction: column; gap: 1rem; }
-.form-group { display: flex; gap: 1rem; align-items: center; }
-.form-group select, .form-group input { flex: 1; padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--secondary-bg); color: var(--text-color); min-height: 3rem; font-size: 1rem; transition: all 0.3s ease; }
-.form-group select:focus, .form-group input:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
-
-button[type="submit"] { background: var(--accent-color); color: var(--primary-bg); padding: 0.75rem 1.5rem; border: none; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; min-height: 3rem; font-family: var(--font-primary); font-weight: 700; font-size: 1.1rem; }
-button[type="submit"]:hover { background: #ffed4a; transform: translateY(-2px); box-shadow: 0 4px 20px rgba(255, 215, 0, 0.2); }
-button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
-
-.feedback-message { padding: 10px; margin-top: 10px; border-radius: 5px; text-align: center; font-weight: bold; opacity: 0; transition: opacity 0.3s ease-in-out; max-height: 0; overflow: hidden; }
-.feedback-message.show { opacity: 1; max-height: 40px; }
-.feedback-message.success { background-color: var(--win-color); color: white; }
-.feedback-message.error { background-color: var(--loss-color); color: white; }
-
 .auth-modal {
     z-index: 99999; 
 }
@@ -430,123 +307,385 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
     display: block;
 }
 
-.search-container-wrapper {
-  margin: 2rem auto 1rem; 
-  width: 98%;
-  max-width: 62.5rem;
-  background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(33, 38, 45, 0.9)); 
-  backdrop-filter: blur(10px);
-  padding: 1.5rem;
+.feedback-message { padding: 10px; margin-top: 10px; border-radius: 5px; text-align: center; font-weight: bold; opacity: 0; transition: opacity 0.3s ease-in-out; max-height: 0; overflow: hidden; }
+.feedback-message.show { opacity: 1; max-height: 40px; }
+.feedback-message.success { background-color: var(--win-color); color: white; }
+.feedback-message.error { background-color: var(--loss-color); color: white; }
+
+
+
+/* ============================================
+   5. League Table
+============================================ */
+.league-table {
+  width: 95%;
+  max-width: 1200px;
+  margin: 2rem auto;
   border-radius: var(--border-radius);
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
+  overflow-x: auto;
+  font-size: 18px;
+  background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(33, 38, 45, 0.9));
+  backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead th {
+  background-color: rgba(33, 38, 45, 0.9);
+  color: #fff;
+  padding: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  white-space: nowrap;
+  font-family: var(--font-primary);
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+thead th[data-column-index]:hover {
+  background-color: var(--tertiary-bg);
+  color: var(--accent-color);
+}
+
+th[data-sort]::after {
+  font-size: 1rem;
+  padding-left: 0.5rem;
+  font-weight: bold;
+}
+
+th[data-sort="asc"]::after {
+  content: " ▲";
+  color: var(--accent-color);
+}
+
+th[data-sort="desc"]::after {
+  content: " ▼";
+  color: var(--accent-color);
+}
+
+tbody td {
+  padding: 0.8rem 1rem;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border-color);
+}
+
+tbody td b.points { color: #fff; font-weight: 700; }
+tbody td img { height: 45px; width: 45px; vertical-align: middle; margin-right: 15px; cursor: pointer; border-radius: 50%; padding: 2px; }
+tbody tr {
+    background-color: transparent;
+    transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+tbody tr:hover {
+    background-color: rgba(41, 41, 41, 0.9);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(255, 215, 0, 0.2);
+}
+
+
+.form-box { display: inline-block; width: 1rem; height: 1rem; margin: 0 3px; border-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.1); }
+.form-box.victory { background-color: var(--win-color); }
+.form-box.loss { background-color: var(--loss-color); }
+.form-box.draw { background-color: var(--draw-color); }
+
+.separator td { background-color: transparent !important; padding: 0 !important; height: 25px; position: relative; border: 0; }
+.separator .line { display: block; height: 2px; margin: 0 10px; }
+.round16 .line { background-color: #0de41c; }
+.knockout-seeded .line { background-color: #157736; }
+.knockout-unseeded .line { background-color: #d72811; }
+.uel-round16 .line { background-color: var(--accent-color); }
+.ecl-round16 .line { background-color: #FFA500; }
+.separator .label { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 0.75rem; font-weight: bold; }
+
+/* ============================================
+   6. Match & Form Elements (COMPACT & STABLE)
+============================================ */
+.match-form {
+  /* CONTAINER & BACKGROUND */
+  background: linear-gradient(135deg, #1f2730, #161b22); 
+  backdrop-filter: blur(10px);
+  padding: 1.2rem; /* Compact padding */
+  border-radius: var(--border-radius);
+  margin: 1.5rem auto; 
+  width: 90%;
+  max-width: 500px; /* Compact max-width */
+  border: 1px solid var(--border-color);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+#match-form-title {
+  color: var(--accent-color);
+  margin-bottom: 1rem; /* Reduced margin */
+  font-size: 1.4rem; /* Compact font size */
+  text-transform: uppercase;
+}
+
+#matchForm { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 0.8rem; /* Compact gap */
+}
+
+/* Layout for Match Input */
+.form-group { 
+  display: flex; 
+  justify-content: space-between;
+  align-items: center; 
+  gap: 0.5rem; 
+  background-color: var(--tertiary-bg);
+  padding: 0.4rem; /* Very compact padding */
+  border-radius: 6px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Score Input Row (Crucial for stability) */
+.score-input-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0; /* Prevents this section from shrinking when selects load */
+}
+
+/* Style for Team Select */
+#homeTeam, #awayTeam {
+  flex-grow: 1; /* Allows team selects to take all available space */
+  padding: 0.5rem 0.7rem; 
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  background: var(--secondary-bg);
+  color: var(--text-color);
+  font-size: 0.9rem;
+  font-weight: 500;
+  min-height: 38px; /* Fixed height for stability */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Style for Score Input (Fixed dimensions for stability) */
+#homeScore, #awayScore {
+  width: 45px; /* Fixed width */
+  padding: 0.5rem 0; 
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  background: var(--secondary-bg);
+  color: var(--accent-color);
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+  min-height: 38px; /* Fixed height for stability */
+}
+
+/* Separator Style */
+.score-separator {
+    font-size: 1.1rem; 
+    font-weight: 700;
+    color: var(--text-color-secondary);
+    flex-shrink: 0; /* Prevents shrinking */
+}
+
+/* Submit Button */
+#matchForm button[type="submit"] { 
+    width: 100%;
+    padding: 0.7rem; /* Compact padding */
+    background: var(--accent-color); 
+    color: var(--primary-bg); 
+    border: none; 
+    border-radius: 6px; 
+    font-size: 0.9rem;
+    font-weight: 700; 
+}
+
+/* ============================================
+   7. Match Day & Search Filter
+============================================ */
+.search-container-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 95%;
+    max-width: 1150px;
+    margin: 2rem auto 0;
+    padding: 1.5rem;
+    background-color: var(--secondary-bg);
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    border: 1px solid var(--border-color);
+    border-bottom: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .search-container-wrapper h2 {
+    margin-top: 0;
     margin-bottom: 1.5rem;
-    color: #fff;
-    text-align: center;
+    color: var(--accent-color);
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+.team-search-select {
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--tertiary-bg);
+    color: var(--text-color);
+    font-size: 1em;
+    min-width: 200px;
+    flex-grow: 1;
+}
+
+#clearSearchBtn {
+    flex-shrink: 0;
 }
 
 .match-day {
-  background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(33, 38, 45, 0.9));
-  backdrop-filter: blur(10px);
-  padding: 1.5rem;
-  border-radius: var(--border-radius);
-  margin: 1rem auto; 
-  width: 98%;
-  max-width: 62.5rem;
-  position: relative;
-  overflow-x: auto;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+    width: 95%;
+    max-width: 1200px;
+    margin: 0 auto 2rem;
+    padding: 2rem;
+    background-color: var(--secondary-bg);
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    border: 1px solid var(--border-color);
+    border-top: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    min-height: 300px;
+    box-sizing: border-box;
 }
 
 #match-day-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1rem;
-    padding-bottom: 1rem;
-}
-
-.match-day-header {
-    grid-column: 1 / -1; 
-    text-align: left;
-    color: var(--accent-color);
-    margin-bottom: 0;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border-color);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
 }
 
 .match-card {
-    background: var(--secondary-bg);
-    border-radius: 8px;
+    background-color: var(--tertiary-bg);
+    border-radius: 10px;
     padding: 1rem;
-    text-align: center;
-    color: #fff;
-    font-size: 1em;
-    border: 1px solid var(--border-color);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    transition: transform 0.2s ease;
+    border-left: 5px solid var(--draw-color);
+    font-size: 1.1em;
+}
+
+.match-card.played {
+    border-left-color: var(--win-color);
 }
 
 .match-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
 }
 
-.match-result { font-size: 1.1em; font-weight: bold; margin-top: 0.5rem; color: var(--accent-color); }
-
-.search-container { 
-  margin-bottom: 1.5rem; 
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
-  gap: 1rem; 
-  position: relative;
-  flex-wrap: wrap;
+.match-team {
+    display: flex;
+    align-items: center;
+    width: 40%;
 }
 
-.team-search-select {
-    flex-grow: 1;
-    min-width: 200px;
-    max-width: 400px;
-    padding: 0.8rem;
-    border-radius: 8px;
+.match-team.away-team {
+    justify-content: flex-end;
+    text-align: right;
+}
+
+.match-team.home-team {
+    text-align: left;
+}
+
+.match-team .team-logo {
+    width: 35px;
+    height: 35px;
+    object-fit: contain;
+}
+
+.match-team.home-team .team-logo {
+    order: -1;
+    margin-right: 0.75rem;
+    margin-left: 0;
+}
+
+.match-team.away-team .team-logo {
+    margin-left: 0.75rem;
+    margin-right: 0;
+}
+
+.match-result {
+    font-weight: 700;
+    color: var(--accent-color);
+    font-size: 1.2em;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.score-pending {
+    color: var(--draw-color);
+    font-size: 0.8em;
+    padding: 0.2rem 0.5rem;
+    border: 1px solid var(--draw-color);
+    border-radius: 4px;
+}
+
+.score-home, .score-away {
+    min-width: 20px;
+    text-align: center;
+}
+
+/* Admin Match Day Score Form */
+.match-score-form {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.match-score-form input[type="number"] {
+    width: 35px;
+    padding: 0.2rem;
+    font-size: 1em;
+    border-radius: 4px;
+    text-align: center;
+    background-color: var(--tertiary-bg);
     border: 1px solid var(--border-color);
-    background: var(--secondary-bg);
-    color: #fff;
-    font-size: 1rem;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23c9d1d9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 0.8rem center;
-    background-size: 1em;
+    color: var(--text-color);
 }
 
-.team-search-select:focus { 
-  outline: none; 
-  border-color: var(--accent-color); 
-  box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); 
+.btn-small {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8em;
+    font-weight: 500;
+    border-radius: 4px;
 }
 
-#clearSearchBtn {
-  padding: 0.8rem 1.2rem;
-  font-size: 0.9em;
-  display: none;
+.match-score-form input[type="number"]:disabled {
+    background-color: rgba(33, 38, 45, 0.7);
+    color: var(--text-color-secondary);
+    border-color: var(--tertiary-bg);
 }
 
-.empty-state {
-  display: none; 
-  padding: 2rem;
-  color: var(--text-color-secondary);
-  font-style: italic;
+.match-score-form button:disabled {
+    background-color: var(--draw-color);
+    color: var(--primary-bg);
+    cursor: not-allowed;
+    border-color: var(--draw-color);
 }
-
 
 /* ============================================
    8. Modal
@@ -571,7 +710,6 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
   thead th, tbody td { padding: 0.5rem 0.3rem; }
   tbody td img { width: 30px; height: 30px; margin-right: 5px; }
   .form-box { width: 0.7rem; height: 0.7rem; }
-  .match-form { width: 95%; padding: 1.5rem;}
   .form-group { flex-direction: column; gap: 0.8rem; }
   .search-container-wrapper, .match-day { width: 100%; max-width: 100%; border-radius: 0; box-sizing: border-box;  margin-left: 0;  margin-right: 0;}
   .search-container-wrapper {  margin-top: 1rem;  margin-bottom: 0;  padding: 1rem 1rem 0.5rem 1rem;}
@@ -616,4 +754,108 @@ button[type="submit"].ready { animation: glow 2s infinite ease-in-out; }
   0% { background-color: var(--tertiary-bg); }
   50% { background-color: #2a3038; }
   100% { background-color: var(--tertiary-bg); }
+}
+
+/* ============================================
+   11. Knockout Stage
+============================================ */
+.knockout-container {
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+    padding: 2rem 1rem;
+    gap: 2rem;
+    max-width: 100%;
+    -webkit-overflow-scrolling: touch;
+}
+
+.knockout-round {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 1.5rem;
+    min-width: 300px;
+}
+
+.knockout-round-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+.knockout-match-card {
+    background: var(--tertiary-bg);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    border-left: 5px solid var(--border-color);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+.knockout-team {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+    font-size: 1.1rem;
+}
+
+.knockout-team.winner {
+    font-weight: 700;
+    color: #fff;
+}
+
+.knockout-team.loser {
+    opacity: 0.5;
+    text-decoration: line-through;
+}
+
+.knockout-team img {
+    width: 35px;
+    height: 35px;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+
+.knockout-team .team-name {
+    flex-grow: 1;
+}
+
+.knockout-team .team-score {
+    font-weight: 700;
+    color: var(--accent-color);
+    font-size: 1.2rem;
+    min-width: 25px;
+    text-align: right;
+}
+
+.knockout-placeholder {
+    font-style: italic;
+    color: var(--text-color-secondary);
+}
+
+.knockout-admin-form {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-color);
+    align-items: center;
+    justify-content: center;
+}
+
+.knockout-admin-form input {
+    width: 40px;
+    padding: 0.3rem;
+    text-align: center;
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.knockout-admin-form button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
 }
