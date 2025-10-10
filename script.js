@@ -14,9 +14,7 @@ const appState = {
   currentLeague: 'ucl',
   currentLeagueMatches: [],
   sortedTeams: [],
-  knockoutMatches: {},
   unsubscribe: null,
-  unsubscribeKnockout: null,
   fixtures: {},
   config: {}
 };
@@ -31,7 +29,6 @@ const dom = {
   closeModalBtn: document.getElementById('closeModal'),
   leagueSection: document.getElementById('league-section'),
   matchesSection: document.getElementById('matches-section'),
-  knockoutSection: document.getElementById('knockout-section'),
   leagueLogo: document.getElementById('league-logo'),
   leagueTableBody: document.querySelector('#leagueTable tbody'),
   matchForm: document.getElementById('matchForm'),
@@ -40,8 +37,6 @@ const dom = {
   awayTeamSelect: document.getElementById('awayTeam'),
   matchDayTitle: document.getElementById('match-day-title'),
   matchDayContainer: document.getElementById('match-day-container'),
-  knockoutTitle: document.getElementById('knockout-title'),
-  knockoutMasterContainer: document.querySelector('.knockout-master-container'),
   daySelector: document.getElementById('daySelector'),
   teamSearchSelect: document.getElementById('teamSearchSelect'),
   clearSearchBtn: document.getElementById('clearSearchBtn'),
@@ -87,10 +82,6 @@ function initFirebase() {
         appState.isAdmin = false;
     }
     updateAuthUI();
-    // Re-render knockout bracket to show/hide admin forms
-    if (appState.sortedTeams.length > 0) {
-        renderKnockoutBracket();
-    }
   });
 }
 
@@ -128,7 +119,6 @@ function updateUIFromConfig(config) {
     dom.leagueLogo.alt = config.name ? `${config.name} Logo` : 'League Logo';
     dom.matchFormTitle.textContent = `${config.name || 'N/A'}`;
     dom.matchDayTitle.textContent = `${config.name || 'N/A'} Match Day`;
-    dom.knockoutTitle.textContent = `${config.name || 'N/A'} Knockout Stage`;
     populateTeamDropdowns(appState.currentLeague);
     populateTeamSearchDropdown(appState.currentLeague);
 }
@@ -393,7 +383,6 @@ function processMatchesAndUpdateUI(matches, league) {
     dom.leagueTableBody.innerHTML = '';
     dom.leagueTableBody.appendChild(fragment);
 
-    renderKnockoutBracket();
 }
 
 function filterMatches(allMatches) {
@@ -459,7 +448,6 @@ async function switchLeague(league) {
 
     appState.currentLeague = league;
     if (appState.unsubscribe) appState.unsubscribe();
-    if (appState.unsubscribeKnockout) appState.unsubscribeKnockout();
 
     const cachedConfig = localStorage.getItem(`leagueConfig_${league}`);
     if (cachedConfig) {
@@ -499,265 +487,11 @@ async function switchLeague(league) {
             processMatchesAndUpdateUI(matches, league);
         });
 
-        const knockoutMatchesRef = collection(appState.db, `${league}KnockoutMatches`);
-        appState.unsubscribeKnockout = onSnapshot(knockoutMatchesRef, snapshot => {
-            appState.knockoutMatches = snapshot.docs.reduce((acc, doc) => {
-                acc[doc.id] = doc.data();
-                return acc;
-            }, {});
-            renderKnockoutBracket();
-        });
-
     } catch (error) {
         console.error(`Error loading data for ${league}:`, error);
         showFeedback(`Could not load data for ${league}.`, false);
     }
 }
-
-
-/* ============================================
-   6. Knockout Stage Logic
-============================================ */
-
-const knockoutPairings = {
-    playoffs: [
-        { homeRank: 18, awayRank: 15 }, { homeRank: 17, awayRank: 16 },
-        { homeRank: 24, awayRank: 9 }, { homeRank: 23, awayRank: 10 },
-        { homeRank: 22, awayRank: 11 }, { homeRank: 21, awayRank: 12 },
-        { homeRank: 20, awayRank: 14 }, { homeRank: 19, awayRank: 13 },
-    ],
-    round16: [
-        { seededRank: 1, winnerFrom: 'playoffs-0' }, { seededRank: 2, winnerFrom: 'playoffs-1' },
-        { seededRank: 3, winnerFrom: 'playoffs-2' }, { seededRank: 4, winnerFrom: 'playoffs-3' },
-        { seededRank: 5, winnerFrom: 'playoffs-4' }, { seededRank: 6, winnerFrom: 'playoffs-5' },
-        { seededRank: 7, winnerFrom: 'playoffs-6' }, { seededRank: 8, winnerFrom: 'playoffs-7' },
-    ],
-    quarterfinals: [
-        { winnerFrom: 'round16-0' }, { winnerFrom: 'round16-1' }, 
-        { winnerFrom: 'round16-2' }, { winnerFrom: 'round16-3' },
-        { winnerFrom: 'round16-4' }, { winnerFrom: 'round16-5' },
-        { winnerFrom: 'round16-6' }, { winnerFrom: 'round16-7' },
-    ],
-    semifinals: [
-        { winnerFrom: 'quarterfinals-0' }, { winnerFrom: 'quarterfinals-1' },
-        { winnerFrom: 'quarterfinals-2' }, { winnerFrom: 'quarterfinals-3' },
-    ],
-    final: [
-        { winnerFrom: 'semifinals-0' }, { winnerFrom: 'semifinals-1' },
-    ]
-};
-
-function getTeamByRank(rank) {
-    return appState.sortedTeams[rank - 1] || null;
-}
-
-function getWinner(matchId) {
-    const match = appState.knockoutMatches[matchId];
-    if (!match) return null;
-    if (match.homeScore > match.awayScore) return match.homeTeam;
-    if (match.awayScore > match.homeScore) return match.awayTeam;
-    return null; // Draw or no result
-}
-
-function renderKnockoutBracket() {
-    // If the league phase is not complete, display a waiting message but keep the container structure.
-    if (appState.sortedTeams.length < 24) {
-        dom.knockoutMasterContainer.innerHTML = `
-            <h2 id="knockout-title">${appState.config[appState.currentLeague]?.name || 'N/A'} Knockout Stage</h2>
-            <p class="empty-state" style="display:block;">Awaiting completion of the league phase. At least 24 teams must be ranked.</p>
-            
-            <div id="knockout-playoffs-container" class="knockout-stage-container" style="display:none;">
-                <h3>Knockout Play-offs</h3>
-                <div class="knockout-stage-grid"></div>
-            </div>
-            <div id="knockout-round16-container" class="knockout-stage-container" style="display:none;">
-                <h3>Round of 16</h3>
-                <div class="knockout-stage-grid"></div>
-            </div>
-            <div id="knockout-quarterfinals-container" class="knockout-stage-container" style="display:none;">
-                <h3>Quarter-finals</h3>
-                <div class="knockout-stage-grid"></div>
-            </div>
-            <div id="knockout-semifinals-container" class="knockout-stage-container" style="display:none;">
-                <h3>Semi-finals</h3>
-                <div class="knockout-stage-grid"></div>
-            </div>
-            <div id="knockout-final-container" class="knockout-stage-container" style="display:none;">
-                <h3>Final</h3>
-                <div class="knockout-stage-grid"></div>
-            </div>
-        `;
-        return;
-    }
-
-    // Restore visibility of containers if they were hidden
-    const containers = dom.knockoutMasterContainer.querySelectorAll('.knockout-stage-container');
-    containers.forEach(c => c.style.display = 'block');
-    const waitingMessage = dom.knockoutMasterContainer.querySelector('.empty-state');
-    if (waitingMessage) {
-      waitingMessage.style.display = 'none';
-    }
-
-
-    const winners = {
-      playoffs: {}, round16: {}, quarterfinals: {}, semifinals: {}, final: {}
-    };
-
-    Object.keys(appState.knockoutMatches).forEach(id => {
-        const match = appState.knockoutMatches[id];
-        const winner = getWinner(id);
-        if(winner) {
-            winners[match.stage][id] = winner;
-        }
-    });
-    
-    const renderMatchCard = (matchId, stage, homeTeam, awayTeam) => {
-        const matchData = appState.knockoutMatches[matchId];
-
-        const createTeamHtml = (team, isLoser) => {
-            if (!team) {
-                return '<div class="knockout-team"><span class="knockout-placeholder">TBD</span></div>';
-            }
-            const logoSrc = `images/logos/${team.toLowerCase().replace(/ /g, '-')}.webp`;
-            const loserClass = isLoser ? 'loser' : '';
-            return `
-                <div class="knockout-team ${loserClass}">
-                    <div class="team-logo-container">
-                       <img src="${logoSrc}" alt="${team}" class="team-logo">
-                    </div>
-                    <span class="knockout-team-name">${team}</span>
-                </div>`;
-        };
-
-        const homeIsLoser = matchData && matchData.homeScore < matchData.awayScore;
-        const awayIsLoser = matchData && matchData.awayScore < matchData.homeScore;
-
-        const homeTeamHtml = createTeamHtml(homeTeam, homeIsLoser);
-        const awayTeamHtml = createTeamHtml(awayTeam, awayIsLoser);
-        
-        let resultOrFormHtml = '';
-        if (matchData) {
-            resultOrFormHtml = `
-                <div class="knockout-result">
-                    <p>${matchData.homeScore} - ${matchData.awayScore}</p>
-                </div>`;
-        } else if (appState.isAdmin && homeTeam && awayTeam) {
-            resultOrFormHtml = `
-                <div class="knockout-form">
-                    <form data-match-id="${matchId}" data-stage="${stage}" data-home="${homeTeam}" data-away="${awayTeam}">
-                        <input type="number" min="0" required placeholder="H">
-                        <span>-</span>
-                        <input type="number" min="0" required placeholder="A">
-                        <button type="submit" class="btn">Save</button>
-                    </form>
-                </div>`;
-        }
-        
-        return `
-            <div class="knockout-match-card" data-match-id="${matchId}">
-                <div class="knockout-teams">
-                    ${homeTeamHtml}
-                    <span class="knockout-vs">VS</span>
-                    ${awayTeamHtml}
-                </div>
-                ${resultOrFormHtml}
-            </div>`;
-    };
-
-    // Play-offs
-    const playoffsGrid = dom.knockoutMasterContainer.querySelector('#knockout-playoffs-container .knockout-stage-grid');
-    playoffsGrid.innerHTML = knockoutPairings.playoffs.map((p, i) => {
-        const matchId = `playoffs-${i}`;
-        const homeTeam = getTeamByRank(p.homeRank);
-        const awayTeam = getTeamByRank(p.awayRank);
-        return renderMatchCard(matchId, 'playoffs', homeTeam, awayTeam);
-    }).join('');
-
-    // Round of 16
-    const round16Grid = dom.knockoutMasterContainer.querySelector('#knockout-round16-container .knockout-stage-grid');
-    round16Grid.innerHTML = knockoutPairings.round16.map((p, i) => {
-        const matchId = `round16-${i}`;
-        const homeTeam = getTeamByRank(p.seededRank);
-        const awayTeam = winners.playoffs[p.winnerFrom];
-        return renderMatchCard(matchId, 'round16', homeTeam, awayTeam);
-    }).join('');
-
-    // Quarter-finals
-    const quarterfinalsGrid = dom.knockoutMasterContainer.querySelector('#knockout-quarterfinals-container .knockout-stage-grid');
-    const qfPairings = [];
-    for(let i = 0; i < knockoutPairings.quarterfinals.length; i += 2) {
-      qfPairings.push({
-        homeWinnerFrom: knockoutPairings.quarterfinals[i].winnerFrom,
-        awayWinnerFrom: knockoutPairings.quarterfinals[i+1].winnerFrom
-      });
-    }
-    quarterfinalsGrid.innerHTML = qfPairings.map((p, i) => {
-        const matchId = `quarterfinals-${i}`;
-        const homeTeam = winners.round16[p.homeWinnerFrom];
-        const awayTeam = winners.round16[p.awayWinnerFrom];
-        return renderMatchCard(matchId, 'quarterfinals', homeTeam, awayTeam);
-    }).join('');
-
-    // Semi-finals
-    const semifinalsGrid = dom.knockoutMasterContainer.querySelector('#knockout-semifinals-container .knockout-stage-grid');
-    const sfPairings = [];
-    for(let i = 0; i < knockoutPairings.semifinals.length; i += 2) {
-      sfPairings.push({
-        homeWinnerFrom: knockoutPairings.semifinals[i].winnerFrom,
-        awayWinnerFrom: knockoutPairings.semifinals[i+1].winnerFrom
-      });
-    }
-    semifinalsGrid.innerHTML = sfPairings.map((p, i) => {
-        const matchId = `semifinals-${i}`;
-        const homeTeam = winners.quarterfinals[p.homeWinnerFrom];
-        const awayTeam = winners.quarterfinals[p.awayWinnerFrom];
-        return renderMatchCard(matchId, 'semifinals', homeTeam, awayTeam);
-    }).join('');
-
-    // Final
-    const finalGrid = dom.knockoutMasterContainer.querySelector('#knockout-final-container .knockout-stage-grid');
-    const finalPairing = knockoutPairings.final[0];
-    const homeTeamFinal = winners.semifinals[finalPairing.homeWinnerFrom];
-    const awayTeamFinal = winners.semifinals[finalPairing.awayWinnerFrom];
-    finalGrid.innerHTML = renderMatchCard('final-0', 'final', homeTeamFinal, awayTeamFinal);
-}
-
-async function handleKnockoutMatchSubmit(e) {
-    e.preventDefault();
-    const form = e.target;
-    const { matchId, stage, home, away } = form.dataset;
-    const homeScore = parseInt(form.elements[0].value);
-    const awayScore = parseInt(form.elements[1].value);
-
-    if (isNaN(homeScore) || isNaN(awayScore)) {
-        showFeedback('Please enter valid scores.', false);
-        return;
-    }
-    
-    const submitButton = form.querySelector('button[type="submit"]');
-    submitButton.textContent = 'Saving...';
-    submitButton.disabled = true;
-
-    const matchData = {
-        stage,
-        homeTeam: home,
-        awayTeam: away,
-        homeScore,
-        awayScore
-    };
-
-    try {
-        const docRef = doc(appState.db, `${appState.currentLeague}KnockoutMatches`, matchId);
-        await setDoc(docRef, matchData);
-        // The onSnapshot listener will automatically re-render the bracket
-    } catch (error) {
-        console.error("Error saving knockout match:", error);
-        showFeedback(`Error: ${error.message}`, false);
-        submitButton.textContent = 'Save';
-        submitButton.disabled = false;
-    }
-}
-
 
 /* ============================================
    7. Authentication Functions
@@ -863,13 +597,6 @@ function setupEventListeners() {
             document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
             const panelId = target.getAttribute('aria-controls');
             document.getElementById(panelId.replace('panel-', '') + '-section').classList.add('active');
-        }
-    });
-
-    dom.matchForm.addEventListener('submit', handleMatchSubmission);
-    dom.knockoutSection.addEventListener('submit', (e) => {
-        if (e.target.closest('.knockout-form form')) {
-            handleKnockoutMatchSubmit(e);
         }
     });
 
