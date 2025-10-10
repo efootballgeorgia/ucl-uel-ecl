@@ -522,6 +522,7 @@ tbody tr:hover {
     border: 1px solid var(--border-color);
     border-bottom: none;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box; 
 }
 
 .search-container-wrapper h2 {
@@ -555,7 +556,7 @@ tbody tr:hover {
 
 .match-day {
     width: 95%;
-    max-width: 1200px;
+    max-width: 1150px;
     margin: 0 auto 2rem;
     padding: 2rem;
     background-color: var(--secondary-bg);
@@ -569,7 +570,7 @@ tbody tr:hover {
 
 #match-day-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: 1fr;
     gap: 1.5rem;
 }
 
@@ -711,8 +712,6 @@ tbody tr:hover {
   tbody td img { width: 30px; height: 30px; margin-right: 5px; }
   .form-box { width: 0.7rem; height: 0.7rem; }
   .form-group { flex-direction: column; gap: 0.8rem; }
-  .search-container-wrapper, .match-day { width: 100%; max-width: 100%; border-radius: 0; box-sizing: border-box;  margin-left: 0;  margin-right: 0;}
-  .search-container-wrapper {  margin-top: 1rem;  margin-bottom: 0;  padding: 1rem 1rem 0.5rem 1rem;}
   .match-day { margin-top: 0;  padding: 1rem;  border-top: 1px solid var(--border-color);}
   .search-container { flex-direction: column;}
   .team-search-select {  width: 100%;  min-width: unset;}
@@ -720,6 +719,23 @@ tbody tr:hover {
   #match-day-container {  grid-template-columns: 1fr;}
   .match-card {  font-size: 0.9em;}
   .match-result {  font-size: 1em;}
+    .search-container-wrapper, .match-day, #knockout-content-container { 
+    width: 100%; 
+    max-width: 100%; 
+    border-radius: 0; 
+    box-sizing: border-box;  
+    margin-left: 0;  
+    margin-right: 0;
+  }
+}
+
+@media (min-width: 600px) {
+    #match-day-container {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+        .knockout-matches-grid {
+        grid-template-columns: repeat(2, 1fr); /* CHANGE: 2 columns above 600px */
+    }
 }
 
 /* ============================================
@@ -759,30 +775,43 @@ tbody tr:hover {
 /* ============================================
    11. Knockout Stage
 ============================================ */
-.knockout-container {
+.knockout-nav-wrapper {
+    padding: 2rem 1rem 1rem 1rem;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--secondary-bg);
+}
+
+.knockout-nav {
     display: flex;
     justify-content: center;
-    overflow-x: auto;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+#knockout-content-container {
     padding: 2rem 1rem;
-    gap: 2rem;
-    max-width: 100%;
-    -webkit-overflow-scrolling: touch;
+    max-width: 500px;
+    margin: 0 auto;
+    box-sizing: border-box; 
 }
 
 .knockout-round {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    gap: 1.5rem;
-    min-width: 300px;
+    width: 100%;
 }
 
 .knockout-round-title {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     font-weight: 700;
     color: var(--accent-color);
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
     text-transform: uppercase;
+    text-align: center;
+}
+
+.knockout-matches-grid {
+    display: grid;
+    grid-template-columns: 1fr; 
+    gap: 1.5rem;
 }
 
 .knockout-match-card {
@@ -791,6 +820,12 @@ tbody tr:hover {
     padding: 1rem;
     border-left: 5px solid var(--border-color);
     box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.knockout-match-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.5);
 }
 
 .knockout-team {
