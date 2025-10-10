@@ -28,10 +28,11 @@
       </nav>
       <img src="images/logos/champions-league-logo.webp" alt="Champions League Logo" id="league-logo" class="league-logo active">
       <nav class="main-nav" role="tablist" aria-label="Main Navigation">
-        <button class="nav-btn btn active" id="tab-league" role="tab" aria-selected="true" aria-controls="panel-league" data-page="league">Table</button>
-        <button class="nav-btn btn" id="tab-matches" role="tab" aria-selected="false" aria-controls="panel-matches" data-page="matches">Matches</button>
-      </nav>
-      <div class="auth-status">
+        <button class="nav-btn btn active" id="tab-league" role="tab" aria-selected="true" aria-controls="panel-league" data-view="league">Table</button>
+        <button class="nav-btn btn" id="tab-matches" role="tab" aria-selected="false" aria-controls="panel-matches" data-view="matches">Matches</button>
+        <button class="nav-btn btn" id="tab-knockout" role="tab" aria-selected="false" aria-controls="panel-knockout" data-view="knockout">Knockout</button>
+      </div>
+        <div class="auth-status">
         <span id="user-status">Not logged in</span>
         <button id="auth-btn" class="btn">Login / Signup</button>
         <button id="logout-btn" class="btn" style="display:none;">Logout</button>
@@ -95,6 +96,11 @@
         </div>
         <div class="match-day">
             <div id="match-day-container"></div>
+        </div>
+    </section>
+    
+    <section id="knockout-section" class="page-section" role="tabpanel" aria-labelledby="tab-knockout">
+        <div class="knockout-container">
         </div>
     </section>
 
