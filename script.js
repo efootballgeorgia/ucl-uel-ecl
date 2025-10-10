@@ -518,8 +518,10 @@ async function switchLeague(league) {
 ============================================ */
 
 function generateKnockoutStage(sortedTeams, knockoutMatches) {
+    const knockoutSection = document.getElementById('knockout-section');
+
     if (sortedTeams.length < 24) {
-        dom.knockoutContainer.innerHTML = '<p class="empty-state">Not enough teams have played to generate the knockout bracket.</p>';
+        knockoutSection.innerHTML = '<p class="empty-state" style="display:block; padding: 2rem;">Not enough teams have played to generate the knockout bracket.</p>';
         return;
     }
 
@@ -533,125 +535,151 @@ function generateKnockoutStage(sortedTeams, knockoutMatches) {
     const teams9to24 = qualifiedTeams.slice(8, 24);
 
     // --- Knockout Play-off Round (Formerly R32) ---
-    const kopo_winners = [];
     const kopo_matches = [];
     for (let i = 0; i < 8; i++) {
         const homeTeam = teams9to24[i];      // Teams 9-16
         const awayTeam = teams9to24[15 - i]; // Teams 24-17
         const matchId = `r32-${i}`;
-        const matchData = knockoutData[matchId];
-        kopo_matches.push({ id: matchId, homeTeam, awayTeam, data: matchData });
-        
-        let winner = null;
-        if (matchData) {
-            winner = matchData.homeScore > matchData.awayScore ? matchData.homeTeam : matchData.awayTeam;
-        }
-        kopo_winners.push(winner);
+        kopo_matches.push({ id: matchId, homeTeam, awayTeam, data: knockoutData[matchId] });
     }
 
     // --- Round of 16 ---
-    const r16_winners = [];
     const r16_matches = [];
     for (let i = 0; i < 8; i++) {
         const homeTeam = top8[i];
-        const awayTeam = kopo_winners[i]; // Can be null if KOPO match not played
-        const matchId = `r16-${i}`;
-        const matchData = knockoutData[matchId];
-        r16_matches.push({ id: matchId, homeTeam, awayTeam, data: matchData, dependsOn: `Winner Play-off` });
-
-        let winner = null;
-        if (matchData && awayTeam) {
-            winner = matchData.homeScore > matchData.awayScore ? matchData.homeTeam : matchData.awayTeam;
+        const kopoWinnerMatch = kopo_matches[i].data;
+        let awayTeam = null;
+        if (kopoWinnerMatch) {
+            awayTeam = kopoWinnerMatch.homeScore > kopoWinnerMatch.awayScore ? kopoWinnerMatch.homeTeam : kopoWinnerMatch.awayTeam;
         }
-        r16_winners.push(winner);
+        const matchId = `r16-${i}`;
+        r16_matches.push({ id: matchId, homeTeam, awayTeam, data: knockoutData[matchId], dependsOn: `Winner Play-off` });
     }
 
     // --- Quarter Finals ---
-    const qf_winners = [];
     const qf_matches = [];
     for (let i = 0; i < 4; i++) {
-        const homeTeam = r16_winners[i*2];
-        const awayTeam = r16_winners[i*2+1];
+        const match1Data = r16_matches[i * 2].data;
+        const match2Data = r16_matches[i * 2 + 1].data;
+        let homeTeam = null;
+        let awayTeam = null;
+        if (match1Data && r16_matches[i * 2].awayTeam) { // Check if opponent was determined
+            homeTeam = match1Data.homeScore > match1Data.awayScore ? match1Data.homeTeam : match1Data.awayTeam;
+        }
+        if (match2Data && r16_matches[i * 2 + 1].awayTeam) {
+            awayTeam = match2Data.homeScore > match2Data.awayScore ? match2Data.homeTeam : match2Data.awayTeam;
+        }
         const matchId = `qf-${i}`;
-        const matchData = knockoutData[matchId];
-        qf_matches.push({ id: matchId, homeTeam, awayTeam, data: matchData, dependsOn: `Winner R16` });
-
-        let winner = null;
-        if (matchData && homeTeam && awayTeam) {
-             winner = matchData.homeScore > matchData.awayScore ? matchData.homeTeam : matchData.awayTeam;
-        }
-        qf_winners.push(winner);
+        qf_matches.push({ id: matchId, homeTeam, awayTeam, data: knockoutData[matchId], dependsOn: `Winner R16` });
     }
-
+    
     // --- Semi Finals ---
-    const sf_winners = [];
     const sf_matches = [];
-     for (let i = 0; i < 2; i++) {
-        const homeTeam = qf_winners[i*2];
-        const awayTeam = qf_winners[i*2+1];
-        const matchId = `sf-${i}`;
-        const matchData = knockoutData[matchId];
-        sf_matches.push({ id: matchId, homeTeam, awayTeam, data: matchData, dependsOn: `Winner QF` });
-        
-        let winner = null;
-        if (matchData && homeTeam && awayTeam) {
-             winner = matchData.homeScore > matchData.awayScore ? matchData.homeTeam : matchData.awayTeam;
+    for (let i = 0; i < 2; i++) {
+        const match1Data = qf_matches[i * 2].data;
+        const match2Data = qf_matches[i * 2 + 1].data;
+        let homeTeam = null;
+        let awayTeam = null;
+        if (match1Data && qf_matches[i * 2].homeTeam && qf_matches[i * 2].awayTeam) {
+            homeTeam = match1Data.homeScore > match1Data.awayScore ? match1Data.homeTeam : match1Data.awayTeam;
         }
-        sf_winners.push(winner);
+        if (match2Data && qf_matches[i * 2 + 1].homeTeam && qf_matches[i * 2 + 1].awayTeam) {
+            awayTeam = match2Data.homeScore > match2Data.awayScore ? match2Data.homeTeam : match2Data.awayTeam;
+        }
+        const matchId = `sf-${i}`;
+        sf_matches.push({ id: matchId, homeTeam, awayTeam, data: knockoutData[matchId], dependsOn: `Winner QF` });
     }
     
     // --- Final ---
     const final_match = [];
-    const homeTeam = sf_winners[0];
-    const awayTeam = sf_winners[1];
-    const matchId = `final-0`;
-    const matchData = knockoutData[matchId];
-    final_match.push({ id: matchId, homeTeam, awayTeam, data: matchData, dependsOn: `Winner SF` });
-        
-    // --- Split matches for symmetrical bracket rendering ---
-    const kopo_left = kopo_matches.slice(0, 4);
-    const kopo_right = kopo_matches.slice(4, 8);
-    const r16_left = r16_matches.slice(0, 4);
-    const r16_right = r16_matches.slice(4, 8);
-    const qf_left = qf_matches.slice(0, 2);
-    const qf_right = qf_matches.slice(2, 4);
-    const sf_left = sf_matches.slice(0, 1);
-    const sf_right = sf_matches.slice(1, 2);
+    const sfMatch1Data = sf_matches[0].data;
+    const sfMatch2Data = sf_matches[1].data;
+    let finalHomeTeam = null;
+    let finalAwayTeam = null;
+    if (sfMatch1Data && sf_matches[0].homeTeam && sf_matches[0].awayTeam) {
+        finalHomeTeam = sfMatch1Data.homeScore > sfMatch1Data.awayScore ? sfMatch1Data.homeTeam : sfMatch1Data.awayTeam;
+    }
+    if (sfMatch2Data && sf_matches[1].homeTeam && sf_matches[1].awayTeam) {
+        finalAwayTeam = sfMatch2Data.homeScore > sfMatch2Data.awayScore ? sfMatch2Data.homeTeam : sfMatch2Data.awayTeam;
+    }
+    final_match.push({ id: `final-0`, homeTeam: finalHomeTeam, awayTeam: finalAwayTeam, data: knockoutData[`final-0`], dependsOn: `Winner SF` });
 
-    // --- Render Bracket ---
-    dom.knockoutContainer.innerHTML = `
-        <div class="bracket-side bracket-left">
-            ${renderKnockoutRound(kopo_left, 'Knockout Play-off')}
-            ${renderKnockoutRound(r16_left, 'Round of 16')}
-            ${renderKnockoutRound(qf_left, 'Quarter Finals')}
-            ${renderKnockoutRound(sf_left, 'Semi Finals')}
+    // --- Group all rounds for navigation ---
+    const allRounds = [
+        { title: 'Knockout Play-off', matches: kopo_matches },
+        { title: 'Round of 16', matches: r16_matches },
+        { title: 'Quarter Finals', matches: qf_matches },
+        { title: 'Semi Finals', matches: sf_matches },
+        { title: 'Final', matches: final_match }
+    ];
+
+    // --- Render UI ---
+    knockoutSection.innerHTML = `
+        <div class="knockout-nav-wrapper">
+            <nav class="knockout-nav" role="tablist" aria-label="Knockout Rounds Navigation"></nav>
         </div>
-        <div class="bracket-center">
-            <img src="images/logos/ucl-trophy.webp" alt="Trophy" class="trophy-image"/>
-            ${renderKnockoutRound(final_match, 'Final')}
-        </div>
-        <div class="bracket-side bracket-right">
-            ${renderKnockoutRound(kopo_right, 'Knockout Play-off')}
-            ${renderKnockoutRound(r16_right, 'Round of 16')}
-            ${renderKnockoutRound(qf_right, 'Quarter Finals')}
-            ${renderKnockoutRound(sf_right, 'Semi Finals')}
-        </div>
+        <div id="knockout-content-container"></div>
     `;
     
-    // Add event listeners after rendering
-    document.querySelectorAll('.knockout-admin-form').forEach(form => {
-        form.addEventListener('submit', handleKnockoutMatchSubmission);
+    const knockoutNav = knockoutSection.querySelector('.knockout-nav');
+    const knockoutContent = knockoutSection.querySelector('#knockout-content-container');
+    
+    // --- Populate Navigation Bar ---
+    allRounds.forEach((round, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'btn knockout-round-btn';
+        btn.textContent = round.title;
+        btn.dataset.roundIndex = index;
+        if (index === 0) {
+            btn.classList.add('active');
+        }
+        knockoutNav.appendChild(btn);
     });
+    
+    // --- Function to Render a Specific Round ---
+    const renderRound = (roundIndex) => {
+        const round = allRounds[roundIndex];
+        if (!round || round.matches.length === 0) {
+            knockoutContent.innerHTML = '<p class="empty-state">No matches for this round yet.</p>';
+            return;
+        }
+
+        const matchesHTML = round.matches.map(match => renderKnockoutCard(match)).join('');
+        
+        knockoutContent.innerHTML = `
+            <div class="knockout-round">
+                <h2 class="knockout-round-title">${round.title}</h2>
+                <div class="knockout-matches-grid">
+                    ${matchesHTML}
+                </div>
+            </div>
+        `;
+        
+        // Re-attach event listeners for the newly rendered admin forms
+        knockoutContent.querySelectorAll('.knockout-admin-form').forEach(form => {
+            form.addEventListener('submit', handleKnockoutMatchSubmission);
+        });
+    };
+
+    // --- Navigation Event Listener ---
+    knockoutNav.addEventListener('click', (e) => {
+        const target = e.target.closest('.knockout-round-btn');
+        if (!target) return;
+
+        const currentActive = knockoutNav.querySelector('.btn.active');
+        if (currentActive) {
+            currentActive.classList.remove('active');
+        }
+        target.classList.add('active');
+        
+        const roundIndex = parseInt(target.dataset.roundIndex);
+        renderRound(roundIndex);
+    });
+
+    // --- Initial Render of the first round ---
+    renderRound(0);
 }
 
-function renderKnockoutRound(matches, title) {
-    return `
-        <div class="knockout-round">
-            <h2 class="knockout-round-title">${title}</h2>
-            ${matches.map(match => renderKnockoutCard(match)).join('')}
-        </div>
-    `;
-}
 
 function renderKnockoutCard(match) {
     const { id, homeTeam, awayTeam, data, dependsOn } = match;
