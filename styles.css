@@ -828,6 +828,7 @@ tbody tr.row-updated {
 /* ============================================
    14. Skeleton Loader for Match Cards
 ============================================ */
+
 .match-card.skeleton {
   pointer-events: none;
   border-left-color: var(--tertiary-bg);
