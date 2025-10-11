@@ -553,7 +553,7 @@ function generateKnockoutStage(sortedTeams, knockoutMatches) {
             awayTeam = kopoWinnerMatch.homeScore > kopoWinnerMatch.awayScore ? kopoWinnerMatch.homeTeam : kopoWinnerMatch.awayTeam;
         }
         const matchId = `r16-${i}`;
-        r16_matches.push({ id: matchId, homeTeam, awayTeam, data: knockoutData[matchId], dependsOn: `Winner Play-off` });
+        r16_matches.push({ id: matchId, homeTeam, awayTeam, data: knockoutData[matchId], dependsOn: `Winner of Play-off` });
     }
 
     // --- Quarter Finals ---
@@ -570,7 +570,7 @@ function generateKnockoutStage(sortedTeams, knockoutMatches) {
             awayTeam = match2Data.homeScore > match2Data.awayScore ? match2Data.homeTeam : match2Data.awayTeam;
         }
         const matchId = `qf-${i}`;
-        qf_matches.push({ id: matchId, homeTeam, awayTeam, data: knockoutData[matchId], dependsOn: `Winner R16` });
+        qf_matches.push({ id: matchId, homeTeam, awayTeam, data: knockoutData[matchId], dependsOn: `Winner of R16` });
     }
     
     // --- Semi Finals ---
@@ -587,7 +587,7 @@ function generateKnockoutStage(sortedTeams, knockoutMatches) {
             awayTeam = match2Data.homeScore > match2Data.awayScore ? match2Data.homeTeam : match2Data.awayTeam;
         }
         const matchId = `sf-${i}`;
-        sf_matches.push({ id: matchId, homeTeam, awayTeam, data: knockoutData[matchId], dependsOn: `Winner QF` });
+        sf_matches.push({ id: matchId, homeTeam, awayTeam, data: knockoutData[matchId], dependsOn: `Winner of QuarterFinals` });
     }
     
     // --- Final ---
@@ -602,7 +602,7 @@ function generateKnockoutStage(sortedTeams, knockoutMatches) {
     if (sfMatch2Data && sf_matches[1].homeTeam && sf_matches[1].awayTeam) {
         finalAwayTeam = sfMatch2Data.homeScore > sfMatch2Data.awayScore ? sfMatch2Data.homeTeam : sfMatch2Data.awayTeam;
     }
-    final_match.push({ id: `final-0`, homeTeam: finalHomeTeam, awayTeam: finalAwayTeam, data: knockoutData[`final-0`], dependsOn: `Winner SF` });
+    final_match.push({ id: `final-0`, homeTeam: finalHomeTeam, awayTeam: finalAwayTeam, data: knockoutData[`final-0`], dependsOn: `Winner of SemiFinals` });
 
     // --- Group all rounds for navigation ---
     const allRounds = [
@@ -941,3 +941,4 @@ window.onload = () => {
     });
     switchLeague(initialLeague);
 };
+
