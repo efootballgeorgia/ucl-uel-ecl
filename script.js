@@ -13,10 +13,10 @@ const appState = {
   isAdmin: false,
   currentLeague: 'ucl',
   currentLeagueMatches: [],
-  currentLeagueKnockoutMatches: [], // New state for knockout matches
+  currentLeagueKnockoutMatches: [], 
   sortedTeams: [],
   unsubscribe: null,
-  unsubscribeKnockout: null, // New unsubscriber for knockout listener
+  unsubscribeKnockout: null, 
   fixtures: {},
   config: {}
 };
@@ -24,6 +24,7 @@ const appState = {
 /* ============================================
    2. DOM Elements
 ============================================ */
+
 const dom = {
   loading: document.getElementById('loading'),
   modal: document.getElementById('myModal'),
@@ -31,8 +32,8 @@ const dom = {
   closeModalBtn: document.getElementById('closeModal'),
   leagueSection: document.getElementById('league-section'),
   matchesSection: document.getElementById('matches-section'),
-  knockoutSection: document.getElementById('knockout-section'), // New knockout section
-  knockoutContainer: document.querySelector('.knockout-container'), // New knockout container
+  knockoutSection: document.getElementById('knockout-section'),
+  knockoutContainer: document.querySelector('.knockout-container'),
   leagueLogo: document.getElementById('league-logo'),
   leagueTableBody: document.querySelector('#leagueTable tbody'),
   matchForm: document.getElementById('matchForm'),
@@ -86,7 +87,6 @@ function initFirebase() {
         appState.isAdmin = false;
     }
     updateAuthUI();
-    // Re-render UI elements that depend on admin status
     processMatchesAndUpdateUI(appState.currentLeagueMatches, appState.currentLeague);
   });
 }
@@ -94,6 +94,7 @@ function initFirebase() {
 /* ============================================
    4. Utility & Helper Functions
 ============================================ */
+
 function showFeedback(message, isSuccess) {
     dom.feedbackMessage.textContent = message;
     dom.feedbackMessage.className = `feedback-message ${isSuccess ? 'success' : 'error'} show`;
@@ -160,6 +161,7 @@ function updateAuthUI() {
 /* ============================================
    5. Core Application Logic
 ============================================ */
+
 function renderTable(league) {
     const config = appState.config[league];
     if (!config || !config.teams) return;
@@ -389,7 +391,6 @@ function processMatchesAndUpdateUI(matches, league) {
     dom.leagueTableBody.innerHTML = '';
     dom.leagueTableBody.appendChild(fragment);
 
-    // After processing league table, generate the knockout stage
     generateKnockoutStage(appState.sortedTeams, appState.currentLeagueKnockoutMatches);
 }
 
@@ -456,7 +457,7 @@ async function switchLeague(league) {
 
     appState.currentLeague = league;
     if (appState.unsubscribe) appState.unsubscribe();
-    if (appState.unsubscribeKnockout) appState.unsubscribeKnockout(); // Unsubscribe from previous knockout listener
+    if (appState.unsubscribeKnockout) appState.unsubscribeKnockout();
 
     const cachedConfig = localStorage.getItem(`leagueConfig_${league}`);
     if (cachedConfig) {
@@ -489,7 +490,6 @@ async function switchLeague(league) {
         updateUIFromConfig(appState.config[league]);
         generateMatchDay(league);
 
-        // Listener for League Matches
         const leagueMatchesRef = collection(appState.db, `${league}Matches`);
         const qLeague = query(leagueMatchesRef, orderBy('timestamp', 'asc'));
         appState.unsubscribe = onSnapshot(qLeague, snapshot => {
@@ -497,12 +497,10 @@ async function switchLeague(league) {
             processMatchesAndUpdateUI(matches, league);
         });
         
-        // New Listener for Knockout Matches
         const knockoutMatchesRef = collection(appState.db, `${league}KnockoutMatches`);
         appState.unsubscribeKnockout = onSnapshot(knockoutMatchesRef, snapshot => {
             const knockoutMatches = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             appState.currentLeagueKnockoutMatches = knockoutMatches;
-            // Re-render the knockout stage with new data
             generateKnockoutStage(appState.sortedTeams, appState.currentLeagueKnockoutMatches);
         });
 
@@ -534,16 +532,14 @@ function generateKnockoutStage(sortedTeams, knockoutMatches) {
     const top8 = qualifiedTeams.slice(0, 8);
     const teams9to24 = qualifiedTeams.slice(8, 24);
 
-    // --- Knockout Play-off Round (Formerly R32) ---
     const kopo_matches = [];
     for (let i = 0; i < 8; i++) {
-        const homeTeam = teams9to24[i];      // Teams 9-16
-        const awayTeam = teams9to24[15 - i]; // Teams 24-17
+        const homeTeam = teams9to24[i];    
+        const awayTeam = teams9to24[15 - i]; 
         const matchId = `r32-${i}`;
         kopo_matches.push({ id: matchId, homeTeam, awayTeam, data: knockoutData[matchId] });
     }
 
-    // --- Round of 16 ---
     const r16_matches = [];
     for (let i = 0; i < 8; i++) {
         const homeTeam = top8[i];
@@ -553,27 +549,25 @@ function generateKnockoutStage(sortedTeams, knockoutMatches) {
             awayTeam = kopoWinnerMatch.homeScore > kopoWinnerMatch.awayScore ? kopoWinnerMatch.homeTeam : kopoWinnerMatch.awayTeam;
         }
         const matchId = `r16-${i}`;
-        r16_matches.push({ id: matchId, homeTeam, awayTeam, data: knockoutData[matchId], dependsOn: `Winner of Play-off` });
+        r16_matches.push({ id: matchId, homeTeam, awayTeam, data: knockoutData[matchId], dependsOn: `Winner Play-off` });
     }
 
-    // --- Quarter Finals ---
     const qf_matches = [];
     for (let i = 0; i < 4; i++) {
         const match1Data = r16_matches[i * 2].data;
         const match2Data = r16_matches[i * 2 + 1].data;
         let homeTeam = null;
         let awayTeam = null;
-        if (match1Data && r16_matches[i * 2].awayTeam) { // Check if opponent was determined
+        if (match1Data && r16_matches[i * 2].awayTeam) { 
             homeTeam = match1Data.homeScore > match1Data.awayScore ? match1Data.homeTeam : match1Data.awayTeam;
         }
         if (match2Data && r16_matches[i * 2 + 1].awayTeam) {
             awayTeam = match2Data.homeScore > match2Data.awayScore ? match2Data.homeTeam : match2Data.awayTeam;
         }
         const matchId = `qf-${i}`;
-        qf_matches.push({ id: matchId, homeTeam, awayTeam, data: knockoutData[matchId], dependsOn: `Winner of R16` });
+        qf_matches.push({ id: matchId, homeTeam, awayTeam, data: knockoutData[matchId], dependsOn: `Winner R16` });
     }
     
-    // --- Semi Finals ---
     const sf_matches = [];
     for (let i = 0; i < 2; i++) {
         const match1Data = qf_matches[i * 2].data;
@@ -587,10 +581,9 @@ function generateKnockoutStage(sortedTeams, knockoutMatches) {
             awayTeam = match2Data.homeScore > match2Data.awayScore ? match2Data.homeTeam : match2Data.awayTeam;
         }
         const matchId = `sf-${i}`;
-        sf_matches.push({ id: matchId, homeTeam, awayTeam, data: knockoutData[matchId], dependsOn: `Winner of QuarterFinals` });
+        sf_matches.push({ id: matchId, homeTeam, awayTeam, data: knockoutData[matchId], dependsOn: `Winner QF` });
     }
     
-    // --- Final ---
     const final_match = [];
     const sfMatch1Data = sf_matches[0].data;
     const sfMatch2Data = sf_matches[1].data;
@@ -602,9 +595,8 @@ function generateKnockoutStage(sortedTeams, knockoutMatches) {
     if (sfMatch2Data && sf_matches[1].homeTeam && sf_matches[1].awayTeam) {
         finalAwayTeam = sfMatch2Data.homeScore > sfMatch2Data.awayScore ? sfMatch2Data.homeTeam : sfMatch2Data.awayTeam;
     }
-    final_match.push({ id: `final-0`, homeTeam: finalHomeTeam, awayTeam: finalAwayTeam, data: knockoutData[`final-0`], dependsOn: `Winner of SemiFinals` });
+    final_match.push({ id: `final-0`, homeTeam: finalHomeTeam, awayTeam: finalAwayTeam, data: knockoutData[`final-0`], dependsOn: `Winner SF` });
 
-    // --- Group all rounds for navigation ---
     const allRounds = [
         { title: 'Knockout Play-off', matches: kopo_matches },
         { title: 'Round of 16', matches: r16_matches },
@@ -613,7 +605,6 @@ function generateKnockoutStage(sortedTeams, knockoutMatches) {
         { title: 'Final', matches: final_match }
     ];
 
-    // --- Render UI ---
     knockoutSection.innerHTML = `
         <div class="knockout-nav-wrapper">
             <nav class="knockout-nav" role="tablist" aria-label="Knockout Rounds Navigation"></nav>
@@ -624,7 +615,6 @@ function generateKnockoutStage(sortedTeams, knockoutMatches) {
     const knockoutNav = knockoutSection.querySelector('.knockout-nav');
     const knockoutContent = knockoutSection.querySelector('#knockout-content-container');
     
-    // --- Populate Navigation Bar ---
     allRounds.forEach((round, index) => {
         const btn = document.createElement('button');
         btn.className = 'btn knockout-round-btn';
@@ -636,7 +626,6 @@ function generateKnockoutStage(sortedTeams, knockoutMatches) {
         knockoutNav.appendChild(btn);
     });
     
-    // --- Function to Render a Specific Round ---
     const renderRound = (roundIndex) => {
         const round = allRounds[roundIndex];
         if (!round || round.matches.length === 0) {
@@ -655,13 +644,11 @@ function generateKnockoutStage(sortedTeams, knockoutMatches) {
             </div>
         `;
         
-        // Re-attach event listeners for the newly rendered admin forms
         knockoutContent.querySelectorAll('.knockout-admin-form').forEach(form => {
             form.addEventListener('submit', handleKnockoutMatchSubmission);
         });
     };
 
-    // --- Navigation Event Listener ---
     knockoutNav.addEventListener('click', (e) => {
         const target = e.target.closest('.knockout-round-btn');
         if (!target) return;
@@ -676,7 +663,6 @@ function generateKnockoutStage(sortedTeams, knockoutMatches) {
         renderRound(roundIndex);
     });
 
-    // --- Initial Render of the first round ---
     renderRound(0);
 }
 
@@ -845,6 +831,7 @@ async function handleLogout() {
 /* ============================================
    8. Event Listeners & App Initialization
 ============================================ */
+
 function setupEventListeners() {
     let lastFocusedElement;
 
@@ -884,6 +871,8 @@ function setupEventListeners() {
         dom.teamSearchSelect.value = '';
         filterMatches(appState.currentLeagueMatches);
     });
+
+    dom.matchForm.addEventListener('submit', handleMatchSubmission);
 
     dom.teamSearchSelect.addEventListener('change', () => filterMatches(appState.currentLeagueMatches));
 
@@ -941,4 +930,3 @@ window.onload = () => {
     });
     switchLeague(initialLeague);
 };
-
