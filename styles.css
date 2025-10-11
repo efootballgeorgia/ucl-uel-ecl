@@ -50,6 +50,7 @@ h1, h2, h3, h4, h5, h6 {
 /* ============================================
    2. Animations & Keyframes
 ============================================ */
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
@@ -78,6 +79,7 @@ h1, h2, h3, h4, h5, h6 {
 /* ============================================
    3. Background & Loading
 ============================================ */
+
 #bg-video {
   position: fixed;
   top: 0;
@@ -89,32 +91,11 @@ h1, h2, h3, h4, h5, h6 {
   filter: blur(5px) brightness(0.7);
 }
 
-#loading {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(13, 17, 23, 0.9); 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  transition: opacity 0.3s ease;
-}
-
-.spinner {
-  width: 50px;
-  height: 50px;
-  border: 5px solid var(--border-color); 
-  border-top-color: var(--accent-color); 
-  border-radius: 50%;
-  animation: spin 1s infinite linear;
-}
 
 /* ============================================
    4. Header & Navigation
 ============================================ */
+
 header {
   position: relative;
   top: 0;
@@ -312,11 +293,15 @@ header {
 .feedback-message.success { background-color: var(--win-color); color: white; }
 .feedback-message.error { background-color: var(--loss-color); color: white; }
 
-
+#global-feedback .feedback-message {
+    max-width: 500px;
+    margin: 1rem auto;
+}
 
 /* ============================================
    5. League Table
 ============================================ */
+
 .league-table {
   width: 95%;
   max-width: 1200px;
@@ -391,7 +376,6 @@ tbody tr:hover {
     box-shadow: 0 5px 20px rgba(255, 215, 0, 0.2);
 }
 
-
 .form-box { display: inline-block; width: 1rem; height: 1rem; margin: 0 3px; border-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.1); }
 .form-box.victory { background-color: var(--win-color); }
 .form-box.loss { background-color: var(--loss-color); }
@@ -406,109 +390,11 @@ tbody tr:hover {
 .ecl-round16 .line { background-color: #FFA500; }
 .separator .label { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 0.75rem; font-weight: bold; }
 
-/* ============================================
-   6. Match & Form Elements (COMPACT & STABLE)
-============================================ */
-.match-form {
-  /* CONTAINER & BACKGROUND */
-  background: linear-gradient(135deg, #1f2730, #161b22); 
-  backdrop-filter: blur(10px);
-  padding: 1.2rem; /* Compact padding */
-  border-radius: var(--border-radius);
-  margin: 1.5rem auto; 
-  width: 90%;
-  max-width: 500px; /* Compact max-width */
-  border: 1px solid var(--border-color);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-  text-align: center;
-}
-
-#match-form-title {
-  color: var(--accent-color);
-  margin-bottom: 1rem; /* Reduced margin */
-  font-size: 1.4rem; /* Compact font size */
-  text-transform: uppercase;
-}
-
-#matchForm { 
-  display: flex; 
-  flex-direction: column; 
-  gap: 0.8rem; /* Compact gap */
-}
-
-/* Layout for Match Input */
-.form-group { 
-  display: flex; 
-  justify-content: space-between;
-  align-items: center; 
-  gap: 0.5rem; 
-  background-color: var(--tertiary-bg);
-  padding: 0.4rem; /* Very compact padding */
-  border-radius: 6px;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-/* Score Input Row (Crucial for stability) */
-.score-input-row {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-shrink: 0; /* Prevents this section from shrinking when selects load */
-}
-
-/* Style for Team Select */
-#homeTeam, #awayTeam {
-  flex-grow: 1; /* Allows team selects to take all available space */
-  padding: 0.5rem 0.7rem; 
-  border-radius: 4px;
-  border: 1px solid var(--border-color);
-  background: var(--secondary-bg);
-  color: var(--text-color);
-  font-size: 0.9rem;
-  font-weight: 500;
-  min-height: 38px; /* Fixed height for stability */
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-}
-
-/* Style for Score Input (Fixed dimensions for stability) */
-#homeScore, #awayScore {
-  width: 45px; /* Fixed width */
-  padding: 0.5rem 0; 
-  border-radius: 4px;
-  border: 1px solid var(--border-color);
-  background: var(--secondary-bg);
-  color: var(--accent-color);
-  font-size: 1rem;
-  font-weight: 700;
-  text-align: center;
-  min-height: 38px; /* Fixed height for stability */
-}
-
-/* Separator Style */
-.score-separator {
-    font-size: 1.1rem; 
-    font-weight: 700;
-    color: var(--text-color-secondary);
-    flex-shrink: 0; /* Prevents shrinking */
-}
-
-/* Submit Button */
-#matchForm button[type="submit"] { 
-    width: 100%;
-    padding: 0.7rem; /* Compact padding */
-    background: var(--accent-color); 
-    color: var(--primary-bg); 
-    border: none; 
-    border-radius: 6px; 
-    font-size: 0.9rem;
-    font-weight: 700; 
-}
 
 /* ============================================
    7. Match Day & Search Filter
 ============================================ */
+
 .search-container-wrapper {
     display: flex;
     flex-direction: column;
@@ -577,7 +463,7 @@ tbody tr:hover {
 .match-card {
     background-color: var(--tertiary-bg);
     border-radius: 10px;
-    padding: 1rem;
+    padding: 0.7rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -585,6 +471,20 @@ tbody tr:hover {
     transition: transform 0.2s ease;
     border-left: 5px solid var(--draw-color);
     font-size: 1.1em;
+}
+
+.match-result .btn-edit {
+  margin-left: 1rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.8em;
+}
+
+.match-card.is-editing .match-result {
+  display: none;
+}
+
+.match-card.is-editing .match-score-form {
+  display: flex;
 }
 
 .match-card.played {
@@ -618,14 +518,11 @@ tbody tr:hover {
 }
 
 .match-team.home-team .team-logo {
-    order: -1;
     margin-right: 0.75rem;
-    margin-left: 0;
 }
 
 .match-team.away-team .team-logo {
     margin-left: 0.75rem;
-    margin-right: 0;
 }
 
 .match-result {
@@ -650,47 +547,10 @@ tbody tr:hover {
     text-align: center;
 }
 
-/* Admin Match Day Score Form */
-.match-score-form {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-}
-
-.match-score-form input[type="number"] {
-    width: 35px;
-    padding: 0.2rem;
-    font-size: 1em;
-    border-radius: 4px;
-    text-align: center;
-    background-color: var(--tertiary-bg);
-    border: 1px solid var(--border-color);
-    color: var(--text-color);
-}
-
-.btn-small {
-    padding: 0.3rem 0.6rem;
-    font-size: 0.8em;
-    font-weight: 500;
-    border-radius: 4px;
-}
-
-.match-score-form input[type="number"]:disabled {
-    background-color: rgba(33, 38, 45, 0.7);
-    color: var(--text-color-secondary);
-    border-color: var(--tertiary-bg);
-}
-
-.match-score-form button:disabled {
-    background-color: var(--draw-color);
-    color: var(--primary-bg);
-    cursor: not-allowed;
-    border-color: var(--draw-color);
-}
-
 /* ============================================
    8. Modal
 ============================================ */
+
 .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9); justify-content: center; align-items: center; transition: opacity 0.3s ease; opacity: 0; }
 .modal.show { display: flex; opacity: 1; }
 .modal-content { max-width: 90%; max-height: 90%; object-fit: contain; cursor: pointer; border-radius: var(--border-radius); box-shadow: 0 0 50px rgba(0,0,0,0.7); }
@@ -700,6 +560,7 @@ tbody tr:hover {
 /* ============================================
    9. Media Queries & Responsive
 ============================================ */
+
 @media (max-width: 768px) {
   body { font-size: 12px; }
   header { padding: 1rem; }
@@ -711,13 +572,12 @@ tbody tr:hover {
   thead th, tbody td { padding: 0.5rem 0.3rem; }
   tbody td img { width: 30px; height: 30px; margin-right: 5px; }
   .form-box { width: 0.7rem; height: 0.7rem; }
-  .form-group { flex-direction: column; gap: 0.8rem; }
   .match-day { margin-top: 0;  padding: 1rem;  border-top: 1px solid var(--border-color);}
   .search-container { flex-direction: column;}
   .team-search-select {  width: 100%;  min-width: unset;}
   #clearSearchBtn {  width: 100%;}
   #match-day-container {  grid-template-columns: 1fr;}
-  .match-card {  font-size: 0.9em;}
+  .match-card {  font-size: 0.9em; flex-wrap: wrap; }
   .match-result {  font-size: 1em;}
     .search-container-wrapper, .match-day, #knockout-content-container { 
     width: 100%; 
@@ -731,10 +591,10 @@ tbody tr:hover {
 
 @media (min-width: 600px) {
     #match-day-container {
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
     }
         .knockout-matches-grid {
-        grid-template-columns: repeat(2, 1fr); /* CHANGE: 2 columns above 600px */
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -775,6 +635,7 @@ tbody tr:hover {
 /* ============================================
    11. Knockout Stage
 ============================================ */
+
 .knockout-nav-wrapper {
     padding: 2rem 1rem 1rem 1rem;
     border-bottom: 1px solid var(--border-color);
@@ -893,4 +754,100 @@ tbody tr:hover {
 .knockout-admin-form button {
     padding: 0.4rem 0.8rem;
     font-size: 0.9rem;
+}
+
+/* ============================================
+   12. Real-time Update FX
+============================================ */
+
+/* Animation for highlighting a table row when its data updates */
+@keyframes highlight-fade {
+  from { background-color: rgba(255, 215, 0, 0.4); }
+  to { background-color: transparent; }
+}
+
+/* Class that applies the animation. 'forwards' ensures it stays transparent at the end. */
+tbody tr.row-updated {
+  animation: highlight-fade 1.5s ease-out forwards;
+}
+
+/* ============================================
+   13. Inline Match Score Form
+============================================ */
+
+/* Hide the static result text when the form is shown */
+.match-card.editable .match-result {
+  display: none;
+}
+
+/* Style the form that will appear on the match card */
+.match-score-form {
+  display: none; /* Hidden by default */
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Show the form on editable cards */
+.match-card.editable .match-score-form {
+  display: flex;
+}
+
+.match-score-form input[type="number"] {
+  width: 40px;
+  padding: 0.4rem;
+  font-size: 1em;
+  font-weight: 700;
+  border-radius: 6px;
+  text-align: center;
+  background-color: var(--secondary-bg);
+  border: 1px solid var(--border-color);
+  color: var(--accent-color);
+  -moz-appearance: textfield; /* Firefox */
+}
+
+/* Hide the number input arrows in Chrome, Safari, Edge */
+.match-score-form input[type="number"]::-webkit-outer-spin-button,
+.match-score-form input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.match-score-form button {
+  padding: 0.5rem 0.8rem;
+  font-size: 0.9em;
+}
+
+.match-score-form button:disabled {
+  background-color: var(--draw-color);
+  color: var(--primary-bg);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* ============================================
+   14. Skeleton Loader for Match Cards
+============================================ */
+.match-card.skeleton {
+  pointer-events: none;
+  border-left-color: var(--tertiary-bg);
+}
+
+.match-card.skeleton .match-team,
+.match-card.skeleton .match-result {
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.match-card.skeleton .team-logo-placeholder {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: var(--tertiary-bg);
+}
+
+.match-card.skeleton .text-placeholder {
+  height: 20px;
+  width: 120px;
+  border-radius: 6px;
+  background-color: var(--tertiary-bg);
 }
