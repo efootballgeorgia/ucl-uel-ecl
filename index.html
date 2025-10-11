@@ -15,9 +15,6 @@
     Your browser does not support the video tag.
   </video>
 
-  <div id="loading">
-    <div class="spinner"></div>
-  </div>
 
   <header>
     <div class="header-content">
@@ -31,7 +28,7 @@
         <button class="nav-btn btn active" id="tab-league" role="tab" aria-selected="true" aria-controls="panel-league" data-view="league">Table</button>
         <button class="nav-btn btn" id="tab-matches" role="tab" aria-selected="false" aria-controls="panel-matches" data-view="matches">Matches</button>
         <button class="nav-btn btn" id="tab-knockout" role="tab" aria-selected="false" aria-controls="panel-knockout" data-view="knockout">Knockout</button>
-      </div>
+      </nav> <!-- This closing div was misplaced in the original file, corrected here -->
         <div class="auth-status">
         <span id="user-status">Not logged in</span>
         <button id="auth-btn" class="btn">Login / Signup</button>
@@ -41,46 +38,27 @@
   </header>
 
   <main>
+    <div id="global-feedback" aria-live="polite"></div>
     <section id="league-section" class="page-section active" role="tabpanel" aria-labelledby="tab-league">
       <div class="league-table">
         <table id="leagueTable">
-          <thead>
+<thead>
             <tr>
               <th>#</th>
-              <th data-column-index="1" data-type="string">Team</th>
-              <th data-column-index="2" data-type="number">P</th>
-              <th data-column-index="3" data-type="number">W</th>
-              <th data-column-index="4" data-type="number">D</th>
-              <th data-column-index="5" data-type="number">L</th>
-              <th data-column-index="6" data-type="goals">+/-</th>
-              <th data-column-index="7" data-type="number">Pts</th>
+              <th data-sort-key="team">Team</th>
+              <th data-sort-key="played">P</th>
+              <th data-sort-key="wins">W</th>
+              <th data-sort-key="draws">D</th>
+              <th data-sort-key="losses">L</th>
+              <th data-sort-key="gd">+/-</th>
+              <th data-sort-key="points">Pts</th>
               <th>Form</th>
             </tr>
           </thead>
           <tbody>
-            </tbody>
+          </tbody>
         </table>
       </div>
-
-      <section class="match-form">
-        <h2 id="match-form-title"></h2>
-        <form id="matchForm">
-          <div class="form-group">
-            <label for="homeTeam" class="visually-hidden">Home Team</label>
-            <select id="homeTeam" required><option value="">Home Team</option></select>
-            <label for="homeScore" class="visually-hidden">Home Score</label>
-            <input type="number" id="homeScore" min="0" required>
-          </div>
-          <div class="form-group">
-            <label for="awayTeam" class="visually-hidden">Away Team</label>
-            <select id="awayTeam" required><option value="">Away Team</option></select>
-            <label for="awayScore" class="visually-hidden">Away Score</label>
-            <input type="number" id="awayScore" min="0" required>
-          </div>
-          <div class="feedback-message" aria-live="polite"></div>
-          <button type="submit" class="btn">Add Match</button>
-        </form>
-      </section>
     </section>
     
     <section id="matches-section" class="page-section" role="tabpanel" aria-labelledby="tab-matches">
@@ -90,17 +68,18 @@
                 <select id="daySelector" class="team-search-select"></select>
                 <label for="teamSearchSelect" class="visually-hidden">Select Team to Filter</label>
                 <select id="teamSearchSelect" class="team-search-select"></select>
-                <button id="clearSearchBtn" class="btn">Clear Filter</button>
+                <button id="clearSearchBtn" class="btn" style="display:none;">Clear Filter</button>
             </div>
-            <div id="no-search-results" class="empty-state">No matches found for your selection.</div>
+            <div id="no-search-results" class="empty-state" style="display:none;">No matches found for your selection.</div>
         </div>
         <div class="match-day">
-            <div id="match-day-container"></div>
+            <div id="match-day-container">
+            </div>
         </div>
     </section>
     
     <section id="knockout-section" class="page-section" role="tabpanel" aria-labelledby="tab-knockout">
-        </section>
+    </section>
 
 
     <div class="modal" id="myModal">
@@ -116,11 +95,11 @@
         <form id="auth-form">
           <div class="form-group">
             <label for="auth-email" class="visually-hidden">Email</label>
-            <input type="email" id="auth-email" placeholder="Email" required>
+            <input type="email" id="auth-email" placeholder="Email" required autocomplete="email">
           </div>
           <div class="form-group">
             <label for="auth-password" class="visually-hidden">Password</label>
-            <input type="password" id="auth-password" placeholder="Password" required>
+            <input type="password" id="auth-password" placeholder="Password" required autocomplete="current-password">
           </div>
           <button type="submit" id="login-btn" class="btn">Login</button>
           <button type="button" id="signup-btn" class="btn">Signup</button>
@@ -129,6 +108,6 @@
     </div>
   </main>
 
-<script type="module" src="script.js"></script>
+<script type="module" src="js/main.js"></script>
 </body>
 </html>
