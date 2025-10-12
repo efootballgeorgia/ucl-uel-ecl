@@ -6,25 +6,20 @@ import { generateMatchDay, filterMatches, renderSkeletonMatches, updateUIFromCon
 import { renderTable, updateTeamStats, subtractTeamStats, sortTable, renderSkeletonTable } from "./ui-table.js";
 
 function processLeagueChanges(snapshot) {
-    snapshot.docChanges().forEach(change => {
-        const docData = change.doc.data();
-        const docId = change.doc.id;
-        const oldMatch = appState.currentLeagueMatches.find(m => m.id === docId);
-
-        if (change.type === 'modified' || change.type === 'removed') {
-            if (oldMatch) {
-                subtractTeamStats(oldMatch.homeTeam, oldMatch.homeScore, oldMatch.awayScore);
-                subtractTeamStats(oldMatch.awayTeam, oldMatch.awayScore, oldMatch.homeScore);
-            }
-        }
-        
-        if (change.type === 'added' || change.type === 'modified') {
-            updateTeamStats(docData.homeTeam, docData.homeScore, docData.awayScore);
-            updateTeamStats(docData.awayTeam, docData.awayScore, docData.homeScore);
-        }
+    appState.currentLeagueMatches.forEach(match => {
+        if (match.homeScore === undefined) return;
+        subtractTeamStats(match.homeTeam, match.homeScore, match.awayScore);
+        subtractTeamStats(match.awayTeam, match.awayScore, match.homeScore);
     });
 
     appState.currentLeagueMatches = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    appState.currentLeagueMatches.forEach(match => {
+        if (match.homeScore === undefined) return;
+        updateTeamStats(match.homeTeam, match.homeScore, match.awayScore);
+        updateTeamStats(match.awayTeam, match.awayScore, match.homeScore);
+    });
+    
     sortTable();
     
     const rows = Array.from(document.querySelectorAll('#leagueTable tbody tr:not(.separator)'));
