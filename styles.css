@@ -7,7 +7,7 @@
   --tertiary-bg: #21262d;
   --text-color: #c9d1d9;
   --text-color-secondary: #8b949e;
-  --accent-color: #ffd700;
+  --accent-color: #494a4f;
   --win-color: #238636;
   --loss-color: #da3633;
   --draw-color: #8b949e;
@@ -152,7 +152,7 @@ header {
   padding: 0.75rem 1.5rem;
   background: transparent;
   color: var(--text-color);
-  border: 1px solid var(--border-color);
+  border: 2px solid var(--border-color);
   border-radius: var(--border-radius);
   cursor: pointer;
   font-weight: 600;
@@ -464,7 +464,7 @@ tbody tr.row-updated {
     border: 1px solid var(--border-color);
     border-bottom: none;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    box-sizing: border-box; 
+    box-sizing: border-box;
 }
 
 .search-container-wrapper h2 {
@@ -543,7 +543,12 @@ tbody tr.row-updated {
 }
 
 .match-result .btn-edit {
-  margin-left: 1rem;
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(25%, -25%);
+  z-index: 2;
+  margin: 0;
   padding: 0.4rem 0.8rem;
   font-size: 0.8em;
 }
@@ -596,7 +601,7 @@ tbody tr.row-updated {
 
 .match-result {
     font-weight: 700;
-    color: var(--accent-color);
+    color: rgb(92, 92, 24);
     font-size: 1.2em;
     display: flex;
     gap: 0.5rem;
@@ -604,7 +609,7 @@ tbody tr.row-updated {
 }
 
 .match-score-form {
-  display: flex; 
+  display: flex;
   gap: 0.5rem;
   align-items: center;
   justify-content: center;
@@ -708,7 +713,7 @@ tbody tr.row-updated {
   #clearSearchBtn {  width: 100%;}
   #match-day-container {  grid-template-columns: 1fr;}
   .match-card {  font-size: 0.9em; flex-wrap: wrap; }
-  .match-result {  font-size: 1em;}
+  .match-result {  font-size: 1.25em;}
     .search-container-wrapper, .match-day, #knockout-content-container { 
     width: 100%; 
     max-width: 100%; 
