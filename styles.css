@@ -418,6 +418,20 @@ tbody tr:hover {
     box-shadow: 0 5px 20px rgba(255, 215, 0, 0.2);
 }
 
+tbody.is-sorting {
+  opacity: 0.6;
+  transition: opacity 0.1s ease-in-out;
+}
+
+@keyframes highlight-fade {
+  from { background-color: rgba(255, 215, 0, 0.4); }
+  to { background-color: transparent; }
+}
+
+tbody tr.row-updated {
+  animation: highlight-fade 1.5s ease-out;
+}
+
 .form-box { display: inline-block; width: 1rem; height: 1rem; margin: 0 3px; border-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.1); }
 .form-box.victory { background-color: var(--win-color); }
 .form-box.loss { background-color: var(--loss-color); }
@@ -870,17 +884,4 @@ tbody tr:hover {
 .knockout-admin-form button {
     padding: 0.4rem 0.8rem;
     font-size: 0.9rem;
-}
-
-/* ============================================
-   12. Real-time Update FX
-============================================ */
-
-@keyframes highlight-fade {
-  from { background-color: rgba(255, 215, 0, 0.4); }
-  to { background-color: transparent; }
-}
-
-tbody tr.row-updated {
-  animation: highlight-fade 1.5s ease-out;
 }
