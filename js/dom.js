@@ -1,0 +1,27 @@
+// js/dom.js
+export const dom = {
+  leagueSection: document.getElementById('league-section'),
+  matchesSection: document.getElementById('matches-section'),
+  knockoutSection: document.getElementById('knockout-section'),
+  knockoutContainer: document.querySelector('.knockout-container'),
+  leagueLogo: document.getElementById('league-logo'),
+  leagueTableBody: document.querySelector('#leagueTable tbody'),
+  matchDayTitle: document.getElementById('match-day-title'),
+  matchDayContainer: document.getElementById('match-day-container'),
+  daySelector: document.getElementById('daySelector'),
+  teamSearchSelect: document.getElementById('teamSearchSelect'),
+  clearSearchBtn: document.getElementById('clearSearchBtn'),
+  noSearchResults: document.getElementById('no-search-results'),
+  feedbackMessage: document.getElementById('global-feedback'),
+  authModal: document.getElementById('auth-modal'),
+  closeAuthModalBtn: document.getElementById('closeAuthModal'),
+  authForm: document.getElementById('auth-form'),
+  authEmailInput: document.getElementById('auth-email'),
+  authPasswordInput: document.getElementById('auth-password'),
+  loginBtn: document.getElementById('login-btn'),
+  signupBtn: document.getElementById('signup-btn'),
+  authFeedbackMessage: document.querySelector('.auth-feedback-message'),
+  userStatusSpan: document.getElementById('user-status'),
+  authBtn: document.getElementById('auth-btn'),
+  logoutBtn: document.getElementById('logout-btn')
+};
