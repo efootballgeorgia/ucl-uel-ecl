@@ -56,19 +56,9 @@ h1, h2, h3, h4, h5, h6 {
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes glow {
-  0% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
-  50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.9); }
-  100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
-}
-
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .team-logo:hover {
@@ -212,7 +202,22 @@ header {
 }
 
 .auth-modal {
-    z-index: 99999; 
+    display: none; 
+    position: fixed; 
+    z-index: 99999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+.auth-modal.show {
+    display: flex;
+    opacity: 1;
 }
 
 .auth-modal-content {
@@ -227,6 +232,21 @@ header {
     text-align: center;
     position: relative;
     animation: fadeIn 0.4s ease-out;
+}
+
+.close { 
+    position: absolute; 
+    top: 1.5rem; 
+    right: 2.5rem; 
+    color: #fff; 
+    font-size: 3rem; 
+    font-weight: bold; 
+    cursor: pointer; 
+    transition: color 0.3s ease; 
+}
+.close:hover, .close:focus { 
+    color: var(--accent-color); 
+    text-decoration: none; 
 }
 
 .auth-modal-content h2 {
@@ -283,20 +303,42 @@ header {
     color: white;
     background-color: var(--loss-color);
     display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 .auth-feedback-message.show {
     display: block;
+    opacity: 1;
 }
 
-.feedback-message { padding: 10px; margin-top: 10px; border-radius: 5px; text-align: center; font-weight: bold; opacity: 0; transition: opacity 0.3s ease-in-out; max-height: 0; overflow: hidden; }
-.feedback-message.show { opacity: 1; max-height: 40px; }
-.feedback-message.success { background-color: var(--win-color); color: white; }
-.feedback-message.error { background-color: var(--loss-color); color: white; }
+#global-feedback {
+    position: fixed;
+    top: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10000;
+    width: 90%;
+    max-width: 500px;
+}
 
 #global-feedback .feedback-message {
-    max-width: 500px;
-    margin: 1rem auto;
+    padding: 1rem;
+    margin-top: 10px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
 }
+#global-feedback .feedback-message.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+#global-feedback .feedback-message.success { background-color: var(--win-color); }
+#global-feedback .feedback-message.error { background-color: var(--loss-color); }
 
 /* ============================================
    5. League Table
@@ -335,7 +377,7 @@ thead th {
   letter-spacing: 0.5px;
 }
 
-thead th[data-column-index]:hover {
+thead th[data-sort-key]:hover {
   background-color: var(--tertiary-bg);
   color: var(--accent-color);
 }
@@ -463,7 +505,7 @@ tbody tr:hover {
 .match-card {
     background-color: var(--tertiary-bg);
     border-radius: 10px;
-    padding: 0.7rem;
+    padding: 1.5rem 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -471,6 +513,19 @@ tbody tr:hover {
     transition: transform 0.2s ease;
     border-left: 5px solid var(--draw-color);
     font-size: 1.1em;
+    position: relative;
+}
+.match-day-indicator {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--accent-color);
+    color: var(--primary-bg);
+    padding: 2px 8px;
+    border-radius: 5px;
+    font-size: 0.8em;
+    font-weight: bold;
 }
 
 .match-result .btn-edit {
@@ -534,6 +589,77 @@ tbody tr:hover {
     align-items: center;
 }
 
+.match-score-form {
+  display: flex; 
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.match-card.played.is-editing .match-result,
+.match-card:not(.played) .match-result {
+    display: none;
+}
+
+.match-card.played:not(.is-editing) .match-score-form {
+    display: none;
+}
+
+
+.match-score-form input[type="number"] {
+  width: 40px;
+  padding: 0.4rem;
+  font-size: 1em;
+  font-weight: 700;
+  border-radius: 6px;
+  text-align: center;
+  background-color: var(--secondary-bg);
+  border: 1px solid var(--border-color);
+  color: var(--accent-color);
+}
+
+.match-score-form input[type="number"]::-webkit-outer-spin-button,
+.match-score-form input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.match-score-form button {
+  padding: 0.5rem 0.8rem;
+  font-size: 0.9em;
+}
+
+.match-score-form button:disabled {
+  background-color: var(--draw-color);
+  color: var(--primary-bg);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.match-card.skeleton {
+  pointer-events: none;
+  border-left-color: var(--tertiary-bg);
+}
+
+.match-card.skeleton .match-team,
+.match-card.skeleton .match-result {
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.match-card.skeleton .team-logo-placeholder {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: var(--tertiary-bg);
+}
+
+.match-card.skeleton .text-placeholder {
+  height: 20px;
+  width: 120px;
+  border-radius: 6px;
+  background-color: var(--tertiary-bg);
+}
+
 .score-pending {
     color: var(--draw-color);
     font-size: 0.8em;
@@ -546,16 +672,6 @@ tbody tr:hover {
     min-width: 20px;
     text-align: center;
 }
-
-/* ============================================
-   8. Modal
-============================================ */
-
-.modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.9); justify-content: center; align-items: center; transition: opacity 0.3s ease; opacity: 0; }
-.modal.show { display: flex; opacity: 1; }
-.modal-content { max-width: 90%; max-height: 90%; object-fit: contain; cursor: pointer; border-radius: var(--border-radius); box-shadow: 0 0 50px rgba(0,0,0,0.7); }
-.close { position: absolute; top: 1.5rem; right: 2.5rem; color: #fff; font-size: 3rem; font-weight: bold; cursor: pointer; transition: color 0.3s ease; }
-.close:hover, .close:focus { color: var(--accent-color); text-decoration: none; }
 
 /* ============================================
    9. Media Queries & Responsive
@@ -594,7 +710,7 @@ tbody tr:hover {
         grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
     }
         .knockout-matches-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     }
 }
 
@@ -651,7 +767,7 @@ tbody tr:hover {
 
 #knockout-content-container {
     padding: 2rem 1rem;
-    max-width: 500px;
+    max-width: 1200px;
     margin: 0 auto;
     box-sizing: border-box; 
 }
@@ -760,95 +876,11 @@ tbody tr:hover {
    12. Real-time Update FX
 ============================================ */
 
-/* Animation for highlighting a table row when its data updates */
 @keyframes highlight-fade {
   from { background-color: rgba(255, 215, 0, 0.4); }
   to { background-color: transparent; }
 }
 
-/* Class that applies the animation. 'forwards' ensures it stays transparent at the end. */
 tbody tr.row-updated {
-  animation: highlight-fade 1.5s ease-out forwards;
-}
-
-/* ============================================
-   13. Inline Match Score Form
-============================================ */
-
-/* Hide the static result text when the form is shown */
-.match-card.editable .match-result {
-  display: none;
-}
-
-/* Style the form that will appear on the match card */
-.match-score-form {
-  display: none; /* Hidden by default */
-  gap: 0.5rem;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Show the form on editable cards */
-.match-card.editable .match-score-form {
-  display: flex;
-}
-
-.match-score-form input[type="number"] {
-  width: 40px;
-  padding: 0.4rem;
-  font-size: 1em;
-  font-weight: 700;
-  border-radius: 6px;
-  text-align: center;
-  background-color: var(--secondary-bg);
-  border: 1px solid var(--border-color);
-  color: var(--accent-color);
-  -moz-appearance: textfield; /* Firefox */
-}
-
-/* Hide the number input arrows in Chrome, Safari, Edge */
-.match-score-form input[type="number"]::-webkit-outer-spin-button,
-.match-score-form input[type="number"]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.match-score-form button {
-  padding: 0.5rem 0.8rem;
-  font-size: 0.9em;
-}
-
-.match-score-form button:disabled {
-  background-color: var(--draw-color);
-  color: var(--primary-bg);
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-/* ============================================
-   14. Skeleton Loader for Match Cards
-============================================ */
-
-.match-card.skeleton {
-  pointer-events: none;
-  border-left-color: var(--tertiary-bg);
-}
-
-.match-card.skeleton .match-team,
-.match-card.skeleton .match-result {
-  animation: pulse 1.5s infinite ease-in-out;
-}
-
-.match-card.skeleton .team-logo-placeholder {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  background-color: var(--tertiary-bg);
-}
-
-.match-card.skeleton .text-placeholder {
-  height: 20px;
-  width: 120px;
-  border-radius: 6px;
-  background-color: var(--tertiary-bg);
+  animation: highlight-fade 1.5s ease-out;
 }
