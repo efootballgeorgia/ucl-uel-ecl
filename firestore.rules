@@ -36,29 +36,35 @@ service cloud.firestore {
     // Rules for the REGULAR season match collections.
     match /uclMatches/{matchId} {
       allow read: if true;
-      allow write: if isAdmin() && isValidMatchData(request.resource.data);
+      allow create, update: if isAdmin() && isValidMatchData(request.resource.data);
+      allow delete: if isAdmin();
     }
     match /uelMatches/{matchId} {
       allow read: if true;
-      allow write: if isAdmin() && isValidMatchData(request.resource.data);
+      allow create, update: if isAdmin() && isValidMatchData(request.resource.data);
+      allow delete: if isAdmin();
     }
     match /eclMatches/{matchId} {
       allow read: if true;
-      allow write: if isAdmin() && isValidMatchData(request.resource.data);
+      allow create, update: if isAdmin() && isValidMatchData(request.resource.data);
+      allow delete: if isAdmin();
     }
 
     // Rules for the KNOCKOUT stage match collections.
     match /uclKnockoutMatches/{matchId} {
       allow read: if true;
-      allow write: if isAdmin() && isValidMatchData(request.resource.data);
+      allow create, update: if isAdmin() && isValidMatchData(request.resource.data);
+      allow delete: if isAdmin();
     }
     match /uelKnockoutMatches/{matchId} {
       allow read: if true;
-      allow write: if isAdmin() && isValidMatchData(request.resource.data);
+      allow create, update: if isAdmin() && isValidMatchData(request.resource.data);
+      allow delete: if isAdmin();
     }
     match /eclKnockoutMatches/{matchId} {
       allow read: if true;
-      allow write: if isAdmin() && isValidMatchData(request.resource.data);
+      allow create, update: if isAdmin() && isValidMatchData(request.resource.data);
+      allow delete: if isAdmin();
     }
   }
 }
