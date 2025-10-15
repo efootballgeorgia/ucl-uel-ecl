@@ -1,0 +1,21 @@
+{
+  "name": "Georgian League",
+  "short_name": "GLeague",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#030424",
+  "theme_color": "#030424",
+  "description": "Live football league tables and match results for UCL, UEL, and ECL.",
+  "icons": [
+    {
+      "src": "images/logos/champions-league-logo.webp",
+      "sizes": "192x192",
+      "type": "image/webp"
+    },
+    {
+      "src": "images/logos/champions-league-logo.webp",
+      "sizes": "512x512",
+      "type": "image/webp"
+    }
+  ]
+}
