@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Football Leagues</title>
+<title>Efootball Georgia</title>
+<link rel="icon" type="image/webp" href="images/logos/champions-league-logo.webp">
+<link rel="apple-touch-icon" href="images/logos/champions-league-logo.webp">
+<link rel="manifest" href="manifest.json">
 <link rel="stylesheet" href="styles.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,6 +38,7 @@ Your browser does not support the video tag.
 </div>
 </header>
 <main>
+<div class="visually-hidden" aria-live="polite" id="table-sort-announcer"></div>
 <div id="global-feedback" aria-live="polite"></div>
 <section id="league-section" class="page-section active" role="tabpanel" aria-labelledby="tab-league">
 <div class="league-table">
@@ -97,6 +101,7 @@ Your browser does not support the video tag.
   </div>
 </div>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js" async=""></script>
 <script type="module" src="js/main.js"></script>
 </body>
 </html>
