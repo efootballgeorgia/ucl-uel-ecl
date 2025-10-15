@@ -1,39 +1,43 @@
 rules_version = '2';
+
 service cloud.firestore {
   match /databases/{database}/documents {
 
     // --- HELPER FUNCTIONS ---
 
-    // Checks if the requesting user's UID exists in the 'admins' collection.
     function isAdmin() {
+      // Returns true if the requesting user's UID exists in the 'admins' collection.
       return exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
 
-    // Validates the data for a match document.
-    // Ensures scores are non-negative integers.
     function isValidMatchData(matchData) {
+      // Enforces that scores are non-negative integers.
       return matchData.homeScore is int &&
              matchData.awayScore is int &&
              matchData.homeScore >= 0 &&
              matchData.awayScore >= 0;
     }
 
+    function isOwner(userId) {
+      // Returns true if the requesting user is the owner of the document.
+      return request.auth.uid == userId;
+    }
+
 
     // --- COLLECTION RULES ---
 
-    // Rules for League Configuration documents (e.g., /leagues/ucl)
     match /leagues/{league} {
       allow read: if true;
-      allow write: if false; // Prevent client-side modification
+      allow write: if false; // League configuration is read-only from the client.
     }
 
-    // Rules for the 'admins' collection itself.
     match /admins/{userId} {
-      allow read: if isAdmin();
-      allow write: if false; // CRITICAL: Must be managed from Firebase Console
+      // CORRECTED: A user can check THEIR OWN admin status, but not others.
+      allow read: if isOwner(userId);
+      allow write: if false; // CRITICAL: Admin roles must be managed from the Firebase Console.
     }
 
-    // Rules for the REGULAR season match collections.
+    // --- Match Collections ---
     match /uclMatches/{matchId} {
       allow read: if true;
       allow create, update: if isAdmin() && isValidMatchData(request.resource.data);
@@ -50,7 +54,7 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
-    // Rules for the KNOCKOUT stage match collections.
+    // --- Knockout Match Collections ---
     match /uclKnockoutMatches/{matchId} {
       allow read: if true;
       allow create, update: if isAdmin() && isValidMatchData(request.resource.data);
