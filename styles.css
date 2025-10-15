@@ -592,6 +592,7 @@ tbody tr.row-updated {
   font-size: 0.6em;
 }
 
+/* ADDED: Destructive style for the delete button */
 .btn-delete {
   background-color: var(--loss-color);
   border-color: var(--loss-color) !important;
