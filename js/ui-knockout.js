@@ -2,9 +2,35 @@ import { dom } from './dom.js';
 import { appState } from './state.js';
 import { getTeamSlug } from './utils.js';
 
+function areAllTeamsReadyForKnockout() {
+    const leagueConfig = appState.config[appState.currentLeague];
+    if (!leagueConfig || !leagueConfig.teams || !dom.leagueTableBody) {
+        return false;
+    }
+
+    const requiredGames = leagueConfig.numberOfMatchDays || 8;
+    
+    for (const teamName of leagueConfig.teams) {
+        const row = dom.leagueTableBody.querySelector(`tr[data-team="${teamName}"]`);
+        
+        if (!row || row.classList.contains('skeleton')) {
+            return false;
+        }
+
+        const playedGames = parseInt(row.cells[2].textContent, 10);
+        
+        if (isNaN(playedGames) || playedGames < requiredGames) {
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+
 function getWinner(matchData) {
     if (!matchData || typeof matchData.homeScore !== 'number') return null;
-    return matchData.homeScore > matchData.awayScore ? matchData.homeTeam : matchData.awayTeam;
+    return matchData.homeScore > matchData.awayScore ? matchData.homeTeam : matchAta.awayTeam;
 }
 
 function calculateKnockoutData(sortedTeams, knockoutMatches) {
@@ -51,6 +77,11 @@ function calculateKnockoutData(sortedTeams, knockoutMatches) {
 }
 
 export function generateKnockoutStage(sortedTeams, knockoutMatches) {
+    if (!areAllTeamsReadyForKnockout()) {
+        dom.knockoutSection.innerHTML = `<p class="empty-state" style="display:block; padding: 4rem 2rem; font-size: 2.5rem; font-weight: 700; color: var(--accent-color); text-transform: uppercase;">SOON</p>`;
+        return;
+    }
+    
     const allRounds = calculateKnockoutData(sortedTeams, knockoutMatches);
 
     if (!allRounds) {
