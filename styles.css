@@ -2,19 +2,54 @@
    1. General Styles & CSS Variables
 ============================================ */
 :root {
-  --primary-bg: #0d1117;
-  --secondary-bg: #161b22;
-  --tertiary-bg: #21262d;
-  --text-color: #c9d1d9;
-  --text-color-secondary: #8b949e;
-  --accent-color: #494a4f;
+  --primary-bg: #030424;
+  --secondary-bg: #090b3b;
+  --tertiary-bg: #414148;
   --win-color: #238636;
-  --loss-color: #da3633;
+  --loss-color: #da3333;
   --draw-color: #8b949e;
   --border-color: #30363d;
+  --shadow-color: rgba(255, 215, 0, 0.2);
+
   --border-radius: 12px;
   --header-height: 80px;
   --font-primary: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.ucl-theme {
+  --primary-bg: #030424;
+  --secondary-bg: #202026;
+  --tertiary-bg: #2e2e3a;
+  --text-color: #e5e5ff;
+  --text-color-secondary: #a0a3d9;
+  --accent-color: #393547;
+  --accent-color-hover: #fff500;
+  --border-color: #000000;
+  --shadow-color: rgba(255, 218, 0, 0.2);
+}
+
+.uel-theme {
+  --primary-bg: #0a0a0a;
+  --secondary-bg: #1c1c1c;
+  --tertiary-bg: #282828;
+  --text-color: #f0f0f0;
+  --text-color-secondary: #b3b3b3;
+  --accent-color: #ff4500;
+  --accent-color-hover: #ff6a2e;
+  --border-color: #333333;
+  --shadow-color: rgba(255, 69, 0, 0.25);
+}
+
+.ecl-theme {
+  --primary-bg: #050f0a;
+  --secondary-bg: #0d1e16;
+  --tertiary-bg: #142c20;
+  --text-color: #e0f0e8;
+  --text-color-secondary: #a0b0a8;
+  --accent-color: #00ff85;
+  --accent-color-hover: #50ffaa;
+  --border-color: #1e4231;
+  --shadow-color: rgba(0, 255, 133, 0.2);
 }
 
 body {
@@ -92,11 +127,12 @@ header {
   z-index: 1000;
   padding: 1.5rem 0;
   background: rgba(13, 17, 23, 0.7);
+  backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border-color);
   transition: padding 0.3s ease, background 0.3s ease;
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .header-content {
@@ -107,8 +143,8 @@ header {
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
-  padding: 0 1rem; 
-  box-sizing: border-box; 
+  padding: 0 1rem;
+  box-sizing: border-box;
 }
 
 
@@ -127,7 +163,7 @@ header {
   transition: background-color 0.3s ease, width 0.3s ease;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #ffed4a;
+  background-color: var(--accent-color-hover);
   width: 10px;
 }
 
@@ -152,7 +188,7 @@ header {
   padding: 0.75rem 1.5rem;
   background: transparent;
   color: var(--text-color);
-  border: 2px solid var(--border-color);
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   cursor: pointer;
   font-weight: 600;
@@ -165,14 +201,14 @@ header {
   color: var(--primary-bg);
   border-color: var(--accent-color);
   transform: translateY(-2px);
-  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.2);
+  box-shadow: 0 4px 20px var(--shadow-color);
 }
 
 .btn.active {
   background: var(--accent-color);
   color: var(--primary-bg);
   border-color: var(--accent-color);
-  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+  box-shadow: 0 0 15px var(--shadow-color);
 }
 
 .page-section {
@@ -190,20 +226,20 @@ header {
     gap: 1rem;
     color: var(--text-color-secondary);
     font-size: 0.9em;
-    margin-top: 1rem; 
+    margin-top: 1rem;
 }
 .auth-status #user-status {
     font-weight: 600;
     color: var(--accent-color);
 }
 .auth-status .btn {
-    padding: 0.5rem 1rem; 
+    padding: 0.5rem 1rem;
     font-size: 0.9em;
 }
 
 .auth-modal {
-    display: none; 
-    position: fixed; 
+    display: none;
+    position: fixed;
     z-index: 99999;
     left: 0;
     top: 0;
@@ -221,7 +257,7 @@ header {
 }
 
 .auth-modal-content {
-    background: linear-gradient(135deg, rgba(22, 27, 34, 0.95), rgba(33, 38, 45, 0.95));
+    background: linear-gradient(135deg, var(--secondary-bg), var(--tertiary-bg));
     backdrop-filter: blur(15px);
     padding: 2.5rem;
     border-radius: var(--border-radius);
@@ -234,19 +270,19 @@ header {
     animation: fadeIn 0.4s ease-out;
 }
 
-.close { 
-    position: absolute; 
-    top: 1.5rem; 
-    right: 2.5rem; 
-    color: #fff; 
-    font-size: 3rem; 
-    font-weight: bold; 
-    cursor: pointer; 
-    transition: color 0.3s ease; 
+.close {
+    position: absolute;
+    top: 1.5rem;
+    right: 2.5rem;
+    color: #fff;
+    font-size: 3rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
 }
-.close:hover, .close:focus { 
-    color: var(--accent-color); 
-    text-decoration: none; 
+.close:hover, .close:focus {
+    color: var(--accent-color);
+    text-decoration: none;
 }
 
 .auth-modal-content h2 {
@@ -263,9 +299,9 @@ header {
 
 #auth-form .form-group {
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     gap: 0.5rem;
-    align-items: stretch; 
+    align-items: stretch;
 }
 
 #auth-form input[type="email"],
@@ -285,7 +321,7 @@ header {
 #auth-form input[type="password"]:focus {
     outline: none;
     border-color: var(--accent-color);
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    box-shadow: 0 0 10px var(--shadow-color);
 }
 
 #auth-form .btn {
@@ -355,7 +391,7 @@ header {
   font-size: 18px;
   background: linear-gradient(135deg, rgba(22, 27, 34, 0.9), rgba(33, 38, 45, 0.9));
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
   box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
 }
 
@@ -415,7 +451,7 @@ tbody tr {
 tbody tr:hover {
     background-color: rgba(41, 41, 41, 0.9);
     transform: translateY(-3px);
-    box-shadow: 0 5px 20px rgba(255, 215, 0, 0.2);
+    box-shadow: 0 5px 20px var(--shadow-color);
 }
 
 tbody.is-sorting {
@@ -424,7 +460,7 @@ tbody.is-sorting {
 }
 
 @keyframes highlight-fade {
-  from { background-color: rgba(255, 215, 0, 0.4); }
+  from { background-color: var(--shadow-color); }
   to { background-color: transparent; }
 }
 
@@ -528,6 +564,7 @@ tbody tr.row-updated {
     border-left: 5px solid var(--draw-color);
     font-size: 1.1em;
     position: relative;
+    margin-top: 1rem;
 }
 .match-day-indicator {
     position: absolute;
@@ -542,15 +579,45 @@ tbody tr.row-updated {
     font-weight: bold;
 }
 
-.match-result .btn-edit {
+.match-actions {
   position: absolute;
-  top: 0;
+  top: -0.75rem;
   right: 0;
-  transform: translate(25%, -25%);
-  z-index: 2;
-  margin: 0;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.match-actions .btn {
   padding: 0.4rem 0.8rem;
-  font-size: 0.8em;
+  font-size: 0.6em;
+}
+
+.btn-delete {
+  background-color: var(--loss-color);
+  border-color: var(--loss-color) !important;
+  color: #fff !important;
+}
+
+.btn-delete:hover {
+  background-color: #ff4c4c !important;
+  border-color: #ff4c4c !important;
+}
+
+.match-card .btn-save,
+.match-card .btn-cancel {
+  display: none;
+}
+
+.match-card.is-editing .btn-edit,
+.match-card.is-editing .btn-delete {
+  display: none;
+}
+
+.match-card.is-editing .btn-save,
+.match-card.is-editing .btn-cancel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .match-card.is-editing .match-result {
@@ -609,19 +676,19 @@ tbody tr.row-updated {
 }
 
 .match-score-form {
-  display: flex;
+  display: none;
   gap: 0.5rem;
   align-items: center;
   justify-content: center;
+  flex-grow: 1;
 }
 
-.match-card.played.is-editing .match-result,
-.match-card:not(.played) .match-result {
-    display: none;
+.match-card:not(.is-editing) .match-result {
+    display: flex;
 }
 
-.match-card.played:not(.is-editing) .match-score-form {
-    display: none;
+.match-card.is-editing .match-score-form {
+    display: flex;
 }
 
 
@@ -643,9 +710,25 @@ tbody tr.row-updated {
   margin: 0;
 }
 
-.match-score-form button {
-  padding: 0.5rem 0.8rem;
-  font-size: 0.9em;
+.btn.is-loading .btn-text {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.btn.is-loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  border: 2px solid transparent;
+  border-top-color: var(--primary-bg);
+  border-radius: 50%;
+  animation: spin 1s ease infinite;
 }
 
 .match-score-form button:disabled {
@@ -713,13 +796,13 @@ tbody tr.row-updated {
   #clearSearchBtn {  width: 100%;}
   #match-day-container {  grid-template-columns: 1fr;}
   .match-card {  font-size: 0.9em; flex-wrap: wrap; }
-  .match-result {  font-size: 1.25em;}
-    .search-container-wrapper, .match-day, #knockout-content-container { 
-    width: 100%; 
-    max-width: 100%; 
-    border-radius: 0; 
-    box-sizing: border-box;  
-    margin-left: 0;  
+  .match-result {  font-size: 1.5em;}
+    .search-container-wrapper, .match-day, #knockout-content-container {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 0;
+    box-sizing: border-box;
+    margin-left: 0;
     margin-right: 0;
   }
 }
@@ -788,7 +871,7 @@ tbody tr.row-updated {
     padding: 2rem 1rem;
     max-width: 1200px;
     margin: 0 auto;
-    box-sizing: border-box; 
+    box-sizing: border-box;
 }
 
 .knockout-round {
@@ -806,7 +889,7 @@ tbody tr.row-updated {
 
 .knockout-matches-grid {
     display: grid;
-    grid-template-columns: 1fr; 
+    grid-template-columns: 1fr;
     gap: 1.5rem;
 }
 
