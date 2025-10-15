@@ -669,7 +669,7 @@ tbody tr.row-updated {
 
 .match-result {
     font-weight: 700;
-    color: rgb(92, 92, 24);
+    color: yellow;
     font-size: 1.2em;
     display: flex;
     gap: 0.5rem;
