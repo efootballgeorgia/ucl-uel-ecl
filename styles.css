@@ -22,7 +22,7 @@
   --tertiary-bg: #2e2e3a;
   --text-color: #e5e5ff;
   --text-color-secondary: #a0a3d9;
-  --accent-color: #393547;
+  --accent-color: #fbfbfb;
   --accent-color-hover: #fff500;
   --border-color: #000000;
   --shadow-color: rgba(255, 218, 0, 0.2);
@@ -426,12 +426,12 @@ th[data-sort]::after {
 
 th[data-sort="asc"]::after {
   content: " ▲";
-  color: var(--accent-color);
+  color: yellow
 }
 
 th[data-sort="desc"]::after {
   content: " ▼";
-  color: var(--accent-color);
+  color: red
 }
 
 tbody td {
