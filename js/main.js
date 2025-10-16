@@ -190,19 +190,10 @@ window.onload = () => {
         btn.classList.toggle(CSS.ACTIVE, btn.dataset.league === initialLeague);
     });
 
-    switchLeague(initialLeague).then(() => {
-        if (initialTeam) {
-            dom.teamSearchSelect.value = initialTeam;
-        } else {
-            dom.daySelector.value = initialDay;
-        }
-        filterMatches();
-        updateURL(); 
-    });
-
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('service-worker.js')
             .then(reg => console.log('Service Worker registered successfully.', reg))
             .catch(err => console.error('Service Worker registration failed:', err));
     }
 };
+
