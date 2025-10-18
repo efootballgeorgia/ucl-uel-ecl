@@ -22,7 +22,7 @@
   --tertiary-bg: #2e2e3a;
   --text-color: #e5e5ff;
   --text-color-secondary: #a0a3d9;
-  --accent-color: #393547;
+  --accent-color: #fbfbfb;
   --accent-color-hover: #fff500;
   --border-color: #000000;
   --shadow-color: rgba(255, 218, 0, 0.2);
@@ -426,12 +426,12 @@ th[data-sort]::after {
 
 th[data-sort="asc"]::after {
   content: " ▲";
-  color: var(--accent-color);
+  color: yellow
 }
 
 th[data-sort="desc"]::after {
   content: " ▼";
-  color: var(--accent-color);
+  color: red
 }
 
 tbody td {
@@ -466,31 +466,6 @@ tbody.is-sorting {
 
 tbody tr.row-updated {
   animation: highlight-fade 1.5s ease-out;
-}
-
-/* Style for favorite team row/cell */
-.is-favorite b {
-  color: var(--accent-color-hover);
-  font-weight: 700;
-}
-
-/* Style for the interactive star */
-.favorite-star {
-  cursor: pointer;
-  font-size: 1.2em;
-  color: #ccc;
-  display: inline-block;
-  margin-right: 10px;
-  transition: transform 0.2s ease, color 0.2s ease;
-}
-
-.favorite-star:hover {
-  transform: scale(1.3);
-}
-
-td.is-favorite .favorite-star {
-  color: var(--accent-color-hover);
-  transform: scale(1.1);
 }
 
 .form-box { display: inline-block; width: 1rem; height: 1rem; margin: 0 3px; border-radius: 4px; border: 1px solid rgba(255, 255, 255, 0.1); }
@@ -582,7 +557,7 @@ td.is-favorite .favorite-star {
     border-radius: 10px;
     padding: 1.5rem 1rem;
     display: flex;
-    justify-content: center; /* UPDATED */
+    justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
     transition: transform 0.2s ease;
@@ -590,9 +565,7 @@ td.is-favorite .favorite-star {
     font-size: 1.1em;
     position: relative;
     margin-top: 1rem;
-    gap: 0.75rem; /* ADDED */
 }
-
 .match-day-indicator {
     position: absolute;
     top: -10px;
@@ -619,6 +592,7 @@ td.is-favorite .favorite-star {
   font-size: 0.6em;
 }
 
+/* ADDED: Destructive style for the delete button */
 .btn-delete {
   background-color: var(--loss-color);
   border-color: var(--loss-color) !important;
@@ -667,8 +641,7 @@ td.is-favorite .favorite-star {
 .match-team {
     display: flex;
     align-items: center;
-    flex-grow: 1;      /* ADDED */
-    flex-basis: 0;     /* ADDED */
+    width: 40%;
 }
 
 .match-team.away-team {
@@ -696,12 +669,11 @@ td.is-favorite .favorite-star {
 
 .match-result {
     font-weight: 700;
-    color: rgb(92, 92, 24);
+    color: yellow;
     font-size: 1.2em;
     display: flex;
     gap: 0.5rem;
     align-items: center;
-    flex-shrink: 0; /* ADDED */
 }
 
 .match-score-form {
@@ -709,7 +681,7 @@ td.is-favorite .favorite-star {
   gap: 0.5rem;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0; /* ADDED */
+  flex-grow: 1;
 }
 
 .match-card:not(.is-editing) .match-result {
@@ -898,3 +870,107 @@ td.is-favorite .favorite-star {
 
 #knockout-content-container {
     padding: 2rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.knockout-round {
+    width: 100%;
+}
+
+.knockout-round-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent-color);
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.knockout-matches-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+.knockout-match-card {
+    background: var(--tertiary-bg);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    border-left: 5px solid var(--border-color);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.knockout-match-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.5);
+}
+
+.knockout-team {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0;
+    font-size: 1.1rem;
+}
+
+.knockout-team.winner {
+    font-weight: 700;
+    color: #fff;
+}
+
+.knockout-team.loser {
+    opacity: 0.5;
+    text-decoration: line-through;
+}
+
+.knockout-team img {
+    width: 35px;
+    height: 35px;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+
+.knockout-team .team-name {
+    flex-grow: 1;
+}
+
+.knockout-team .team-score {
+    font-weight: 700;
+    color: var(--accent-color);
+    font-size: 1.2rem;
+    min-width: 25px;
+    text-align: right;
+}
+
+.knockout-placeholder {
+    font-style: italic;
+    color: var(--text-color-secondary);
+}
+
+.knockout-admin-form {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-color);
+    align-items: center;
+    justify-content: center;
+}
+
+.knockout-admin-form input {
+    width: 40px;
+    padding: 0.3rem;
+    text-align: center;
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.knockout-admin-form button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+}
