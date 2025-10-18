@@ -492,7 +492,7 @@ tbody tr.row-updated {
     flex-direction: column;
     align-items: center;
     width: 95%;
-    max-width: 1150px;
+    max-width: 1000px;
     margin: 2rem auto 0;
     padding: 1.5rem;
     background-color: var(--secondary-bg);
@@ -534,7 +534,7 @@ tbody tr.row-updated {
 
 .match-day {
     width: 95%;
-    max-width: 1150px;
+    max-width: 1000px;
     margin: 0 auto 2rem;
     padding: 2rem;
     background-color: var(--secondary-bg);
@@ -810,7 +810,7 @@ tbody tr.row-updated {
 
 @media (min-width: 600px) {
     #match-day-container {
-        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(350px, 2fr));
     }
         .knockout-matches-grid {
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
