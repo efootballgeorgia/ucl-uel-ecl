@@ -1,107 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Efootball Georgia</title>
-<link rel="icon" type="image/webp" href="images/logos/champions-league-logo.webp">
-<link rel="apple-touch-icon" href="images/logos/champions-league-logo.webp">
-<link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="styles.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Football Leagues</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<video autoplay muted loop id="bg-video">
-<source src="images/background-video.mp4" type="video/mp4">
-Your browser does not support the video tag.
-</video>
-<header>
-<div class="header-content">
-<nav class="league-selector-nav">
-<button class="league-btn btn active" data-league="ucl">Champions League</button>
-<button class="league-btn btn" data-league="uel">Europa League</button>
-<button class="league-btn btn" data-league="ecl">Conference League</button>
-</nav>
-<img src="images/logos/champions-league-logo.webp" alt="Champions League Logo" id="league-logo" class="league-logo active">
-<nav class="main-nav" role="tablist" aria-label="Main Navigation">
-<button class="nav-btn btn active" id="tab-league" role="tab" aria-selected="true" aria-controls="panel-league" data-view="league">Table</button>
-<button class="nav-btn btn" id="tab-matches" role="tab" aria-selected="false" aria-controls="panel-matches" data-view="matches">Matches</button>
-<button class="nav-btn btn" id="tab-knockout" role="tab" aria-selected="false" aria-controls="panel-knockout" data-view="knockout">Knockout</button>
-</nav>
-<div class="auth-status">
-<span id="user-status">Not logged in</span>
-<button id="auth-btn" class="btn">Login / Signup</button>
-<button id="logout-btn" class="btn" style="display:none;">Logout</button>
-</div>
-</div>
-</header>
-<main>
-<div class="visually-hidden" aria-live="polite" id="table-sort-announcer"></div>
-<div id="global-feedback" aria-live="polite"></div>
-<section id="league-section" class="page-section active" role="tabpanel" aria-labelledby="tab-league">
-<div class="league-table">
-<table id="leagueTable">
-<thead>
-<tr>
-<th>#</th>
-<th data-sort-key="team">Team</th>
-<th data-sort-key="played">P</th>
-<th data-sort-key="wins">W</th>
-<th data-sort-key="draws">D</th>
-<th data-sort-key="losses">L</th>
-<th data-sort-key="gd">+/-</th>
-<th data-sort-key="points">Pts</th>
-<th>Form</th>
-</tr>
-</thead>
-<tbody>
-</tbody>
-</table>
-</div>
-</section>
-<section id="matches-section" class="page-section" role="tabpanel" aria-labelledby="tab-matches">
-    <div class="search-container-wrapper"> <h2 id="match-day-title">UCL Match Day</h2>
-        <div class="search-container">
-            <label for="daySelector" class="visually-hidden">Select Match Day</label>
-            <select id="daySelector" class="team-search-select"></select>
-            <label for="teamSearchSelect" class="visually-hidden">Select Team to Filter</label>
-            <select id="teamSearchSelect" class="team-search-select"></select>
-            <button id="clearSearchBtn" class="btn" style="display:none;">Clear Filter</button>
-        </div>
-        <div id="no-search-results" class="empty-state" style="display:none;">No matches found for your selection.</div>
-    </div>
-    <div class="match-day">
-        <div id="match-day-container">
-        </div>
-    </div>
-</section>
+  <video autoplay muted loop id="bg-video">
+    <source src="images/background-video.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
 
-<section id="knockout-section" class="page-section" role="tabpanel" aria-labelledby="tab-knockout">
-</section>
+  <header>
+    <div class="header-content">
+      <nav class="league-selector-nav">
+        <button class="league-btn btn active" data-league="ucl">Champions League</button>
+        <button class="league-btn btn" data-league="uel">Europa League</button>
+        <button class="league-btn btn" data-league="ecl">Conference League</button>
+      </nav>
+      <img src="images/logos/champions-league-logo.webp" alt="Champions League Logo" id="league-logo" class="league-logo active">
+      <nav class="main-nav" role="tablist" aria-label="Main Navigation">
+        <button class="nav-btn btn active" id="tab-league" role="tab" aria-selected="true" aria-controls="panel-league" data-view="league">Table</button>
+        <button class="nav-btn btn" id="tab-matches" role="tab" aria-selected="false" aria-controls="panel-matches" data-view="matches">Matches</button>
+        <button class="nav-btn btn" id="tab-knockout" role="tab" aria-selected="false" aria-controls="panel-knockout" data-view="knockout">Knockout</button>
+      </nav>
+        <div class="auth-status">
+        <span id="user-status">Not logged in</span>
+        <button id="auth-btn" class="btn">Login / Signup</button>
+        <button id="logout-btn" class="btn" style="display:none;">Logout</button>
+      </div>
+    </div>
+  </header>
 
-<div class="modal auth-modal" id="auth-modal">
-  <span class="close" id="closeAuthModal">&times;</span>
-  <div class="modal-content auth-modal-content">
-    <h2>Login / Signup</h2>
-    <div class="auth-feedback-message" aria-live="polite"></div>
-    <form id="auth-form">
-      <div class="form-group">
-        <label for="auth-email" class="visually-hidden">Email</label>
-        <input type="email" id="auth-email" placeholder="Email" required autocomplete="email">
+  <main>
+    <div id="global-feedback" aria-live="polite"></div>
+    <section id="league-section" class="page-section active" role="tabpanel" aria-labelledby="tab-league">
+      <div class="league-table">
+        <table id="leagueTable">
+           <!-- Correct semantic location for caption -->
+          <caption class="visually-hidden" aria-live="polite" id="table-sort-announcement"></caption>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th data-sort-key="team">Team</th>
+              <th data-sort-key="played">P</th>
+              <th data-sort-key="wins">W</th>
+              <th data-sort-key="draws">D</th>
+              <th data-sort-key="losses">L</th>
+              <th data-sort-key="gd">+/-</th>
+              <th data-sort-key="points">Pts</th>
+              <th>Form</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
       </div>
-      <div class="form-group">
-        <label for="auth-password" class="visually-hidden">Password</label>
-        <input type="password" id="auth-password" placeholder="Password" required autocomplete="current-password">
+    </section>
+
+    <section id="matches-section" class="page-section" role="tabpanel" aria-labelledby="tab-matches">
+        <div class="search-container-wrapper"> <h2 id="match-day-title">UCL Match Day</h2>
+            <div class="search-container">
+                <label for="daySelector" class="visually-hidden">Select Match Day</label>
+                <select id="daySelector" class="team-search-select"></select>
+                <label for="teamSearchSelect" class="visually-hidden">Select Team to Filter</label>
+                <select id="teamSearchSelect" class="team-search-select"></select>
+                <button id="clearSearchBtn" class="btn" style="display:none;">Clear Filter</button>
+            </div>
+            <div id="no-search-results" class="empty-state" style="display:none;">No matches found for your selection.</div>
+        </div>
+        <div class="match-day">
+            <div id="match-day-container">
+            </div>
+        </div>
+    </section>
+
+    <section id="knockout-section" class="page-section" role="tabpanel" aria-labelledby="tab-knockout">
+    </section>
+
+    <div class="modal auth-modal" id="auth-modal">
+      <span class="close" id="closeAuthModal">&times;</span>
+      <div class="modal-content auth-modal-content">
+        <h2>Login / Signup</h2>
+        <div class="auth-feedback-message" aria-live="polite"></div>
+        <form id="auth-form">
+          <div class="form-group">
+            <label for="auth-email" class="visually-hidden">Email</label>
+            <input type="email" id="auth-email" placeholder="Email" required autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label for="auth-password" class="visually-hidden">Password</label>
+            <input type="password" id="auth-password" placeholder="Password" required autocomplete="current-password">
+          </div>
+          <button type="submit" id="login-btn" class="btn">Login</button>
+          <button type="button" id="signup-btn" class="btn">Signup</button>
+        </form>
       </div>
-      <button type="submit" id="login-btn" class="btn">Login</button>
-      <button type="button" id="signup-btn" class="btn">Signup</button>
-    </form>
-  </div>
-</div>
-</main>
-<script src="https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js" async=""></script>
+    </div>
+  </main>
+
 <script type="module" src="js/main.js"></script>
 </body>
 </html>
