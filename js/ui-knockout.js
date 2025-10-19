@@ -45,7 +45,7 @@ function calculateKnockoutData(sortedTeams, knockoutMatches) {
     const topSeeded = qualifiedTeams.slice(0, seeded);
     const playoffTeams = qualifiedTeams.slice(seeded);
 
-    const kopo_matches = Array.from({ length: playoffTeams.length}, (_, i) => ({
+    const kopo_matches = Array.from({ length: playoffTeams.length / 2}, (_, i) => ({
         id: `r32-${i}`, homeTeam: playoffTeams[i], awayTeam: playoffTeams[playoffTeams.length - 1 - i],
         data: knockoutData[`r32-${i}`]
     }));
@@ -168,6 +168,7 @@ function renderKnockoutCard(match) {
     </div>`;
 
 }
+
 
 
 
