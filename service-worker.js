@@ -1,16 +1,16 @@
-const CACHE_NAME = 'league-v2'; 
-const DYNAMIC_CACHE_NAME = 'league-dynamic-v2';
+const CACHE_NAME = 'nekro-league-v1';
+const DYNAMIC_CACHE_NAME = 'nekro-league-dynamic-v1';
 
 const STATIC_ASSETS = [
     '/',
     '/index.html',
     '/styles.css',
+    'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap',
     '/js/main.js',
-    '/js/auth.js',
-    '/js/config.js',
+    '/js/supabase.js', // Updated
+    '/js/supabase-client.js', // Updated
     '/js/constants.js',
     '/js/dom.js',
-    '/js/supabase.js', 
     '/js/state.js',
     '/js/ui-feedback.js',
     '/js/ui-knockout.js',
@@ -18,6 +18,7 @@ const STATIC_ASSETS = [
     '/js/ui-table.js',
     '/js/utils.js',
     '/images/logos/champions-league-logo.webp',
+    'https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js'
 ];
 
 self.addEventListener('install', evt => {
@@ -41,13 +42,30 @@ self.addEventListener('activate', evt => {
 });
 
 self.addEventListener('fetch', evt => {
+    // Check for Supabase API calls
+    if (evt.request.url.includes('supabase.co')) {
+        evt.respondWith(
+            caches.open(DYNAMIC_CACHE_NAME).then(cache => {
+                return fetch(evt.request).then(networkResponse => {
+                    if(networkResponse.ok) { // Only cache successful responses
+                       cache.put(evt.request.url, networkResponse.clone());
+                    }
+                    return networkResponse;
+                }).catch(() => cache.match(evt.request.url)); // Serve from cache on network failure
+            })
+        );
+        return;
+    }
 
+    // Default cache-then-network strategy
     evt.respondWith(
         caches.match(evt.request).then(cacheRes => {
             return cacheRes || fetch(evt.request).then(fetchRes => {
                 return caches.open(DYNAMIC_CACHE_NAME).then(cache => {
-                    if (fetchRes.status === 200 && evt.request.method === 'GET') {
-                         cache.put(evt.request.url, fetchRes.clone());
+                    if (!evt.request.url.startsWith('chrome-extension://')) {
+                        if (fetchRes.status === 200) {
+                            cache.put(evt.request.url, fetchRes.clone());
+                        }
                     }
                     return fetchRes;
                 });
