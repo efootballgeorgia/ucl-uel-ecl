@@ -592,6 +592,7 @@ tbody tr.row-updated {
   font-size: 0.6em;
 }
 
+/* ADDED: Destructive style for the delete button */
 .btn-delete {
   background-color: var(--loss-color);
   border-color: var(--loss-color) !important;
@@ -659,11 +660,11 @@ tbody tr.row-updated {
 }
 
 .match-team.home-team .team-logo {
-    margin-right: 0.1rem;
+    margin-right: 0.75rem;
 }
 
 .match-team.away-team .team-logo {
-    margin-left: 0.1rem;
+    margin-left: 0.75rem;
 }
 
 .match-result {
@@ -677,16 +678,18 @@ tbody tr.row-updated {
 
 .match-score-form {
   display: none;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
 }
-.match-card:not(.played) .btn-edit {
-  display: none;
+
+.match-card:not(.is-editing) .match-result {
+    display: flex;
 }
 
 .match-card.is-editing .match-score-form {
-  display: flex;
-}
-.match-card.is-editing .match-result {
-  display: none;
+    display: flex;
 }
 
 
