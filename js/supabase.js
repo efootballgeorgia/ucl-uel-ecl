@@ -1,9 +1,12 @@
+// supabase.js
+
 import { supabase } from './supabase-client.js';
 import { appState } from './state.js';
+import { dom } from './dom.js';
 import { showAuthFeedback, updateAuthUI, showFeedback } from './ui-feedback.js';
 import { generateKnockoutStage } from './ui-knockout.js';
 import { generateMatchDay, filterMatches, renderSkeletonMatches, updateUIFromConfig } from './ui-matches.js';
-import { renderTable, updateTeamStats, subtractTeamStats, sortTable, renderSkeletonTable } from "./ui-table.js";
+import { renderTable, updateTeamStats, sortTable, renderSkeletonTable } from "./ui-table.js";
 
 // --- AUTHENTICATION ---
 
@@ -79,28 +82,34 @@ export function initializeSupabase() {
         }
 
         updateAuthUI();
-        if (appState.currentLeague) {
-            switchLeague(appState.currentLeague);
-        }
+        // Delay initial league switch slightly to ensure DOM is ready.
+        setTimeout(() => {
+             if (appState.currentLeague) {
+                switchLeague(appState.currentLeague);
+             }
+        }, 0);
     });
 }
 
-
-// Replace this function in supabase.js
+// --- DATABASE ---
 
 function processLeagueChanges(matches) {
-    // --- THIS IS THE FIX ---
-    // Before doing any calculations, find every form container and wipe it clean.
-    dom.leagueTableBody.querySelectorAll('.form-container').forEach(container => container.innerHTML = '');
+    if (!dom.leagueTableBody) {
+        console.error("League table body not found in DOM, cannot process changes.");
+        return;
+    }
     
+    dom.leagueTableBody.querySelectorAll('.form-container').forEach(container => container.innerHTML = '');
+
     const allTeamRows = dom.leagueTableBody.querySelectorAll('tr[data-team]');
+    
     allTeamRows.forEach(row => {
         row.cells[2].textContent = '0'; // P
         row.cells[3].textContent = '0'; // W
         row.cells[4].textContent = '0'; // D
         row.cells[5].textContent = '0'; // L
-        row.cells[6].textContent = '0:0'; // +/-
-        row.cells[7].querySelector('.points').textContent = '0';
+        row.cells[6].textContent = '0:0'; // GF:GA
+        row.cells[7].querySelector('.points').textContent = '0'; // Pts
         row.dataset.gd = '0';
     });
     
@@ -118,7 +127,6 @@ function processLeagueChanges(matches) {
 
     generateKnockoutStage(appState.sortedTeams, appState.currentLeagueKnockoutMatches);
     filterMatches();
-}
 }
 
 async function fetchLeagueData(league) {
@@ -162,7 +170,7 @@ function removeAllSubscriptions() {
 }
 
 function setupLeagueListeners(league) {
-    removeAllSubscriptions(); // Ensure old listeners are gone
+    removeAllSubscriptions();
 
     const channel = supabase.channel(`realtime:${league}`)
         .on('postgres_changes', { event: '*', schema: 'public', table: `${league}Matches` }, () => fetchLeagueData(league))
@@ -191,7 +199,6 @@ export async function switchLeague(league) {
         setupLeagueListeners(league);
     } catch (error) {
         console.error(`Error loading data for ${league}:`, error);
-        showFeedback(`Could not load data for ${league}.`, false);
     }
 }
 
@@ -224,6 +231,7 @@ export async function handleMatchSubmission(form) {
         const { error } = await supabase.from(`${appState.currentLeague}Matches`).upsert(matchData);
         if (error) throw error;
         showFeedback('Match updated successfully!', true);
+
         await fetchLeagueData(appState.currentLeague);
 
         if (card) card.classList.remove('is-editing');
@@ -253,7 +261,6 @@ export async function handleMatchDeletion(docId) {
 
         if (error) throw error;
         showFeedback('Match deleted successfully!', true);
-        await fetchLeagueData(appState.currentLeague);
     } catch (error) {
         showFeedback(`Error deleting match: ${error.message}.`, false);
     }
@@ -285,10 +292,9 @@ export async function handleKnockoutMatchSubmission(e) {
             if(error) throw error;
             showFeedback('Knockout result saved!', true);
         } catch (error) {
-            showFeedback(`Error saving result: ${error.message}`, false);
+            showFeedback(`Error saving result: ${error.message}.`, false);
         }
     }
     button.classList.remove('is-loading');
     button.disabled = false;
-
 }
