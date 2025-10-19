@@ -86,13 +86,24 @@ export function initializeSupabase() {
 }
 
 
-function processLeagueChanges(matches) {
-    appState.currentLeagueMatches.forEach(match => {
-        if (match.homeScore === null || match.homeScore === undefined) return;
-        subtractTeamStats(match.homeTeam, match.homeScore, match.awayScore);
-        subtractTeamStats(match.awayTeam, match.awayScore, match.homeScore);
-    });
+// Replace this function in supabase.js
 
+function processLeagueChanges(matches) {
+    // --- THIS IS THE FIX ---
+    // Before doing any calculations, find every form container and wipe it clean.
+    dom.leagueTableBody.querySelectorAll('.form-container').forEach(container => container.innerHTML = '');
+    
+    const allTeamRows = dom.leagueTableBody.querySelectorAll('tr[data-team]');
+    allTeamRows.forEach(row => {
+        row.cells[2].textContent = '0'; // P
+        row.cells[3].textContent = '0'; // W
+        row.cells[4].textContent = '0'; // D
+        row.cells[5].textContent = '0'; // L
+        row.cells[6].textContent = '0:0'; // +/-
+        row.cells[7].querySelector('.points').textContent = '0';
+        row.dataset.gd = '0';
+    });
+    
     appState.currentLeagueMatches = matches;
 
     appState.currentLeagueMatches.forEach(match => {
@@ -107,6 +118,7 @@ function processLeagueChanges(matches) {
 
     generateKnockoutStage(appState.sortedTeams, appState.currentLeagueKnockoutMatches);
     filterMatches();
+}
 }
 
 async function fetchLeagueData(league) {
@@ -278,4 +290,5 @@ export async function handleKnockoutMatchSubmission(e) {
     }
     button.classList.remove('is-loading');
     button.disabled = false;
+
 }
