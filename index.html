@@ -62,7 +62,7 @@ Your browser does not support the video tag.
 </div>
 </section>
 <section id="matches-section" class="page-section" role="tabpanel" aria-labelledby="tab-matches">
-    <div class="search-container-wrapper"> <h2 id="match-day-title">UCL Match Day</h2>
+    <div class="search-container-wrapper"> <h2 id="match-box-title">UCL Match Day</h2>
         <div class="search-container">
             <label for="daySelector" class="visually-hidden">Select Match Day</label>
             <select id="daySelector" class="team-search-select"></select>
@@ -72,8 +72,8 @@ Your browser does not support the video tag.
         </div>
         <div id="no-search-results" class="empty-state" style="display:none;">No matches found for your selection.</div>
     </div>
-    <div class="match-day">
-        <div id="match-day-container">
+    <div class="match-box">
+        <div id="match-box-container">
         </div>
     </div>
 </section>
@@ -86,7 +86,7 @@ Your browser does not support the video tag.
   <div class="modal-content auth-modal-content">
     <h2>Login / Signup</h2>
     <div class="auth-feedback-message" aria-live="polite"></div>
-    <form id="auth-form">
+    <form id="auth-form" novalidate>
       <div class="form-group">
         <label for="auth-email" class="visually-hidden">Email</label>
         <input type="email" id="auth-email" placeholder="Email" required autocomplete="email">
@@ -95,8 +95,8 @@ Your browser does not support the video tag.
         <label for="auth-password" class="visually-hidden">Password</label>
         <input type="password" id="auth-password" placeholder="Password" required autocomplete="current-password">
       </div>
-      <button type="submit" id="login-btn" class="btn">Login</button>
-      <button type="button" id="signup-btn" class="btn">Signup</button>
+      <button type="submit" id="login-btn" class="btn" data-action="login">Login</button>
+      <button type="submit" id="signup-btn" class="btn" data-action="signup">Signup</button>
     </form>
   </div>
 </div>
