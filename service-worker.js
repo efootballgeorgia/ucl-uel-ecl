@@ -7,8 +7,7 @@ const STATIC_ASSETS = [
     '/styles.css',
     'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap',
     '/js/main.js',
-    '/js/supabase.js', // Updated
-    '/js/supabase-client.js', // Updated
+    '/js/supabase.js', 
     '/js/constants.js',
     '/js/dom.js',
     '/js/state.js',
@@ -16,7 +15,6 @@ const STATIC_ASSETS = [
     '/js/ui-knockout.js',
     '/js/ui-matches.js',
     '/js/ui-table.js',
-    '/js/utils.js',
     '/images/logos/champions-league-logo.webp',
     'https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js'
 ];
