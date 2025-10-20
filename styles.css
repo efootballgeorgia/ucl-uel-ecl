@@ -429,7 +429,7 @@ tbody td {
 }
 
 tbody td b.points { color: #fff; font-weight: 700; }
-tbody td img { height: 45px; width: 45px; vertical-align: middle; margin-right: 15px; cursor: pointer; border-radius: 50%; padding: 2px; }
+tbody td img { height: 35px; width: 35px; vertical-align: middle; margin-right: 15px; cursor: pointer; padding: 2px; }
 tbody tr {
     background-color: transparent;
     transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
@@ -654,7 +654,7 @@ tbody.is-sorting {
   .league-logo { max-width: 100px; }
   .main-nav { gap: 0.5rem; }
   .btn { padding: 0.6rem 1rem; }
-  .league-table { width: 98%; font-size: 0.75rem; }
+  .league-table { width: 98%; font-size: 0.6rem;}
   thead th, tbody td { padding: 0.5rem 0.3rem; }
   tbody td img { width: 30px; height: 30px; margin-right: 5px; }
   .form-box { width: 0.7rem; height: 0.7rem; }
