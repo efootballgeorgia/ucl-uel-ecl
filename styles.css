@@ -40,6 +40,18 @@
   --shadow-color: rgba(255, 69, 0, 0.25);
 }
 
+.ecl-theme {
+  --primary-bg: #050f0a;
+  --secondary-bg: #0d1e16;
+  --tertiary-bg: #142c20;
+  --text-color: #e0f0e8;
+  --text-color-secondary: #a0b0a8;
+  --accent-color: #00ff85;
+  --accent-color-hover: #50ffaa;
+  --border-color: #1e4231;
+  --shadow-color: rgba(0, 255, 133, 0.2);
+}
+
 body {
   font-family: var(--font-primary);
   background: var(--primary-bg);
@@ -461,6 +473,7 @@ tbody.is-sorting {
 .knockout-seeded .line { background-color: #157736; }
 .knockout-unseeded .line { background-color: #d72811; }
 .uel-round16 .line { background-color: var(--accent-color); }
+.ecl-round16 .line { background-color: #FFA500; }
 
 /* ============================================
    6. Search Filter
@@ -607,8 +620,8 @@ tbody.is-sorting {
 }
 
 .team-logo {
-    width: 35px;
-    height: 35px;
+    width: 29px;
+    height: 29px;
     object-fit: contain;
 }
 
@@ -656,7 +669,7 @@ tbody.is-sorting {
   .btn { padding: 0.6rem 1rem; }
   .league-table { width: 98%; font-size: 0.6rem;}
   thead th, tbody td { padding: 0.5rem 0.3rem; }
-  tbody td img { width: 20px; height: 20px; margin-right: 5px; }
+  tbody td img { width: 30px; height: 30px; margin-right: 5px; }
   .form-box { width: 0.7rem; height: 0.7rem; }
   .match-box { margin-top: 0; padding: 1rem; border-top: 1px solid var(--border-color); }
   .search-container { flex-direction: column; }
@@ -766,4 +779,3 @@ tbody.is-sorting {
 .is-editing .btn-cancel {
   display: inline-flex;
 }
-
