@@ -1,5 +1,5 @@
-const CACHE_NAME = 'nekro-league-v3';
-const DYNAMIC_CACHE_NAME = 'nekro-league-dynamic-v3';
+const CACHE_NAME = 'nekro-league-v4';
+const DYNAMIC_CACHE_NAME = 'nekro-league-dynamic-v4';
 
 const STATIC_ASSETS = [
     '/',
@@ -43,6 +43,8 @@ self.addEventListener('activate', evt => {
 });
 
 self.addEventListener('fetch', evt => {
+    // UPDATED: Network-first strategy for critical API data.
+    // This ensures users always get the freshest scores and stats when online.
     if (evt.request.url.includes('supabase.co')) {
         evt.respondWith(
             caches.open(DYNAMIC_CACHE_NAME).then(cache => {
@@ -51,23 +53,30 @@ self.addEventListener('fetch', evt => {
                        cache.put(evt.request.url, networkResponse.clone());
                     }
                     return networkResponse;
-                }).catch(() => cache.match(evt.request.url));
+                }).catch(() => cache.match(evt.request.url)); // Fallback to cache if offline
             })
         );
         return;
     }
 
+    // UPDATED: Stale-While-Revalidate strategy for all other assets (e.g., images, scripts).
+    // This serves assets from the cache instantly for a faster load time,
+    // then updates the cache from the network in the background for future visits.
     evt.respondWith(
-        caches.match(evt.request).then(cacheRes => {
-            return cacheRes || fetch(evt.request).then(fetchRes => {
-                return caches.open(DYNAMIC_CACHE_NAME).then(cache => {
-                    if (!evt.request.url.startsWith('chrome-extension://')) {
-                        if (fetchRes.status === 200) {
-                            cache.put(evt.request.url, fetchRes.clone());
-                        }
+        caches.open(DYNAMIC_CACHE_NAME).then(cache => {
+            return cache.match(evt.request).then(cachedResponse => {
+                const networkFetch = fetch(evt.request).then(networkResponse => {
+                    // Check for valid, cacheable responses
+                    if (networkResponse && networkResponse.status === 200 && !evt.request.url.startsWith('chrome-extension://')) {
+                        cache.put(evt.request.url, networkResponse.clone());
                     }
-                    return fetchRes;
+                    return networkResponse;
+                }).catch(err => {
+                    console.warn('SW: Network fetch failed. Serving from cache if available.', err);
                 });
+                
+                // Return cached response immediately if available, otherwise wait for the network.
+                return cachedResponse || networkFetch;
             });
         })
     );
