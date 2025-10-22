@@ -11,7 +11,6 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// --- AUTHENTICATION ---
 
 function handleAuthError(error) {
     if (error.message.includes('Invalid login credentials')) {
@@ -89,15 +88,11 @@ export function initializeSupabase() {
         }
 
         updateAuthUI();
-        setTimeout(() => {
-             if (appState.currentLeague) {
-                switchLeague(appState.currentLeague);
-             }
-        }, 0);
+        if (appState.currentLeague) {
+            switchLeague(appState.currentLeague);
+        }
     });
 }
-
-// --- DATABASE ---
 
 function calculateAllTeamStats(matches, teams) {
     const stats = {};
@@ -107,39 +102,24 @@ function calculateAllTeamStats(matches, teams) {
 
     matches.forEach(match => {
         if (typeof match.homeScore !== 'number') return;
-
         const { homeTeam, awayTeam, homeScore, awayScore } = match;
         const home = stats[homeTeam];
         const away = stats[awayTeam];
-
         if (!home || !away) return;
 
-        home.p++;
-        away.p++;
-        home.gf += homeScore;
-        home.ga += awayScore;
-        away.gf += awayScore;
-        away.ga += homeScore;
+        home.p++; away.p++;
+        home.gf += homeScore; home.ga += awayScore;
+        away.gf += awayScore; away.ga += homeScore;
 
         if (homeScore > awayScore) {
-            home.w++;
-            home.pts += 3;
-            home.form.unshift('victory');
-            away.l++;
-            away.form.unshift('loss');
+            home.w++; home.pts += 3; home.form.unshift('victory');
+            away.l++; away.form.unshift('loss');
         } else if (awayScore > homeScore) {
-            away.w++;
-            away.pts += 3;
-            away.form.unshift('victory');
-            home.l++;
-            home.form.unshift('loss');
+            away.w++; away.pts += 3; away.form.unshift('victory');
+            home.l++; home.form.unshift('loss');
         } else {
-            home.d++;
-            away.d++;
-            home.pts++;
-            away.pts++;
-            home.form.unshift('draw');
-            away.form.unshift('draw');
+            home.d++; away.d++; home.pts++; away.pts++;
+            home.form.unshift('draw'); away.form.unshift('draw');
         }
     });
 
@@ -159,10 +139,9 @@ function processLeagueChanges(matches) {
 
     const teamStats = calculateAllTeamStats(matches, leagueConfig.teams);
 
-    renderTable(appState.currentLeague);
     updateTableFromStats(teamStats);
-
     sortTable();
+
     const rows = Array.from(document.querySelectorAll('#leagueTable tbody tr:not(.separator)'));
     appState.sortedTeams = rows.map(row => row.dataset.team);
 
@@ -235,7 +214,8 @@ export async function switchLeague(league) {
         }
 
         setupLeagueUI(league, appState.config[league]);
-        await fetchLeagueData(league);
+        renderTable(league); 
+        await fetchLeagueData(league); 
         await fetchKnockoutData(league);
         setupLeagueListeners(league);
     } catch (error) {
@@ -273,24 +253,32 @@ export async function handleScoreSubmission(e) {
     const awayTeam = matchType === 'league' ? card.dataset.away : form.dataset.awayTeam;
 
     const matchData = { id: docId, homeScore, awayScore, homeTeam, awayTeam };
-    if (matchType === 'league') {
-        matchData.timestamp = new Date().toISOString();
-    } else {
-        matchData.stage = docId.split('-')[0];
-    }
+    if (matchType === 'league') matchData.timestamp = new Date().toISOString();
+    else matchData.stage = docId.split('-')[0];
     
     try {
         const { error } = await supabase.from(tableName).upsert(matchData);
         if (error) throw error;
         showFeedback('Match updated successfully!', true);
 
-        // Instant refresh for knockout stage requires local state update
-        if (matchType === 'knockout') {
-            const matchIndex = appState.currentLeagueKnockoutMatches.findIndex(m => m.id === docId);
-            if (matchIndex > -1) appState.currentLeagueKnockoutMatches[matchIndex] = { ...appState.currentLeagueKnockoutMatches[matchIndex], ...matchData };
-            else appState.currentLeagueKnockoutMatches.push(matchData);
+        const matchIndex = matchType === 'league' 
+            ? appState.currentLeagueMatches.findIndex(m => m.id === docId)
+            : appState.currentLeagueKnockoutMatches.findIndex(m => m.id === docId);
+
+        const targetArray = matchType === 'league' ? appState.currentLeagueMatches : appState.currentLeagueKnockoutMatches;
+        
+        if (matchIndex > -1) {
+            targetArray[matchIndex] = { ...targetArray[matchIndex], ...matchData };
+        } else {
+            targetArray.push(matchData);
+        }
+
+        if (matchType === 'league') {
+            processLeagueChanges(appState.currentLeagueMatches);
+        } else {
             generateKnockoutStage(appState.sortedTeams, appState.currentLeagueKnockoutMatches);
         }
+
     } catch (error) {
         showFeedback(`Error saving match: ${error.message}.`, false);
     } finally {
@@ -305,7 +293,7 @@ export async function handleDelete(docId, matchType) {
         return;
     }
 
-    const card = document.querySelector(`.match-card[data-doc-id="${docId}"], .knockout-match-card[data-doc-id="${docId}"]`);
+    const card = document.querySelector(`[data-doc-id="${docId}"]`);
     if (card) card.style.opacity = '0.5';
 
     const tableName = `${appState.currentLeague}${matchType === 'league' ? 'Matches' : 'KnockoutMatches'}`;
@@ -315,10 +303,14 @@ export async function handleDelete(docId, matchType) {
         if (error) throw error;
         showFeedback('Match deleted successfully!', true);
 
-        if (matchType === 'knockout') {
+        if (matchType === 'league') {
+            appState.currentLeagueMatches = appState.currentLeagueMatches.filter(m => m.id !== docId);
+            processLeagueChanges(appState.currentLeagueMatches);
+        } else {
             appState.currentLeagueKnockoutMatches = appState.currentLeagueKnockoutMatches.filter(m => m.id !== docId);
             generateKnockoutStage(appState.sortedTeams, appState.currentLeagueKnockoutMatches);
         }
+
     } catch (error) {
         showFeedback(`Error deleting match: ${error.message}.`, false);
         if (card) card.style.opacity = '1';
