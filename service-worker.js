@@ -1,5 +1,5 @@
-const CACHE_NAME = 'nekro-league-v1';
-const DYNAMIC_CACHE_NAME = 'nekro-league-dynamic-v1';
+const CACHE_NAME = 'nekro-league-v3';
+const DYNAMIC_CACHE_NAME = 'nekro-league-dynamic-v3';
 
 const STATIC_ASSETS = [
     '/',
@@ -7,10 +7,7 @@ const STATIC_ASSETS = [
     '/styles.css',
     'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap',
     '/js/main.js',
-    '/js/supabase.js', 
-    '/js/constants.js',
-    '/js/dom.js',
-    '/js/state.js',
+    '/js/supabase.js',
     '/js/ui-feedback.js',
     '/js/ui-knockout.js',
     '/js/ui-matches.js',
@@ -26,6 +23,7 @@ self.addEventListener('install', evt => {
             return cache.addAll(STATIC_ASSETS);
         }).catch(err => console.error("App Shell Caching Failed: ", err))
     );
+    self.skipWaiting(); 
 });
 
 self.addEventListener('activate', evt => {
@@ -33,29 +31,32 @@ self.addEventListener('activate', evt => {
         caches.keys().then(keys => {
             return Promise.all(keys
                 .filter(key => key !== CACHE_NAME && key !== DYNAMIC_CACHE_NAME)
-                .map(key => caches.delete(key))
+                .map(key => {
+                    console.log('SW: Deleting old cache:', key);
+                    return caches.delete(key);
+                })
             );
+        }).then(() => {
+            return self.clients.claim();
         })
     );
 });
 
 self.addEventListener('fetch', evt => {
-    // Check for Supabase API calls
     if (evt.request.url.includes('supabase.co')) {
         evt.respondWith(
             caches.open(DYNAMIC_CACHE_NAME).then(cache => {
                 return fetch(evt.request).then(networkResponse => {
-                    if(networkResponse.ok) { // Only cache successful responses
+                    if(networkResponse.ok) {
                        cache.put(evt.request.url, networkResponse.clone());
                     }
                     return networkResponse;
-                }).catch(() => cache.match(evt.request.url)); // Serve from cache on network failure
+                }).catch(() => cache.match(evt.request.url));
             })
         );
         return;
     }
 
-    // Default cache-then-network strategy
     evt.respondWith(
         caches.match(evt.request).then(cacheRes => {
             return cacheRes || fetch(evt.request).then(fetchRes => {
