@@ -90,16 +90,16 @@ function syncMatchContainerDOM(fixturesToShow, allMatches, isTeamFilter = false)
 function renderMatchCard(fixture, playedMatch, dayNumber = null) {
     const isPlayed = !!playedMatch;
     const docId = generateMatchId(fixture.home, fixture.away);
-    const homeScore = isPlayed ? playedMatch.homeScore : null;
-    const awayScore = isPlayed ? playedMatch.awayScore : null;
+    const homeScore = playedMatch?.homeScore ?? '';
+    const awayScore = playedMatch?.awayScore ?? '';
     const adminActionsHTML = renderAdminActionsHTML(docId, isPlayed);
-    const contentHTML = isPlayed ? `
+    const contentHTML = `
         <div class="card-content">
             <div class="team-row">
                 <div class="team-info">
                     <picture>
                         <source data-srcset="images/logos/${getTeamSlug(fixture.home)}.webp" type="image/webp">
-                        <img data-src="images/logos/${getTeamSlug(fixture.home)}.png" alt="${fixture.home}" class="team-logo lazyload">
+                        <img src="images/logos/${getTeamSlug(fixture.home)}.webp" alt="${fixture.home}" class="team-logo">
                     </picture>
                     <span>${fixture.home}</span>
                 </div>
@@ -109,25 +109,27 @@ function renderMatchCard(fixture, playedMatch, dayNumber = null) {
                 <div class="team-info">
                     <picture>
                         <source data-srcset="images/logos/${getTeamSlug(fixture.away)}.webp" type="image/webp">
-                        <img data-src="images/logos/${getTeamSlug(fixture.away)}.png" alt="${fixture.away}" class="team-logo lazyload">
+                        <img src="images/logos/${getTeamSlug(fixture.away)}.webp" alt="${fixture.away}" class="team-logo">
                     </picture>
                     <span>${fixture.away}</span>
                 </div>
                 <span class="team-score">${awayScore}</span>
             </div>
         </div>
-    ` : `<div class="card-pending">VS</div>`;
+    `;
 
     return `
         <div class="match-card ${isPlayed ? 'played' : ''}" data-home="${fixture.home}" data-away="${fixture.away}" data-doc-id="${docId}" data-type="league">
             ${dayNumber ? `<div class="match-box-indicator">Day ${dayNumber}</div>` : ''}
-            ${contentHTML}
+            
+            ${contentHTML} 
+
             <form class="score-form" id="${docId}-form" data-doc-id="${docId}">
                 <label for="${docId}-home-score" class="visually-hidden">Home Score</label>
-                <input type="number" id="${docId}-home-score" class="score-home" min="0" value="${homeScore ?? ''}" required>
+                <input type="number" id="${docId}-home-score" class="score-home" min="0" value="${homeScore}" required>
                 <span>-</span>
                 <label for="${docId}-away-score" class="visually-hidden">Away Score</label>
-                <input type="number" id="${docId}-away-score" class="score-away" min="0" value="${awayScore ?? ''}" required>
+                <input type="number" id="${docId}-away-score" class="score-away" min="0" value="${awayScore}" required>
             </form>
             ${adminActionsHTML}
         </div>

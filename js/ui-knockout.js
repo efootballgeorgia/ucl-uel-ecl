@@ -145,23 +145,22 @@ function renderKnockoutCard(match) {
     const homeWinner = isPlayed && areTeamsSet && data.homeScore > data.awayScore;
     const awayWinner = isPlayed && areTeamsSet && data.awayScore > data.homeScore;
     const renderTeamRow = (team, score, isWinner) => {
-        const teamInfo = team 
-            ? `<div class="team-info">
-                 <picture>
-                    <source data-srcset="images/logos/${getTeamSlug(team)}.webp" type="image/webp">
-                    <img data-src="images/logos/${getTeamSlug(team)}.png" alt="${team} logo" class="team-logo lazyload">
-                 </picture>
-                 <span class="team-name ${isWinner ? 'winner' : ''}">${team}</span>
-               </div>`
-            : `<div class="team-info knockout-placeholder">${dependsOn || 'TBD'}</div>`;
-        
-        const scoreInfo = `<span class="team-score">${score ?? ''}</span>`;
+    const teamInfo = team 
+        ? `<div class="team-info">
+             <picture>
+                <source data-srcset="images/logos/${getTeamSlug(team)}.webp" type="image/webp">
+                <img src="images/logos/${getTeamSlug(team)}.webp" alt="${team} logo" class="team-logo">
+             </picture>
+             <span class="team-name ${isWinner ? 'winner' : ''}">${team}</span>
+           </div>`
+        : `<div class="team-info knockout-placeholder">${dependsOn || 'TBD'}</div>`;
+    
+    const scoreInfo = `<span class="team-score">${score ?? ''}</span>`;
 
-        return `<div class="team-row">${teamInfo}${scoreInfo}</div>`;
-    };
+    return `<div class="team-row">${teamInfo}${scoreInfo}</div>`;
+};
 
     const adminActionsHTML = renderAdminActionsHTML(id, isPlayed, areTeamsSet);
-
     const contentHTML = areTeamsSet
         ? renderTeamRow(homeTeam, data?.homeScore, homeWinner) + renderTeamRow(awayTeam, data?.awayScore, awayWinner)
         : renderTeamRow(null, null, false); 

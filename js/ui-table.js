@@ -32,7 +32,7 @@ export function renderTable(league) {
             <td>
               <picture>
                 <source data-srcset="images/logos/${teamLogoName}.webp" type="image/webp">
-                <img data-src="images/logos/${teamLogoName}.png" alt="${teamName}" class="team-logo lazyload">
+                <img src="images/logos/${teamLogoName}.webp" alt="${teamName}" class="team-logo">
               </picture>
               <b>${teamName}</b>
             </td>
