@@ -1,4 +1,4 @@
-import { dom , appState,} from './main.js';
+import { dom, appState, } from './main.js';
 import { getTeamSlug, renderAdminActionsHTML } from './ui-feedback.js';
 
 function areAllTeamsReadyForKnockout() {
@@ -8,21 +8,21 @@ function areAllTeamsReadyForKnockout() {
     }
 
     const requiredGames = leagueConfig.numberOfMatches || 8;
-    
+
     for (const teamName of leagueConfig.teams) {
         const row = dom.leagueTableBody.querySelector(`tr[data-team="${teamName}"]`);
-        
+
         if (!row || row.classList.contains('skeleton')) {
             return false;
         }
 
         const playedGames = parseInt(row.cells[2].textContent, 10);
-        
+
         if (isNaN(playedGames) || playedGames < requiredGames) {
             return false;
         }
     }
-    
+
     return true;
 }
 
@@ -56,12 +56,12 @@ function calculateKnockoutData(sortedTeams, knockoutMatches) {
         id: `qf-${i}`, homeTeam: getWinner(r16_matches[i * 2]?.data), awayTeam: getWinner(r16_matches[i * 2 + 1]?.data),
         data: knockoutData[`qf-${i}`], dependsOn: `Winners of R16`
     }));
-    
+
     const sf_matches = Array.from({ length: 2 }, (_, i) => ({
         id: `sf-${i}`, homeTeam: getWinner(qf_matches[i * 2]?.data), awayTeam: getWinner(qf_matches[i * 2 + 1]?.data),
         data: knockoutData[`sf-${i}`], dependsOn: `Winners of QF`
     }));
-    
+
     const final_match = [{
         id: `final-0`, homeTeam: getWinner(sf_matches[0]?.data), awayTeam: getWinner(sf_matches[1]?.data),
         data: knockoutData[`final-0`], dependsOn: `Winners of SF`
@@ -79,7 +79,7 @@ export function generateKnockoutStage(sortedTeams, knockoutMatches) {
         dom.knockoutSection.innerHTML = `<p class="empty-state" style="display:block; padding: 4rem 2rem; font-size: 2.5rem; font-weight: 700; color: var(--accent-color); text-transform: uppercase;">SOON</p>`;
         return;
     }
-    
+
     const allRounds = calculateKnockoutData(sortedTeams, knockoutMatches);
 
     if (!allRounds) {
@@ -99,11 +99,11 @@ export function generateKnockoutStage(sortedTeams, knockoutMatches) {
         <div class="match-box">
             <div class="knockout-matches-grid"></div>
         </div>`;
-    
+
     const knockoutNav = dom.knockoutSection.querySelector('.knockout-nav');
     const knockoutTitle = dom.knockoutSection.querySelector('#knockout-stage-title');
     const knockoutGrid = dom.knockoutSection.querySelector('.knockout-matches-grid');
-    
+
     allRounds.forEach((round, index) => {
         if (round.matches.length === 0) return;
         const btn = document.createElement('button');
@@ -113,17 +113,17 @@ export function generateKnockoutStage(sortedTeams, knockoutMatches) {
         if (index == activeRoundIndex) btn.classList.add('active');
         knockoutNav.appendChild(btn);
     });
-    
+
     const renderRound = (roundIndex) => {
         const round = allRounds[roundIndex];
-        
+
         knockoutTitle.textContent = round.title;
 
         if (!round || round.matches.length === 0) {
             knockoutGrid.innerHTML = '<p class="empty-state">No matches for this round yet.</p>';
             return;
         }
-        
+
         knockoutGrid.innerHTML = round.matches.map(renderKnockoutCard).join('');
     };
 
@@ -145,25 +145,25 @@ function renderKnockoutCard(match) {
     const homeWinner = isPlayed && areTeamsSet && data.homeScore > data.awayScore;
     const awayWinner = isPlayed && areTeamsSet && data.awayScore > data.homeScore;
     const renderTeamRow = (team, score, isWinner) => {
-    const teamInfo = team 
-        ? `<div class="team-info">
+        const teamInfo = team
+            ? `<div class="team-info">
              <picture>
                 <source data-srcset="images/logos/${getTeamSlug(team)}.webp" type="image/webp">
                 <img src="images/logos/${getTeamSlug(team)}.webp" alt="${team} logo" class="team-logo">
              </picture>
              <span class="team-name ${isWinner ? 'winner' : ''}">${team}</span>
            </div>`
-        : `<div class="team-info knockout-placeholder">${dependsOn || 'TBD'}</div>`;
-    
-    const scoreInfo = `<span class="team-score">${score ?? ''}</span>`;
+            : `<div class="team-info knockout-placeholder">${dependsOn || 'TBD'}</div>`;
 
-    return `<div class="team-row">${teamInfo}${scoreInfo}</div>`;
-};
+        const scoreInfo = `<span class="team-score">${score ?? ''}</span>`;
+
+        return `<div class="team-row">${teamInfo}${scoreInfo}</div>`;
+    };
 
     const adminActionsHTML = renderAdminActionsHTML(id, isPlayed, areTeamsSet);
     const contentHTML = areTeamsSet
         ? renderTeamRow(homeTeam, data?.homeScore, homeWinner) + renderTeamRow(awayTeam, data?.awayScore, awayWinner)
-        : renderTeamRow(null, null, false); 
+        : renderTeamRow(null, null, false);
 
     return `
     <div class="knockout-match-card match-card ${isPlayed ? 'played' : ''}" data-doc-id="${id}" data-type="knockout">
