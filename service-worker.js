@@ -1,5 +1,5 @@
-const CACHE_NAME = 'nekro-league-v4';
-const DYNAMIC_CACHE_NAME = 'nekro-league-dynamic-v4';
+const CACHE_NAME = 'nekro-league-v5';
+const DYNAMIC_CACHE_NAME = 'nekro-league-dynamic-v5';
 
 const STATIC_ASSETS = [
     '/',
@@ -13,7 +13,6 @@ const STATIC_ASSETS = [
     '/js/ui-matches.js',
     '/js/ui-table.js',
     '/images/logos/champions-league-logo.webp',
-    'https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js'
 ];
 
 self.addEventListener('install', evt => {
