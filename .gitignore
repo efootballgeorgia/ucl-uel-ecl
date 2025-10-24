@@ -1,0 +1,109 @@
+# Environment Variables
+.env
+.env.local
+.env.*.local
+*.env
+
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Dependency Directories
+node_modules/
+jspm_packages/
+bower_components/
+vendor/
+
+# Build Outputs
+dist/
+build/
+.cache/
+*.min.js
+*.min.css
+
+# Temporary Files
+*.tmp
+*.temp
+.temp/
+.tmp/
+
+# Testing
+coverage/
+.nyc_output/
+*.test.js.snap
+
+# Database
+*.sqlite
+*.sqlite3
+*.db
+*.sql
+
+# Backup Files
+*.bak
+*.backup
+*~
+
+# Security
+*.pem
+*.key
+*.cert
+*.crt
+*.p12
+*.pfx
+credentials.json
+service-account.json
+
+# Package Manager
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# MacOS
+.AppleDouble
+.LSOverride
+
+# Windows
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+
+# Optional: Service Workers (if you want to regenerate)
+# service-worker.js
+
+# Optional: Build artifacts
+# *.map

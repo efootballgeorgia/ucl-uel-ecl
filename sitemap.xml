@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+  
+  <!-- Home Page -->
+  <url>
+    <loc>https://efootball-georgia.com/</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Champions League -->
+  <url>
+    <loc>https://efootball-georgia.com/?league=ucl</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Champions League - Table View -->
+  <url>
+    <loc>https://efootball-georgia.com/?league=ucl&amp;view=league</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Champions League - Matches View -->
+  <url>
+    <loc>https://efootball-georgia.com/?league=ucl&amp;view=matches</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Champions League - Knockout View -->
+  <url>
+    <loc>https://efootball-georgia.com/?league=ucl&amp;view=knockout</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Europa League -->
+  <url>
+    <loc>https://efootball-georgia.com/?league=uel</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Europa League - Table View -->
+  <url>
+    <loc>https://efootball-georgia.com/?league=uel&amp;view=league</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Europa League - Matches View -->
+  <url>
+    <loc>https://efootball-georgia.com/?league=uel&amp;view=matches</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Europa League - Knockout View -->
+  <url>
+    <loc>https://efootball-georgia.com/?league=uel&amp;view=knockout</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Conference League -->
+  <url>
+    <loc>https://efootball-georgia.com/?league=ecl</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Conference League - Table View -->
+  <url>
+    <loc>https://efootball-georgia.com/?league=ecl&amp;view=league</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Conference League - Matches View -->
+  <url>
+    <loc>https://efootball-georgia.com/?league=ecl&amp;view=matches</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Conference League - Knockout View -->
+  <url>
+    <loc>https://efootball-georgia.com/?league=ecl&amp;view=knockout</loc>
+    <lastmod>2025-01-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+</urlset>

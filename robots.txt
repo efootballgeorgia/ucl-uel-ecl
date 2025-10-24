@@ -1,0 +1,28 @@
+# robots.txt for Efootball Georgia
+
+# Allow all crawlers
+User-agent: *
+Allow: /
+
+# Disallow admin areas (if any)
+Disallow: /admin/
+Disallow: /api/
+
+# Disallow authentication endpoints
+Disallow: /*?auth=*
+
+# Sitemap location
+Sitemap: https://efootball-georgia.com/sitemap.xml
+
+# Crawl delay (optional - be nice to servers)
+Crawl-delay: 1
+
+# Specific crawler rules
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /

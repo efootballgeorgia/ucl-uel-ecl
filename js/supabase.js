@@ -4,9 +4,11 @@ import { generateKnockoutStage } from './ui-knockout.js';
 import { generateMatches, filterMatches, renderSkeletonMatches, updateUIFromConfig } from './ui-matches.js';
 import { renderTable, sortTable, renderSkeletonTable, updateTableFromStats } from "./ui-table.js";
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+import { config } from './config.js';
 
-const SUPABASE_URL = 'https://nturffjkprilmvqwbnml.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50dXJmZmprcHJpbG12cXdibm1sIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA4MDIxNzQsImV4cCI6MjA3NjM3ODE3NH0.wGNftRwd-AyBt38vKk2SfNwODdEhjIcmDXy9EQMAcuw';
+// Use configuration values
+const SUPABASE_URL = config.supabase.url;
+const SUPABASE_ANON_KEY = config.supabase.anonKey;
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
