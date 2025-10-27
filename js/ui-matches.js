@@ -98,13 +98,8 @@ function renderMatchCard(fixture, playedMatch, dayNumber = null) {
             <div class="team-row">
                 <div class="team-info">
                     <picture>
-<<<<<<< HEAD
                         <source data-srcset="images/logos/${getTeamSlug(fixture.home)}.png" type="image/png">
                         <img src="images/logos/${getTeamSlug(fixture.home)}.png" alt="${fixture.home}" class="team-logo">
-=======
-                        <source data-srcset="images/logos/${getTeamSlug(fixture.home)}.webp" type="image/webp">
-                        <img src="images/logos/${getTeamSlug(fixture.home)}.webp" alt="${fixture.home}" class="team-logo">
->>>>>>> ed254c0411b6ac0aa41d163ddd3d6de43350ad90
                     </picture>
                     <span>${fixture.home}</span>
                 </div>
@@ -113,13 +108,8 @@ function renderMatchCard(fixture, playedMatch, dayNumber = null) {
             <div class="team-row">
                 <div class="team-info">
                     <picture>
-<<<<<<< HEAD
                         <source data-srcset="images/logos/${getTeamSlug(fixture.away)}.png" type="image/png">
                         <img src="images/logos/${getTeamSlug(fixture.away)}.png" alt="${fixture.away}" class="team-logo">
-=======
-                        <source data-srcset="images/logos/${getTeamSlug(fixture.away)}.webp" type="image/webp">
-                        <img src="images/logos/${getTeamSlug(fixture.away)}.webp" alt="${fixture.away}" class="team-logo">
->>>>>>> ed254c0411b6ac0aa41d163ddd3d6de43350ad90
                     </picture>
                     <span>${fixture.away}</span>
                 </div>

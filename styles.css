@@ -524,11 +524,6 @@ tbody td b.points {
 }
 
 tbody td img {
-<<<<<<< HEAD
-=======
-  height: 35px;
-  width: 35px;
->>>>>>> ed254c0411b6ac0aa41d163ddd3d6de43350ad90
   vertical-align: middle;
   margin-right: 15px;
   cursor: pointer;
@@ -784,13 +779,8 @@ tbody.is-sorting {
 }
 
 .team-logo {
-<<<<<<< HEAD
   width: 33px;
   max-height: 33px;
-=======
-  width: 29px;
-  height: 29px;
->>>>>>> ed254c0411b6ac0aa41d163ddd3d6de43350ad90
   object-fit: contain;
 }
 
@@ -864,7 +854,7 @@ tbody.is-sorting {
 
   .league-table {
     width: 98%;
-    font-size: 14px;
+    font-size: 13px;
   }
 
   thead th,
@@ -872,15 +862,6 @@ tbody.is-sorting {
     padding: 0.5rem 0.3rem;
   }
 
-<<<<<<< HEAD
-=======
-  tbody td img {
-    width: 30px;
-    height: 30px;
-    margin-right: 5px;
-  }
-
->>>>>>> ed254c0411b6ac0aa41d163ddd3d6de43350ad90
   .form-box {
     width: 0.7rem;
     height: 0.7rem;
@@ -899,6 +880,12 @@ tbody.is-sorting {
   .team-search-select {
     width: 100%;
     min-width: unset;
+  }
+
+  .team-logo {
+    width: 25px;
+    max-height: 25px;
+    object-fit: contain;
   }
 
   #clearSearchBtn {
