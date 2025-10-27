@@ -52,6 +52,10 @@
     <div id="global-feedback" aria-live="polite"></div>
 
     <section id="league-section" class="page-section active" role="tabpanel" aria-labelledby="tab-league">
+      <div class="table-view-toggle">
+        <button class="btn btn-view-toggle" data-view="simplified">Simplified</button>
+        <button class="btn btn-view-toggle active" data-view="full">Full</button>
+      </div>
       <div class="league-table">
         <table id="leagueTable">
           <thead>
@@ -59,9 +63,9 @@
               <th>#</th>
               <th data-sort-key="team">Team</th>
               <th data-sort-key="played">P</th>
-              <th data-sort-key="wins">W</th>
-              <th data-sort-key="draws">D</th>
-              <th data-sort-key="losses">L</th>
+              <th data-sort-key="wins" class="optional-col">W</th>
+              <th data-sort-key="draws" class="optional-col">D</th>
+              <th data-sort-key="losses" class="optional-col">L</th>
               <th data-sort-key="gd">+/-</th>
               <th data-sort-key="points">Pts</th>
               <th>Form</th>

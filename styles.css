@@ -443,6 +443,25 @@ header {
    5. League Table
 ============================================ */
 
+.table-view-toggle {
+  display: none;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1rem auto;
+  max-width: 900px;
+}
+
+.btn-view-toggle {
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+}
+
+.btn-view-toggle.active {
+  background: var(--accent-color);
+  color: var(--primary-bg);
+  border-color: var(--accent-color);
+}
+
 .league-table {
   width: 65%;
   max-width: 900px;
@@ -481,21 +500,12 @@ thead th[data-sort-key]:hover {
   color: #ffffff;
 }
 
-
-th[data-sort]::after {
-  font-size: 1rem;
-  padding-left: 0.5rem;
-  font-weight: bold;
+thead th[data-sort="asc"] {
+  color: red;
 }
 
-th[data-sort="asc"]::after {
-  content: " ▲";
-  color: #6cff55;
-}
-
-th[data-sort="desc"]::after {
-  content: " ▼";
-  color: #ff5555
+thead th[data-sort="desc"] {
+  color: yellow;
 }
 
 tbody td {
@@ -544,12 +554,18 @@ tbody.is-sorting {
 }
 
 .form-box {
-  display: inline-block;
-  width: 1rem;
-  height: 1rem;
-  margin: 0 3px;
-  border-radius: 4px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 0 2px;
+  border-radius: 50%;
   border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #fff;
+  text-transform: uppercase;
 }
 
 .form-box.victory {
@@ -814,6 +830,18 @@ tbody.is-sorting {
     font-size: 12px;
   }
 
+  .table-view-toggle {
+    display: flex;
+  }
+
+  .league-table.simplified-view .optional-col {
+    display: none;
+  }
+
+  .form-container .form-box:nth-child(n+4) {
+    display: none;
+  }
+
   header {
     padding: 0.5rem;
   }
@@ -853,8 +881,9 @@ tbody.is-sorting {
   }
 
   .form-box {
-    width: 0.7rem;
-    height: 0.7rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    font-size: 0.7rem;
   }
 
   .match-box {

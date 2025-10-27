@@ -10,6 +10,8 @@ export const dom = {
     leagueLogo: document.getElementById('league-logo'),
     leagueSelectorNav: document.querySelector('.league-selector-nav'),
     leagueTableBody: document.querySelector('#leagueTable tbody'),
+    leagueTable: document.querySelector('.league-table'),
+    tableViewToggle: document.querySelector('.table-view-toggle'),
     matchesTitle: document.getElementById('match-box-title'),
     matchesContainer: document.getElementById('match-box-container'),
     daySelector: document.getElementById('daySelector'),
@@ -105,6 +107,23 @@ function setupEventListeners() {
             dom.leagueSelectorNav.classList.remove(CSS.SHOW); // Close dropdown
         });
     });
+
+    if (dom.tableViewToggle) {
+        dom.tableViewToggle.addEventListener(EVENTS.CLICK, (e) => {
+            const target = e.target.closest('.btn-view-toggle');
+            if (!target || target.classList.contains(CSS.ACTIVE)) return;
+
+            dom.tableViewToggle.querySelector('.btn-view-toggle.active').classList.remove(CSS.ACTIVE);
+            target.classList.add(CSS.ACTIVE);
+
+            const view = target.dataset.view;
+            if (view === 'simplified') {
+                dom.leagueTable.classList.add('simplified-view');
+            } else {
+                dom.leagueTable.classList.remove('simplified-view');
+            }
+        });
+    }
 
     dom.leagueLogo.addEventListener(EVENTS.CLICK, (e) => {
         e.stopPropagation();
@@ -229,6 +248,23 @@ function setupEventListeners() {
     dom.logoutBtn.addEventListener(EVENTS.CLICK, handleLogout);
 }
 
+function setInitialTableView() {
+    const isMobile = window.innerWidth <= 768;
+    const simplifiedBtn = dom.tableViewToggle.querySelector('[data-view="simplified"]');
+    const fullBtn = dom.tableViewToggle.querySelector('[data-view="full"]');
+
+    if (isMobile) {
+        dom.leagueTable.classList.add('simplified-view');
+        simplifiedBtn.classList.add(CSS.ACTIVE);
+        fullBtn.classList.remove(CSS.ACTIVE);
+    } else {
+        dom.leagueTable.classList.remove('simplified-view');
+        simplifiedBtn.classList.remove(CSS.ACTIVE);
+        fullBtn.classList.add(CSS.ACTIVE);
+    }
+}
+
+
 window.onload = () => {
     initializeSupabase();
     setupEventListeners();
@@ -250,5 +286,6 @@ window.onload = () => {
         }
         filterMatches();
         updateURL();
+        setInitialTableView();
     });
 };

@@ -36,7 +36,11 @@ export function renderTable(league) {
               </picture>
               <b>${teamName}</b>
             </td>
-            <td>0</td><td>0</td><td>0</td><td>0</td><td>0</td>
+            <td>0</td>
+            <td class="optional-col">0</td>
+            <td class="optional-col">0</td>
+            <td class="optional-col">0</td>
+            <td>0</td>
             <td><b class="points">0</b></td>
             <td><div class="form-container"></div></td>
         `;
@@ -59,8 +63,7 @@ export function updateTableFromStats(teamStats) {
         cells[3].textContent = stats.w;
         cells[4].textContent = stats.d;
         cells[5].textContent = stats.l;
-        // UPDATED: Fixed a bug where GF:GA was not being populated.
-        cells[6].textContent = `${stats.gf}:${stats.ga}`;
+        cells[6].textContent = `${stats.gf - stats.ga}`;
         row.dataset.gd = stats.gf - stats.ga;
         cells[7].querySelector('.points').textContent = stats.pts;
 
@@ -69,6 +72,11 @@ export function updateTableFromStats(teamStats) {
         stats.form.forEach(result => {
             const formBox = document.createElement('span');
             formBox.className = `form-box ${result}`;
+            let letter = '';
+            if (result === 'victory') letter = 'W';
+            else if (result === 'loss') letter = 'L';
+            else if (result === 'draw') letter = 'D';
+            formBox.textContent = letter;
             formContainer.appendChild(formBox);
         });
     });
@@ -90,7 +98,6 @@ export function sortTable() {
 
     const getRowStats = (row) => {
         const cells = row.cells;
-        const [gf, ga] = cells[6].textContent.split(':').map(Number);
         return {
             team: row.dataset.team,
             played: parseInt(cells[2].textContent) || 0,
@@ -99,7 +106,6 @@ export function sortTable() {
             losses: parseInt(cells[5].textContent) || 0,
             points: parseInt(cells[7].textContent) || 0,
             gd: parseInt(row.dataset.gd) || 0,
-            gf: gf || 0,
         };
     };
 
@@ -118,7 +124,6 @@ export function sortTable() {
 
         if (statsB.points !== statsA.points) return statsB.points - statsA.points;
         if (statsB.gd !== statsA.gd) return statsB.gd - statsA.gd;
-        if (statsB.gf !== statsA.gf) return statsB.gf - statsA.gf;
         return statsA.team.localeCompare(statsB.team);
     });
 
