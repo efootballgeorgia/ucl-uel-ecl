@@ -1,4 +1,4 @@
-import { dom , appState,} from './main.js';
+import { dom, appState, } from './main.js';
 
 export const DURATIONS = {
     FEEDBACK_MESSAGE: 3000,
@@ -39,13 +39,13 @@ export function updateAuthUI() {
 }
 
 export const getTeamSlug = (teamName) => {
-  if (!teamName) return '';
-  return teamName.toLowerCase().replace(/ /g, '-');
+    if (!teamName) return '';
+    return teamName.toLowerCase().replace(/ /g, '-');
 };
 
 export const generateMatchId = (homeTeam, awayTeam) => {
-  if (!homeTeam || !awayTeam) return null;
-  return `${getTeamSlug(homeTeam)}-vs-${getTeamSlug(awayTeam)}`;
+    if (!homeTeam || !awayTeam) return null;
+    return `${getTeamSlug(homeTeam)}-vs-${getTeamSlug(awayTeam)}`;
 };
 
 export function renderAdminActionsHTML(docId, isPlayed, areTeamsSet = true) {

@@ -1,4 +1,4 @@
-import { dom , appState,} from './main.js';
+import { dom, appState, } from './main.js';
 import { showAuthFeedback, updateAuthUI, showFeedback } from './ui-feedback.js';
 import { generateKnockoutStage } from './ui-knockout.js';
 import { generateMatches, filterMatches, renderSkeletonMatches, updateUIFromConfig } from './ui-matches.js';
@@ -31,7 +31,7 @@ function handleAuthError(error) {
 export async function handleAuthAction(e) {
     e.preventDefault();
     const action = e.submitter.dataset.action;
-    
+
     try {
         const email = document.getElementById('auth-email').value;
         const password = document.getElementById('auth-password').value;
@@ -40,17 +40,17 @@ export async function handleAuthAction(e) {
             return showAuthFeedback('Password must be at least 6 characters long.', false);
         }
 
-        const authMethod = action === 'login' 
+        const authMethod = action === 'login'
             ? supabase.auth.signInWithPassword.bind(supabase.auth)
             : supabase.auth.signUp.bind(supabase.auth);
 
         const { error } = await authMethod({ email, password });
         if (error) throw error;
-        
+
         const successMessage = action === 'login'
             ? 'Logged in successfully!'
             : 'Account created! Please check your email to verify.';
-        
+
         showAuthFeedback(successMessage, true);
         dom.authModal.classList.remove('show');
         dom.authForm.reset();
@@ -131,7 +131,7 @@ function processLeagueChanges(matches) {
         console.error("League table body not found in DOM, cannot process changes.");
         return;
     }
-    
+
     appState.currentLeagueMatches = matches;
     const leagueConfig = appState.config[appState.currentLeague];
     if (!leagueConfig || !leagueConfig.teams) return;
@@ -194,7 +194,7 @@ function setupLeagueListeners(league) {
         .on('postgres_changes', { event: '*', schema: 'public', table: `${league}Matches` }, () => fetchLeagueData(league))
         .on('postgres_changes', { event: '*', schema: 'public', table: `${league}KnockoutMatches` }, () => fetchKnockoutData(league))
         .subscribe();
-        
+
     appState.channel = channel;
 }
 
@@ -213,8 +213,8 @@ export async function switchLeague(league) {
         }
 
         setupLeagueUI(league, appState.config[league]);
-        renderTable(league); 
-        await fetchLeagueData(league); 
+        renderTable(league);
+        await fetchLeagueData(league);
         await fetchKnockoutData(league);
         setupLeagueListeners(league);
     } catch (error) {
@@ -229,7 +229,7 @@ export async function switchLeague(league) {
 export async function handleScoreSubmission(e) {
     e.preventDefault();
     if (!appState.isAdmin) return showFeedback('You do not have permission.', false);
-    
+
     const form = e.target;
     const card = form.closest('.match-card, .knockout-match-card');
     const button = card.querySelector('.btn-save');
@@ -241,16 +241,16 @@ export async function handleScoreSubmission(e) {
 
     const homeScore = parseInt(form.querySelector('.score-home').value, 10);
     const awayScore = parseInt(form.querySelector('.score-away').value, 10);
-    
+
     if (isNaN(homeScore) || isNaN(awayScore) || homeScore < 0 || awayScore < 0) {
         showFeedback('Please enter valid, non-negative scores.', false);
         button.classList.remove('is-loading');
         button.disabled = false;
         return;
     }
-    
+
     card.classList.remove('is-editing');
-    
+
     const tableName = `${appState.currentLeague}${matchType === 'league' ? 'Matches' : 'KnockoutMatches'}`;
     const homeTeam = matchType === 'league' ? card.dataset.home : form.dataset.homeTeam;
     const awayTeam = matchType === 'league' ? card.dataset.away : form.dataset.awayTeam;
@@ -258,18 +258,18 @@ export async function handleScoreSubmission(e) {
     const matchData = { id: docId, homeScore, awayScore, homeTeam, awayTeam };
     if (matchType === 'league') matchData.timestamp = new Date().toISOString();
     else matchData.stage = docId.split('-')[0];
-    
+
     try {
         const { error } = await supabase.from(tableName).upsert(matchData);
         if (error) throw error;
         showFeedback('Match updated successfully!', true);
 
-        const matchIndex = matchType === 'league' 
+        const matchIndex = matchType === 'league'
             ? appState.currentLeagueMatches.findIndex(m => m.id === docId)
             : appState.currentLeagueKnockoutMatches.findIndex(m => m.id === docId);
 
         const targetArray = matchType === 'league' ? appState.currentLeagueMatches : appState.currentLeagueKnockoutMatches;
-        
+
         if (matchIndex > -1) {
             targetArray[matchIndex] = { ...targetArray[matchIndex], ...matchData };
         } else {

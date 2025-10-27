@@ -1,4 +1,4 @@
-import { dom , appState,} from './main.js';
+import { dom, appState, } from './main.js';
 
 export function renderSkeletonTable() {
     let skeletonHTML = '';
@@ -48,7 +48,7 @@ export function renderTable(league) {
 
 export function updateTableFromStats(teamStats) {
     const allTeamRows = Array.from(dom.leagueTableBody.querySelectorAll('tr[data-team]'));
-    
+
     allTeamRows.forEach(row => {
         const teamName = row.dataset.team;
         const stats = teamStats[teamName];
@@ -134,16 +134,16 @@ export function sortTable() {
             tableBody.appendChild(separatorRow);
         }
     });
-    
+
     tableBody.previousElementSibling.querySelectorAll('th').forEach(th => th.removeAttribute('data-sort'));
     const activeHeader = tableBody.previousElementSibling.querySelector(`th[data-sort-key="${primaryKey}"]`);
     if (activeHeader) {
         activeHeader.setAttribute('data-sort', appState.sortDirection);
     }
-    
+
     const sortAnnouncement = `Table sorted by ${primaryKey}, ${appState.sortDirection} order.`;
     const announcementElement = document.getElementById('table-sort-announcement');
-    
+
     if (announcementElement) {
         announcementElement.textContent = sortAnnouncement;
     }

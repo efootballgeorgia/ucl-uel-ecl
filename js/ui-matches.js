@@ -1,4 +1,4 @@
-import { dom , appState,} from './main.js';
+import { dom, appState, } from './main.js';
 import { getTeamSlug, generateMatchId, renderAdminActionsHTML } from './ui-feedback.js';
 
 export function updateUIFromConfig(config) {
@@ -31,7 +31,7 @@ export function generateMatches(league) {
     }
 
     const teams = [...config.teams];
-    
+
     if (teams.length < 2) {
         dom.matchesContainer.innerHTML = '<p>Not enough teams for fixtures.</p>';
         return;
@@ -71,7 +71,7 @@ function syncMatchContainerDOM(fixturesToShow, allMatches, isTeamFilter = false)
             card.remove();
         }
     }
-    
+
     fixturesToShow.forEach((fixture) => {
         const docId = generateMatchId(fixture.home, fixture.away);
         const playedMatch = allMatches.find(m => m.id === docId);
@@ -162,7 +162,7 @@ export function filterMatches() {
         });
         dom.clearSearchBtn.style.display = 'inline-block';
     }
-    
+
     dom.noSearchResults.style.display = fixturesToShow.length === 0 ? 'block' : 'none';
     syncMatchContainerDOM(fixturesToShow, allMatches, isTeamView);
 }

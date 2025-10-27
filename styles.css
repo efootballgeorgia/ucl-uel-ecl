@@ -511,7 +511,7 @@ th[data-sort="desc"]::after {
 
 tbody td {
   padding: 0.8rem 1rem;
-  text-align: center;
+  text-align: left;
   transition: background-color 0.3s ease;
   white-space: nowrap;
   border-bottom: 1px solid #1a2c44;
@@ -856,7 +856,7 @@ tbody.is-sorting {
 
   .league-table {
     width: 98%;
-    font-size: 0.6rem;
+    font-size: 14px;
   }
 
   thead th,

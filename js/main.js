@@ -3,71 +3,71 @@ import { filterMatches } from './ui-matches.js';
 import { sortTable } from './ui-table.js';
 
 export const dom = {
-  leagueSection: document.getElementById('league-section'),
-  matchesSection: document.getElementById('matches-section'),
-  knockoutSection: document.getElementById('knockout-section'),
-  knockoutContainer: document.querySelector('.knockout-container'),
-  leagueLogo: document.getElementById('league-logo'),
-  leagueSelectorNav: document.querySelector('.league-selector-nav'),
-  leagueTableBody: document.querySelector('#leagueTable tbody'),
-  matchesTitle: document.getElementById('match-box-title'),
-  matchesContainer: document.getElementById('match-box-container'),
-  daySelector: document.getElementById('daySelector'),
-  teamSearchSelect: document.getElementById('teamSearchSelect'),
-  clearSearchBtn: document.getElementById('clearSearchBtn'),
-  noSearchResults: document.getElementById('no-search-results'),
-  feedbackMessage: document.getElementById('global-feedback'),
-  authModal: document.getElementById('auth-modal'),
-  closeAuthModalBtn: document.getElementById('closeAuthModal'),
-  authForm: document.getElementById('auth-form'),
-  authEmailInput: document.getElementById('auth-email'),
-  authPasswordInput: document.getElementById('auth-password'),
-  loginBtn: document.getElementById('login-btn'),
-  signupBtn: document.getElementById('signup-btn'),
-  authFeedbackMessage: document.querySelector('.auth-feedback-message'),
-  userStatusSpan: document.getElementById('user-status'),
-  authBtn: document.getElementById('auth-btn'),
-  logoutBtn: document.getElementById('logout-btn')
+    leagueSection: document.getElementById('league-section'),
+    matchesSection: document.getElementById('matches-section'),
+    knockoutSection: document.getElementById('knockout-section'),
+    knockoutContainer: document.querySelector('.knockout-container'),
+    leagueLogo: document.getElementById('league-logo'),
+    leagueSelectorNav: document.querySelector('.league-selector-nav'),
+    leagueTableBody: document.querySelector('#leagueTable tbody'),
+    matchesTitle: document.getElementById('match-box-title'),
+    matchesContainer: document.getElementById('match-box-container'),
+    daySelector: document.getElementById('daySelector'),
+    teamSearchSelect: document.getElementById('teamSearchSelect'),
+    clearSearchBtn: document.getElementById('clearSearchBtn'),
+    noSearchResults: document.getElementById('no-search-results'),
+    feedbackMessage: document.getElementById('global-feedback'),
+    authModal: document.getElementById('auth-modal'),
+    closeAuthModalBtn: document.getElementById('closeAuthModal'),
+    authForm: document.getElementById('auth-form'),
+    authEmailInput: document.getElementById('auth-email'),
+    authPasswordInput: document.getElementById('auth-password'),
+    loginBtn: document.getElementById('login-btn'),
+    signupBtn: document.getElementById('signup-btn'),
+    authFeedbackMessage: document.querySelector('.auth-feedback-message'),
+    userStatusSpan: document.getElementById('user-status'),
+    authBtn: document.getElementById('auth-btn'),
+    logoutBtn: document.getElementById('logout-btn')
 };
 
 export const appState = {
-  db: null,
-  auth: null,
-  currentUser: null,
-  isAdmin: false,
-  currentLeague: 'ucl',
-  currentLeagueMatches: [],
-  currentLeagueKnockoutMatches: [],
-  sortedTeams: [],
-  channel: null, 
-  fixtures: {},
-  config: {},
-  sortBy: 'points',
-  sortDirection: 'desc'
+    db: null,
+    auth: null,
+    currentUser: null,
+    isAdmin: false,
+    currentLeague: 'ucl',
+    currentLeagueMatches: [],
+    currentLeagueKnockoutMatches: [],
+    sortedTeams: [],
+    channel: null,
+    fixtures: {},
+    config: {},
+    sortBy: 'points',
+    sortDirection: 'desc'
 };
 
 export function setSort(newSortKey) {
-  if (appState.sortBy === newSortKey) {
-    appState.sortDirection = appState.sortDirection === 'asc' ? 'desc' : 'asc';
-  } else {
-    appState.sortBy = newSortKey;
-    appState.sortDirection = 'desc';
-  }
+    if (appState.sortBy === newSortKey) {
+        appState.sortDirection = appState.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+        appState.sortBy = newSortKey;
+        appState.sortDirection = 'desc';
+    }
 }
 
 export const CSS = {
-  ACTIVE: 'active',
-  SHOW: 'show',
-  IS_EDITING: 'is-editing',
-  ROW_UPDATED: 'row-updated',
-  IS_LOADING: 'is-loading',
+    ACTIVE: 'active',
+    SHOW: 'show',
+    IS_EDITING: 'is-editing',
+    ROW_UPDATED: 'row-updated',
+    IS_LOADING: 'is-loading',
 };
 
 export const EVENTS = {
-  CLICK: 'click',
-  SUBMIT: 'submit',
-  CHANGE: 'change',
-  KEYDOWN: 'keydown',
+    CLICK: 'click',
+    SUBMIT: 'submit',
+    CHANGE: 'change',
+    KEYDOWN: 'keydown',
 };
 
 
@@ -90,13 +90,13 @@ function setupEventListeners() {
     dom.leagueSelectorNav.addEventListener(EVENTS.CLICK, (e) => {
         const target = e.target.closest('.league-btn');
         if (!target || target.classList.contains(CSS.ACTIVE)) return;
-        
+
         const currentActiveBtn = dom.leagueSelectorNav.querySelector('.league-btn.active');
         if (currentActiveBtn) {
             currentActiveBtn.classList.remove(CSS.ACTIVE);
         }
         target.classList.add(CSS.ACTIVE);
-        
+
         switchLeague(target.dataset.league).then(() => {
             dom.teamSearchSelect.value = '';
             dom.daySelector.value = 1;
@@ -105,7 +105,7 @@ function setupEventListeners() {
             dom.leagueSelectorNav.classList.remove(CSS.SHOW); // Close dropdown
         });
     });
-    
+
     dom.leagueLogo.addEventListener(EVENTS.CLICK, (e) => {
         e.stopPropagation();
         dom.leagueSelectorNav.classList.toggle(CSS.SHOW);
@@ -142,7 +142,7 @@ function setupEventListeners() {
         filterMatches();
         updateURL();
     });
-    
+
     const mainContentArea = document.querySelector('main');
 
     mainContentArea.addEventListener(EVENTS.CLICK, (e) => {
@@ -175,7 +175,7 @@ function setupEventListeners() {
         const target = e.target.closest('th[data-sort-key]');
         if (!target) return;
         const key = target.dataset.sortKey;
-        setSort(key); 
+        setSort(key);
         sortTable();
     });
 
@@ -224,7 +224,7 @@ function setupEventListeners() {
             closeAuthModal();
         }
     });
-    
+
     dom.authForm.addEventListener(EVENTS.SUBMIT, handleAuthAction);
     dom.logoutBtn.addEventListener(EVENTS.CLICK, handleLogout);
 }
@@ -232,12 +232,12 @@ function setupEventListeners() {
 window.onload = () => {
     initializeSupabase();
     setupEventListeners();
-    
+
     const urlParams = new URLSearchParams(window.location.search);
     const initialLeague = urlParams.get('league') || appState.currentLeague;
     const initialDay = urlParams.get('day') || '1';
     const initialTeam = urlParams.get('team') || '';
-    
+
     document.querySelectorAll('.league-btn').forEach(btn => {
         btn.classList.toggle(CSS.ACTIVE, btn.dataset.league === initialLeague);
     });
@@ -248,7 +248,7 @@ window.onload = () => {
         } else {
             dom.daySelector.value = initialDay;
         }
-        filterMatches(); 
-        updateURL(); 
+        filterMatches();
+        updateURL();
     });
 };

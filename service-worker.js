@@ -22,7 +22,7 @@ self.addEventListener('install', evt => {
             return cache.addAll(STATIC_ASSETS);
         }).catch(err => console.error("App Shell Caching Failed: ", err))
     );
-    self.skipWaiting(); 
+    self.skipWaiting();
 });
 
 self.addEventListener('activate', evt => {
