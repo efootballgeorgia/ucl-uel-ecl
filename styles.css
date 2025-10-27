@@ -49,13 +49,19 @@ body {
   font-size: 16px;
 }
 
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
 h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-primary);
   font-weight: 600;
   color: #fff;
 }
@@ -94,6 +100,18 @@ h6 {
 
   to {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.6;
   }
 }
 
@@ -240,7 +258,6 @@ header {
   cursor: pointer;
   font-weight: 700;
   font-size: 1.1em;
-  font-family: var(--font-primary);
   text-transform: uppercase;
   transition: color 0.3s ease, border-color 0.3s ease;
 }
@@ -268,25 +285,6 @@ header {
 
 .page-section.active {
   display: block;
-}
-
-.auth-status {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  color: var(--text-color-secondary);
-  font-size: 0.9em;
-  margin-top: 1rem;
-}
-
-.auth-status #user-status {
-  font-weight: 600;
-  color: var(--accent-color);
-}
-
-.auth-status .btn {
-  padding: 0.5rem 1rem;
-  font-size: 0.9em;
 }
 
 .auth-modal {
@@ -488,7 +486,6 @@ thead th {
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease;
   white-space: nowrap;
-  font-family: var(--font-primary);
   text-transform: uppercase;
   font-weight: 600;
   letter-spacing: 0.5px;
@@ -541,16 +538,6 @@ tbody tr:hover {
 tbody.is-sorting {
   opacity: 0.6;
   transition: opacity 0.1s ease-in-out;
-}
-
-@keyframes highlight-fade {
-  from {
-    background-color: var(--shadow-color);
-  }
-
-  to {
-    background-color: transparent;
-  }
 }
 
 .form-box {
@@ -675,12 +662,6 @@ tbody.is-sorting {
   box-sizing: border-box;
 }
 
-#match-box-container {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1.5rem;
-}
-
 #match-box-container,
 .knockout-matches-grid {
   display: grid;
@@ -697,49 +678,41 @@ tbody.is-sorting {
 }
 
 /* ============================================
-   7. Match & Knockout Cards (New Vertical Style)
+   7. Match & Knockout Cards (Refactored)
 ============================================ */
 
-.match-card {
-  background-color: #1a2c44;
-  border-radius: 10px;
-  padding: 1rem 1.5rem;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  font-size: 1.1em;
-  position: relative;
-  border: 1px solid #284a7e;
-  border-left: 5px solid transparent;
-}
-
-.match-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
-  border-color: #6c8cff;
-}
-
+.match-card,
 .knockout-match-card {
   background-color: #1a2c44;
   border-radius: 10px;
   padding: 1rem 1.5rem;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   font-size: 1.1em;
   position: relative;
   border: 1px solid #284a7e;
-  border-left: 5px solid #284a7e;
 }
 
+.match-card:hover,
 .knockout-match-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
   border-color: #6c8cff;
 }
 
+.match-card {
+  border-left: 5px solid transparent;
+}
+
+.knockout-match-card {
+  border-left: 5px solid #284a7e;
+}
+
 .match-card.played,
 .knockout-match-card.played {
   border-left-color: #6cff8a;
 }
+
 
 .card-content {
   display: flex;
@@ -816,117 +789,13 @@ tbody.is-sorting {
 
 .match-card.skeleton .card-content {
   height: 82px;
-  background-color: rgba(13, 26, 45, 0.8);
+  background-color: rgba(26, 44, 68, 0.8);
   border-radius: 8px;
   animation: pulse 1.5s infinite ease-in-out;
 }
 
 /* ============================================
-   8. Media Queries & Responsive
-============================================ */
-
-@media (max-width: 768px) {
-  body {
-    font-size: 12px;
-  }
-
-  .table-view-toggle {
-    display: flex;
-  }
-
-  .league-table.simplified-view .optional-col {
-    display: none;
-  }
-
-  .form-container .form-box:nth-child(n+4) {
-    display: none;
-  }
-
-  header {
-    padding: 0.5rem;
-  }
-
-  .header-content {
-    height: auto;
-    gap: 0.7rem;
-  }
-
-  .league-logo {
-    max-width: 60px;
-  }
-
-  .main-nav {
-    align-items: center;
-    flex-direction: row;
-    gap: 0.5rem;
-  }
-
-  .btn {
-    padding: 0.3rem 0.4rem;
-    font-size: 10px;
-  }
-
-  .main-nav .btn {
-    font-size: 10.5px;
-  }
-
-  .league-table {
-    width: 98%;
-    font-size: 13px;
-  }
-
-  thead th,
-  tbody td {
-    padding: 0.5rem 0.3rem;
-  }
-
-  .form-box {
-    width: 1.2rem;
-    height: 1.2rem;
-    font-size: 0.7rem;
-  }
-
-  .match-box {
-    margin-top: 0;
-    padding: 1rem;
-    border-top: 1px solid var(--border-color);
-  }
-
-  .search-container {
-    flex-direction: column;
-  }
-
-  .team-search-select {
-    width: 100%;
-    min-width: unset;
-  }
-
-  .team-logo {
-    width: 25px;
-    max-height: 25px;
-    object-fit: contain;
-  }
-
-  #clearSearchBtn {
-    width: 100%;
-  }
-
-  #match-box-container,
-  .knockout-matches-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (min-width: 600px) {
-
-  #match-box-container,
-  .knockout-matches-grid {
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  }
-}
-
-/* ============================================
-   10. Unified Card Admin & Edit State
+   8. Unified Card Admin & Edit State
 ============================================ */
 
 .btn {
@@ -937,7 +806,6 @@ tbody.is-sorting {
   border-radius: var(--border-radius);
   cursor: pointer;
   font-weight: 600;
-  font-family: var(--font-primary);
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -1042,7 +910,9 @@ tbody.is-sorting {
 }
 
 .is-editing .card-content,
-.is-editing .card-pending {
+.is-editing .card-pending,
+.is-editing .btn-edit,
+.is-editing .btn-delete {
   display: none;
 }
 
@@ -1050,12 +920,111 @@ tbody.is-sorting {
   display: flex;
 }
 
-.is-editing .btn-edit,
-.is-editing .btn-delete {
-  display: none;
-}
-
 .is-editing .btn-save,
 .is-editing .btn-cancel {
   display: inline-flex;
+}
+
+/* ============================================
+   9. Media Queries & Responsive
+============================================ */
+
+@media (max-width: 768px) {
+  body {
+    font-size: 12px;
+  }
+
+  .table-view-toggle {
+    display: flex;
+  }
+
+  .league-table.simplified-view .optional-col {
+    display: none;
+  }
+
+  .form-container .form-box:nth-child(n+4) {
+    display: none;
+  }
+
+  header {
+    padding: 0.5rem;
+  }
+
+  .header-content {
+    height: auto;
+    gap: 0.7rem;
+  }
+
+  .league-logo {
+    max-width: 60px;
+  }
+
+  .main-nav {
+    align-items: center;
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+
+  .btn {
+    padding: 0.3rem 0.4rem;
+    font-size: 10px;
+  }
+
+  .main-nav .btn {
+    font-size: 10.5px;
+  }
+
+  .league-table {
+    width: 98%;
+    font-size: 13px;
+  }
+
+  thead th,
+  tbody td {
+    padding: 0.5rem 0.3rem;
+  }
+
+  .form-box {
+    width: 1.2rem;
+    height: 1.2rem;
+    font-size: 0.7rem;
+  }
+
+  .match-box {
+    margin-top: 0;
+    padding: 1rem;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .search-container {
+    flex-direction: column;
+  }
+
+  .team-search-select {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .team-logo {
+    width: 25px;
+    max-height: 25px;
+    object-fit: contain;
+  }
+
+  #clearSearchBtn {
+    width: 100%;
+  }
+
+  #match-box-container,
+  .knockout-matches-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 600px) {
+
+  #match-box-container,
+  .knockout-matches-grid {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  }
 }
