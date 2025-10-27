@@ -1,0 +1,22 @@
+{
+  "name": "League",
+  "short_name": "EL",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#030424",
+  "theme_color": "#030424",
+  "description": "League tables for UCL, UEL, and ECL.",
+  "icons": [
+    {
+      "src": "images/logos/champions-league-logo.webp",
+      "sizes": "192x192",
+      "type": "image/webp"
+    },
+    {
+      "src": "images/logos/champions-league-logo.webp",
+      "sizes": "512x512",
+      "type": "image/webp"
+    }
+  ]
+}
+
