@@ -1,6 +1,102 @@
 import { dom, appState, } from './main.js';
 import { getTeamSlug, renderAdminActionsHTML } from './ui-feedback.js';
 
+function getDrawImageData(league, roundTitle) {
+    const slug = roundTitle.toLowerCase().replace(/ /g, '-');
+
+    const COORDINATES = {
+        ucl: {
+            'ko-play-offs': {
+                backgroundImage: 'images//ucl-knockout-playoff.png',
+                logoSize: '10%',
+                coordinates: [
+                    { home: { top: '47.4%', left: '35%' }, away: { top: '47.4%', left: '14.6%' } },
+                    { home: { top: '47.4%', left: '86.4%' }, away: { top: '47.4%', left: '65%' } },
+                    { home: { top: '64.3%', left: '35%' }, away: { top: '64.3%', left: '14.6%' } },
+                    { home: { top: '64.3%', left: '86.4%' }, away: { top: '64.3%', left: '66%' } },
+                    { home: { top: '81.5%', left: '86.4%' }, away: { top: '81.5%', left: '66%' } },
+                    { home: { top: '81.5%', left: '35%' }, away: { top: '81.5%', left: '14.6%' } },
+                    { home: { top: '29.5%', left: '35%' }, away: { top: '29.5%', left: '14.6%' } },
+                    { home: { top: '29.5%', left: '86.4%' }, away: { top: '29.5%', left: '65%' } },
+                ]
+            },
+
+            'round-of-16': {
+                backgroundImage: 'images//ucl-round-16.png',
+                logoSize: '10%',
+                coordinates: [
+                    { home: { top: '29.5%', left: '14.6%' }, away: { top: '29.5%', left: '36%' } },
+                    { home: { top: '47.4%', left: '14.6%' }, away: { top: '47.4%', left: '36%' } },
+                    { home: { top: '65.3%', left: '14.6%' }, away: { top: '65.3%', left: '36%' } },
+                    { home: { top: '81.5%', left: '14.6%' }, away: { top: '81.5%', left: '36%' } },
+                    { home: { top: '29.5%', left: '65%' }, away: { top: '29.5%', left: '86.4%' } },
+                    { home: { top: '47.4%', left: '65%' }, away: { top: '47.4%', left: '86.4%' } },
+                    { home: { top: '65.3%', left: '65%' }, away: { top: '65.3%', left: '86.4%' } },
+                    { home: { top: '81.5%', left: '65%' }, away: { top: '81.5%', left: '86.4%' } },
+                ]
+            },
+
+            'quarter-finals': {
+                backgroundImage: 'images//ucl-quarter-finals.png',
+                logoSize: '13%',
+                coordinates: [
+                    { home: { top: '25%', left: '31%' }, away: { top: '25%', left: '69%' } },
+                    { home: { top: '42%', left: '31%' }, away: { top: '42%', left: '69%' } },
+                    { home: { top: '59%', left: '31%' }, away: { top: '59%', left: '69%' } },
+                    { home: { top: '76%', left: '31%' }, away: { top: '76%', left: '69%' } },
+                ]
+            },
+
+            'semi-finals': {
+                backgroundImage: 'images//ucl-semi-finals.png',
+                logoSize: ' 15%',
+                coordinates: [
+                    { home: { top: '41%', left: '31%' }, away: { top: '41%', left: '69%' } },
+                    { home: { top: '67%', left: '31%' }, away: { top: '67%', left: '69%' } },
+                ]
+            },
+
+            'final': {
+                backgroundImage: 'images//ucl-final.png',
+                logoSize: '37%',
+                coordinates: [
+                    { home: { top: '50%', left: '25%' }, away: { top: '50%', left: '75%' } },
+                ]
+            },
+        },
+    };
+
+    return COORDINATES[league]?.[slug] || null;
+}
+
+function renderKnockoutDraw(round) {
+    const drawData = getDrawImageData(appState.currentLeague, round.title);
+    if (!drawData) return '';
+
+    const logosHTML = round.matches.map((match, index) => {
+        const coords = drawData.coordinates[index];
+        if (!coords) return '';
+
+        const getLogoHTML = (team, position) => {
+            if (!team) return '';
+            const style = `top: ${position.top}; left: ${position.left}; height: ${drawData.logoSize};`;
+            return `<img src="images/logos/${getTeamSlug(team)}.png" alt="${team}" class="draw-logo" style="${style}">`;
+        };
+
+        const homeLogoHTML = getLogoHTML(match.homeTeam, coords.home);
+        const awayLogoHTML = getLogoHTML(match.awayTeam, coords.away);
+
+        return homeLogoHTML + awayLogoHTML;
+    }).join('');
+
+    return `
+        <div class="knockout-draw-container">
+            <img src="${drawData.backgroundImage}" class="draw-background-image" alt="${round.title} Draw Bracket">
+            <div class="draw-logo-container">${logosHTML}</div>
+        </div>
+    `;
+}
+
 function areAllTeamsReadyForKnockout(teamStats) {
     const leagueConfig = appState.config[appState.currentLeague];
     if (!leagueConfig || !leagueConfig.teams || !teamStats) {
@@ -80,7 +176,7 @@ export function generateKnockoutStage(sortedTeams, knockoutMatches, teamStats) {
         return;
     }
 
-    const activeRoundIndex = dom.knockoutSection.querySelector('.knockout-round-btn.active')?.dataset.roundIndex || 0;
+    const activeRoundIndex = parseInt(dom.knockoutSection.querySelector('.knockout-round-btn.active')?.dataset.roundIndex, 10) || 0;
 
     dom.knockoutSection.innerHTML = `
         <div class="search-container-wrapper">
@@ -90,11 +186,14 @@ export function generateKnockoutStage(sortedTeams, knockoutMatches, teamStats) {
             </div>
         </div>
         <div class="match-box">
+            <!-- MODIFIED: Added a wrapper for the new draw image -->
+            <div class="knockout-draw-wrapper"></div>
             <div class="knockout-matches-grid"></div>
         </div>`;
 
     const knockoutNav = dom.knockoutSection.querySelector('.knockout-nav');
     const knockoutTitle = dom.knockoutSection.querySelector('#knockout-stage-title');
+    const drawWrapper = dom.knockoutSection.querySelector('.knockout-draw-wrapper');
     const knockoutGrid = dom.knockoutSection.querySelector('.knockout-matches-grid');
 
     allRounds.forEach((round, index) => {
@@ -103,20 +202,21 @@ export function generateKnockoutStage(sortedTeams, knockoutMatches, teamStats) {
         btn.className = 'btn knockout-round-btn';
         btn.textContent = round.title;
         btn.dataset.roundIndex = index;
-        if (index == activeRoundIndex) btn.classList.add('active');
+        if (index === activeRoundIndex) btn.classList.add('active');
         knockoutNav.appendChild(btn);
     });
 
     const renderRound = (roundIndex) => {
         const round = allRounds[roundIndex];
-
         knockoutTitle.textContent = round.title;
 
         if (!round || round.matches.length === 0) {
+            drawWrapper.innerHTML = ''; 
             knockoutGrid.innerHTML = '<p class="empty-state">No matches for this round yet.</p>';
             return;
         }
 
+        drawWrapper.innerHTML = renderKnockoutDraw(round);
         knockoutGrid.innerHTML = round.matches.map(renderKnockoutCard).join('');
     };
 
@@ -125,7 +225,7 @@ export function generateKnockoutStage(sortedTeams, knockoutMatches, teamStats) {
         if (!target) return;
         knockoutNav.querySelector('.btn.active')?.classList.remove('active');
         target.classList.add('active');
-        renderRound(parseInt(target.dataset.roundIndex));
+        renderRound(parseInt(target.dataset.roundIndex, 10));
     });
 
     renderRound(activeRoundIndex);
