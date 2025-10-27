@@ -7,11 +7,6 @@
 .env.*
 !.env.example
 
-# If you choose to use a config.js file for keys instead of .env
-# Make sure to ignore it.
-js/config.js
-
-
 # ==================================
 #        Node.js / npm
 # ==================================

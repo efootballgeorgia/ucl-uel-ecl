@@ -228,14 +228,12 @@ header {
   gap: 2rem;
   flex-wrap: wrap;
   flex-grow: 1;
-  /* Allows it to take up space */
 }
 
 .main-nav .btn {
   padding: 0.5rem 0;
   background: transparent;
   color: var(--text-color-secondary);
-  /* Lighter color for inactive */
   border: none;
   border-bottom: 3px solid transparent;
   border-radius: 0;
@@ -261,11 +259,6 @@ header {
   border-color: var(--accent-color-hover);
   background: transparent;
   box-shadow: none;
-}
-
-.page-section {
-  display: none;
-  animation: fadeIn 0.5s ease-out;
 }
 
 .page-section {
@@ -452,7 +445,7 @@ header {
 
 .league-table {
   width: 65%;
-  max-width: 1200px;
+  max-width: 900px;
   margin: 2rem auto;
   border-radius: var(--border-radius);
   overflow: hidden;
@@ -690,6 +683,7 @@ tbody.is-sorting {
 /* ============================================
    7. Match & Knockout Cards (New Vertical Style)
 ============================================ */
+
 .match-card {
   background-color: #1a2c44;
   border-radius: 10px;
