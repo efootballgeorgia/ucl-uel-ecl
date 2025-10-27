@@ -455,7 +455,7 @@ header {
 ============================================ */
 
 .league-table {
-  width: 95%;
+  width: 65%;
   max-width: 1200px;
   margin: 2rem auto;
   border-radius: var(--border-radius);
