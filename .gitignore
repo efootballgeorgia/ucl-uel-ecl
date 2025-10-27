@@ -9,7 +9,7 @@
 
 # If you choose to use a config.js file for keys instead of .env
 # Make sure to ignore it.
-config.js
+js/config.js
 
 
 # ==================================
