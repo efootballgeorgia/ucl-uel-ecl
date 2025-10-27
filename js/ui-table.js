@@ -31,8 +31,13 @@ export function renderTable(league) {
             <td>${index + 1}</td>
             <td>
               <picture>
+<<<<<<< HEAD
                 <source data-srcset="images/logos/${teamLogoName}.png" type="image/webp">
                 <img src="images/logos/${teamLogoName}.png" alt="${teamName}" class="team-logo">
+=======
+                <source data-srcset="images/logos/${teamLogoName}.webp" type="image/webp">
+                <img src="images/logos/${teamLogoName}.webp" alt="${teamName}" class="team-logo">
+>>>>>>> ed254c0411b6ac0aa41d163ddd3d6de43350ad90
               </picture>
               <b>${teamName}</b>
             </td>

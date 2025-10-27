@@ -148,8 +148,13 @@ function renderKnockoutCard(match) {
         const teamInfo = team
             ? `<div class="team-info">
              <picture>
+<<<<<<< HEAD
                 <source data-srcset="images/logos/${getTeamSlug(team)}.png" type="image/png">
                 <img src="images/logos/${getTeamSlug(team)}.png" alt="${team} logo" class="team-logo">
+=======
+                <source data-srcset="images/logos/${getTeamSlug(team)}.webp" type="image/webp">
+                <img src="images/logos/${getTeamSlug(team)}.webp" alt="${team} logo" class="team-logo">
+>>>>>>> ed254c0411b6ac0aa41d163ddd3d6de43350ad90
              </picture>
              <span class="team-name ${isWinner ? 'winner' : ''}">${team}</span>
            </div>`
