@@ -82,6 +82,7 @@ export function updateTableFromStats(teamStats) {
     });
 }
 
+
 export function sortTable() {
     const tableBody = dom.leagueTableBody;
     if (!tableBody) return;
@@ -127,18 +128,21 @@ export function sortTable() {
         return statsA.team.localeCompare(statsB.team);
     });
 
-    tableBody.innerHTML = '';
+    const fragment = document.createDocumentFragment();
     rows.forEach((row, index) => {
-        row.cells[0].textContent = index + 1;
-        tableBody.appendChild(row);
+        row.cells[0].textContent = index + 1; 
+        fragment.appendChild(row); 
 
         if (qualificationZones[index + 1]) {
             const separatorRow = document.createElement('tr');
             separatorRow.className = 'separator';
             separatorRow.innerHTML = `<td colspan="9" class="${qualificationZones[index + 1]}"><span class="line"></span></td>`;
-            tableBody.appendChild(separatorRow);
+            fragment.appendChild(separatorRow);
         }
     });
+
+    tableBody.innerHTML = '';
+    tableBody.appendChild(fragment);
 
     tableBody.previousElementSibling.querySelectorAll('th').forEach(th => th.removeAttribute('data-sort'));
     const activeHeader = tableBody.previousElementSibling.querySelector(`th[data-sort-key="${primaryKey}"]`);
@@ -148,7 +152,6 @@ export function sortTable() {
 
     const sortAnnouncement = `Table sorted by ${primaryKey}, ${appState.sortDirection} order.`;
     const announcementElement = document.getElementById('table-sort-announcement');
-
     if (announcementElement) {
         announcementElement.textContent = sortAnnouncement;
     }

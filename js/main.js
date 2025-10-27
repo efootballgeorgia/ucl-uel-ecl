@@ -265,9 +265,9 @@ function setInitialTableView() {
 }
 
 
-window.onload = () => {
-    initializeSupabase();
+window.onload = async () => {
     setupEventListeners();
+    await initializeSupabase();
 
     const urlParams = new URLSearchParams(window.location.search);
     const initialLeague = urlParams.get('league') || appState.currentLeague;

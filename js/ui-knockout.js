@@ -1,24 +1,17 @@
 import { dom, appState, } from './main.js';
 import { getTeamSlug, renderAdminActionsHTML } from './ui-feedback.js';
 
-function areAllTeamsReadyForKnockout() {
+function areAllTeamsReadyForKnockout(teamStats) {
     const leagueConfig = appState.config[appState.currentLeague];
-    if (!leagueConfig || !leagueConfig.teams || !dom.leagueTableBody) {
+    if (!leagueConfig || !leagueConfig.teams || !teamStats) {
         return false;
     }
 
     const requiredGames = leagueConfig.numberOfMatches || 8;
 
     for (const teamName of leagueConfig.teams) {
-        const row = dom.leagueTableBody.querySelector(`tr[data-team="${teamName}"]`);
-
-        if (!row || row.classList.contains('skeleton')) {
-            return false;
-        }
-
-        const playedGames = parseInt(row.cells[2].textContent, 10);
-
-        if (isNaN(playedGames) || playedGames < requiredGames) {
+        const stats = teamStats[teamName];
+        if (!stats || stats.p < requiredGames) {
             return false;
         }
     }
@@ -74,8 +67,8 @@ function calculateKnockoutData(sortedTeams, knockoutMatches) {
     ];
 }
 
-export function generateKnockoutStage(sortedTeams, knockoutMatches) {
-    if (!areAllTeamsReadyForKnockout()) {
+export function generateKnockoutStage(sortedTeams, knockoutMatches, teamStats) {
+    if (!areAllTeamsReadyForKnockout(teamStats)) {
         dom.knockoutSection.innerHTML = `<p class="empty-state" style="display:block; padding: 4rem 2rem; font-size: 2.5rem; font-weight: 700; color: var(--accent-color); text-transform: uppercase;">SOON</p>`;
         return;
     }

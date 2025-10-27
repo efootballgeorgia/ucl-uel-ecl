@@ -10,6 +10,54 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+function debounce(func, delay = 350) {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            func.apply(this, args);
+        }, delay);
+    };
+}
+
+let resolveFirstAuthState;
+const firstAuthStatePromise = new Promise(resolve => {
+    resolveFirstAuthState = resolve;
+});
+
+supabase.auth.onAuthStateChange(async (event, session) => {
+    appState.currentUser = session?.user || null;
+
+    if (appState.currentUser) {
+        const { data } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', appState.currentUser.id)
+            .single();
+        appState.isAdmin = data?.role === 'admin';
+    } else {
+        appState.isAdmin = false;
+    }
+
+    if (resolveFirstAuthState) {
+        resolveFirstAuthState(session);
+        resolveFirstAuthState = null;
+    }
+
+    updateAuthUI();
+
+    if (appState.currentLeague && appState.config[appState.currentLeague]) {
+        filterMatches();
+        const leagueConfig = appState.config[appState.currentLeague];
+        const teamStats = calculateAllTeamStats(appState.currentLeagueMatches, leagueConfig.teams);
+        generateKnockoutStage(appState.sortedTeams, appState.currentLeagueKnockoutMatches, teamStats);
+    }
+});
+
+
+export async function initializeSupabase() {
+    return firstAuthStatePromise;
+}
 
 function handleAuthError(error) {
     if (error.message.includes('Invalid login credentials')) {
@@ -70,29 +118,6 @@ export async function handleLogout() {
     }
 }
 
-export function initializeSupabase() {
-    supabase.auth.onAuthStateChange(async (event, session) => {
-        appState.currentUser = session?.user || null;
-
-        if (appState.currentUser) {
-            const { data, error } = await supabase
-                .from('profiles')
-                .select('role')
-                .eq('id', appState.currentUser.id)
-                .single();
-
-            appState.isAdmin = data?.role === 'admin';
-        } else {
-            appState.isAdmin = false;
-        }
-
-        updateAuthUI();
-        if (appState.currentLeague) {
-            switchLeague(appState.currentLeague);
-        }
-    });
-}
-
 function calculateAllTeamStats(matches, teams) {
     const stats = {};
     teams.forEach(team => {
@@ -128,7 +153,6 @@ function calculateAllTeamStats(matches, teams) {
 
 function processLeagueChanges(matches) {
     if (!dom.leagueTableBody) {
-        console.error("League table body not found in DOM, cannot process changes.");
         return;
     }
 
@@ -144,7 +168,7 @@ function processLeagueChanges(matches) {
     const rows = Array.from(document.querySelectorAll('#leagueTable tbody tr:not(.separator)'));
     appState.sortedTeams = rows.map(row => row.dataset.team);
 
-    generateKnockoutStage(appState.sortedTeams, appState.currentLeagueKnockoutMatches);
+    generateKnockoutStage(appState.sortedTeams, appState.currentLeagueKnockoutMatches, teamStats);
     filterMatches();
 }
 
@@ -171,7 +195,11 @@ async function fetchKnockoutData(league) {
         return;
     }
     appState.currentLeagueKnockoutMatches = data || [];
-    generateKnockoutStage(appState.sortedTeams, appState.currentLeagueKnockoutMatches);
+    const leagueConfig = appState.config[appState.currentLeague];
+    if (leagueConfig && leagueConfig.teams) {
+        const teamStats = calculateAllTeamStats(appState.currentLeagueMatches, leagueConfig.teams);
+        generateKnockoutStage(appState.sortedTeams, appState.currentLeagueKnockoutMatches, teamStats);
+    }
 }
 
 function setupLeagueUI(league, config) {
@@ -190,9 +218,12 @@ function removeAllSubscriptions() {
 function setupLeagueListeners(league) {
     removeAllSubscriptions();
 
+    const debouncedFetchLeagueData = debounce(() => fetchLeagueData(league));
+    const debouncedFetchKnockoutData = debounce(() => fetchKnockoutData(league));
+
     const channel = supabase.channel(`realtime:${league}`)
-        .on('postgres_changes', { event: '*', schema: 'public', table: `${league}Matches` }, () => fetchLeagueData(league))
-        .on('postgres_changes', { event: '*', schema: 'public', table: `${league}KnockoutMatches` }, () => fetchKnockoutData(league))
+        .on('postgres_changes', { event: '*', schema: 'public', table: `${league}Matches` }, debouncedFetchLeagueData)
+        .on('postgres_changes', { event: '*', schema: 'public', table: `${league}KnockoutMatches` }, debouncedFetchKnockoutData)
         .subscribe();
 
     appState.channel = channel;
