@@ -1,5 +1,4 @@
-import { dom } from './dom.js';
-import { appState } from './state.js';
+import { dom, appState } from './main.js';
 import { getTeamSlug, renderAdminActionsHTML, renderTeamLogoHTML } from './ui-feedback.js';
 import { supabase } from './supabase.js';
 

@@ -1,11 +1,53 @@
 import { initializeSupabase, handleAuthAction, handleLogout, switchLeague, handleScoreSubmission, handleDelete } from './supabase.js';
 import { filterMatches } from './ui-matches.js';
 import { sortTable } from './ui-table.js';
-import { dom } from './dom.js';
-import { appState } from './state.js';
 
-export { dom };
-export { appState };
+export const dom = {
+    leagueSection: document.getElementById('league-section'),
+    matchesSection: document.getElementById('matches-section'),
+    knockoutSection: document.getElementById('knockout-section'),
+    knockoutContainer: document.querySelector('.knockout-container'),
+    leagueLogo: document.getElementById('league-logo'),
+    leagueSelectorNav: document.querySelector('.league-selector-nav'),
+    leagueTableBody: document.querySelector('#leagueTable tbody'),
+    leagueTable: document.querySelector('.league-table'),
+    tableViewToggle: document.querySelector('.table-view-toggle'),
+    matchesTitle: document.getElementById('match-box-title'),
+    matchesContainer: document.getElementById('match-box-container'),
+    daySelector: document.getElementById('daySelector'),
+    teamSearchSelect: document.getElementById('teamSearchSelect'),
+    clearSearchBtn: document.getElementById('clearSearchBtn'),
+    noSearchResults: document.getElementById('no-search-results'),
+    feedbackMessage: document.getElementById('global-feedback'),
+    authModal: document.getElementById('auth-modal'),
+    closeAuthModalBtn: document.getElementById('closeAuthModal'),
+    authForm: document.getElementById('auth-form'),
+    authEmailInput: document.getElementById('auth-email'),
+    authPasswordInput: document.getElementById('auth-password'),
+    loginBtn: document.getElementById('login-btn'),
+    signupBtn: document.getElementById('signup-btn'),
+    authFeedbackMessage: document.querySelector('.auth-feedback-message'),
+    userStatusSpan: document.getElementById('user-status'),
+    authBtn: document.getElementById('auth-btn'),
+    logoutBtn: document.getElementById('logout-btn')
+};
+
+export const appState = {
+    db: null,
+    auth: null,
+    currentUser: null,
+    isAdmin: false,
+    currentLeague: 'ucl',
+    currentLeagueMatches: [],
+    currentLeagueKnockoutMatches: [],
+    sortedTeams: [],
+    channel: null,
+    fixtures: {},
+    config: {},
+    sortBy: 'points',
+    sortDirection: 'desc'
+};
+
 
 export function setSort(newSortKey) {
     if (appState.sortBy === newSortKey) {

@@ -1,5 +1,4 @@
-import { dom } from './dom.js';
-import { appState } from './state.js';
+import { dom, appState } from './main.js';
 import { showAuthFeedback, updateAuthUI, showFeedback } from './ui-feedback.js';
 import { generateKnockoutStage } from './ui-knockout.js';
 import { generateMatches, filterMatches, renderSkeletonMatches, updateUIFromConfig } from './ui-matches.js';

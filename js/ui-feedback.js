@@ -1,5 +1,4 @@
-import { dom } from './dom.js';
-import { appState } from './state.js';
+import { dom, appState } from './main.js';
 
 export const DURATIONS = {
     FEEDBACK_MESSAGE: 3000,
