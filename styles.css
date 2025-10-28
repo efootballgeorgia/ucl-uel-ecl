@@ -611,14 +611,6 @@ tbody.is-sorting {
   background-color: #0de41c;
 }
 
-.knockout-seeded .line {
-  background-color: #157736;
-}
-
-.knockout-unseeded .line {
-  background-color: #d72811;
-}
-
 .uel-round16 .line {
   background-color: var(--accent-color);
 }
@@ -727,39 +719,21 @@ tbody.is-sorting {
   border-color: #6c8cff;
 }
 
-.match-card {
-  border-left: 5px solid transparent;
-}
-
+.match-card,
 .knockout-match-card {
-  border-left: 5px solid #284a7e;
+  border-left: 5px solid transparent;
+  border-left-color: #ffffff;
 }
 
 .match-card.played,
 .knockout-match-card.played {
-  border-left-color: #6cff8a;
+  border-left-color: #1cba3b;
 }
-
 
 .card-content {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-}
-
-.card-pending {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  color: #a0a3d9;
-  font-size: 1.2em;
-  min-height: 80px;
-}
-
-.knockout-match-card .card-pending {
-  min-height: 0;
-  display: none;
 }
 
 .team-row {
@@ -824,6 +798,7 @@ tbody.is-sorting {
 .knockout-draw-wrapper {
   margin-bottom: 2rem;
 }
+
 .knockout-draw-wrapper:empty {
   display: none;
 }
@@ -1082,7 +1057,6 @@ tbody.is-sorting {
 }
 
 .is-editing .card-content,
-.is-editing .card-pending,
 .is-editing .btn-edit,
 .is-editing .btn-delete {
   display: none;
