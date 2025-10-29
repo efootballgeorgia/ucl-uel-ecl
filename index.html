@@ -23,18 +23,23 @@
   <header>
     <div class="header-content">
       <div class="logo-container">
-        <img src="images/leagues/champions-league-logo.webp" alt="Champions League Logo" id="league-logo"
-          class="league-logo">
-        <button class="btn" id="league-switch-button"> ▼ </button>
-        <nav class="league-selector-nav">
-          <button class="league-btn btn active" data-league="ucl">Champions League</button>
-          <button class="league-btn btn" data-league="uel">Europa League</button>
-          <button class="league-btn btn" data-league="ecl">Conference League</button>
-          <button class="league-btn btn" data-league="la-liga">La Liga</button>
-          <button class="league-btn btn" data-league="premier-league">Premier League</button>
-          <button class="league-btn btn" data-league="seria-a">Seria A</button>
-          <button class="league-btn btn" data-league="ligue-1">Ligue 1</button>
-        </nav>
+        <div class="league-selector-wrapper">
+          <div class="league-selector-header">
+            <img src="images/leagues/champions-league-logo.webp" alt="Champions League Logo" id="league-logo"
+              class="league-logo">
+            <button class="league-switch-button" id="league-switch-button"> ▼ </button>
+          </div>
+          <div class="league-selector-bar"></div>
+          <nav class="league-selector-nav">
+            <button class="league-btn btn active" data-league="ucl">Champions League</button>
+            <button class="league-btn btn" data-league="uel">Europa League</button>
+            <button class="league-btn btn" data-league="ecl">Conference League</button>
+            <button class="league-btn btn" data-league="la-liga">La Liga</button>
+            <button class="league-btn btn" data-league="premier-league">Premier League</button>
+            <button class="league-btn btn" data-league="seria-a">Seria A</button>
+            <button class="league-btn btn" data-league="ligue-1">Ligue 1</button>
+          </nav>
+        </div>
       </div>
       <nav class="main-nav" role="tablist" aria-label="Main Navigation">
         <button class="nav-btn btn active" id="tab-league" role="tab" aria-selected="true" aria-controls="panel-league"
@@ -55,8 +60,8 @@
 
     <section id="league-section" class="page-section active" role="tabpanel" aria-labelledby="tab-league">
       <div class="table-view-toggle">
-        <button class="btn btn-view-toggle" data-view="simplified">Simplified</button>
-        <button class="btn btn-view-toggle active" data-view="full">Full</button>
+        <button class="table-toggle-btn" data-view="simplified">Simplified</button>
+        <button class="table-toggle-btn active" data-view="full">Full</button>
       </div>
       <div class="league-table">
         <table id="leagueTable">

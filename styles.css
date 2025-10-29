@@ -195,6 +195,37 @@ header {
   align-items: center;
 }
 
+.league-selector-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.league-selector-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+  padding: 0.75rem 1.5rem;
+  gap: 0.75rem;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  user-select: none;
+}
+
+.league-selector-header:hover {
+  background-color: #1a1a1a;
+}
+
+.league-selector-bar {
+  height: 4px;
+  background-color: var(--accent-color, #0047ab);
+  border-radius: 0 0 8px 8px;
+  pointer-events: none;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -219,10 +250,29 @@ header {
 
 .league-logo {
   width: auto;
-  max-height: 90px;
+  max-height: 50px;
   display: block;
+  pointer-events: none;
+}
+
+.league-switch-button {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 1rem;
   cursor: pointer;
-  padding-right: 12px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, color 0.2s ease;
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+}
+
+.league-selector-header:hover .league-switch-button {
+  color: #cccccc;
 }
 
 .league-selector-nav {
@@ -471,20 +521,41 @@ header {
 .table-view-toggle {
   display: none;
   justify-content: center;
-  gap: 1rem;
+  align-items: center;
+  gap: 0.25rem;
   margin: 1rem auto;
   max-width: 900px;
+  background: rgba(38, 61, 128, 0.55);
+  border-radius: 9999px;
+  padding: 4px;
+  backdrop-filter: saturate(120%) blur(2px);
 }
 
-.btn-view-toggle {
-  background-color: transparent;
-  border: 1px solid var(--border-color);
+.table-toggle-btn {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: #cfd5ea;
+  font-weight: 600;
+  text-transform: none;
+  padding: 0.45rem 1rem;
+  cursor: pointer;
+  border-radius: 9999px;
+  line-height: 1;
+  transition: color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
 }
 
-.btn-view-toggle.active {
-  background: var(--accent-color);
-  color: var(--primary-bg);
-  border-color: var(--accent-color);
+.table-toggle-btn:hover,
+.table-toggle-btn:focus {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+  outline: none;
+}
+
+.table-toggle-btn.active {
+  background: #ffffff;
+  color: #233a7a;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
 }
 
 .league-table {
@@ -874,7 +945,16 @@ tbody.is-sorting {
 
   .league-logo {
     max-width: 60px;
-    padding-right: 12px;
+    max-height: 40px;
+  }
+  
+  .league-selector-header {
+    padding: 0.5rem 1rem;
+    gap: 0.5rem;
+  }
+  
+  .league-selector-bar {
+    height: 3px;
   }
   
   tbody td img {
@@ -908,6 +988,10 @@ tbody.is-sorting {
     font-size: 12.5px;
   }
 
+  .league-selector-wrapper {
+    margin-right: 130px;
+  }
+   
   thead th,
   tbody td {
     padding: 0.5rem 0.3rem;

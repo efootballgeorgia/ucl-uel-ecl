@@ -8,6 +8,8 @@ export const dom = {
     knockoutSection: document.getElementById('knockout-section'),
     leagueLogo: document.getElementById('league-logo'),
     leagueSwitchButton: document.getElementById('league-switch-button'),
+    leagueSelectorWrapper: document.querySelector('.league-selector-wrapper'),
+    leagueSelectorHeader: document.querySelector('.league-selector-header'),
     leagueSelectorNav: document.querySelector('.league-selector-nav'),
     leagueTableBody: document.querySelector('#leagueTable tbody'),
     leagueTable: document.querySelector('.league-table'),
@@ -110,10 +112,10 @@ function setupEventListeners() {
 
     if (dom.tableViewToggle) {
         dom.tableViewToggle.addEventListener(EVENTS.CLICK, (e) => {
-            const target = e.target.closest('.btn-view-toggle');
+            const target = e.target.closest('.table-toggle-btn');
             if (!target || target.classList.contains(CSS.ACTIVE)) return;
 
-            dom.tableViewToggle.querySelector('.btn-view-toggle.active').classList.remove(CSS.ACTIVE);
+            dom.tableViewToggle.querySelector('.table-toggle-btn.active').classList.remove(CSS.ACTIVE);
             target.classList.add(CSS.ACTIVE);
 
             const view = target.dataset.view;
@@ -125,14 +127,15 @@ function setupEventListeners() {
         });
     }
 
-    dom.leagueSwitchButton.addEventListener(EVENTS.CLICK, (e) => {
+    // Make the entire league selector header clickable
+    dom.leagueSelectorHeader.addEventListener(EVENTS.CLICK, (e) => {
         e.stopPropagation();
         dom.leagueSelectorNav.classList.toggle(CSS.SHOW);
     });
 
     window.addEventListener(EVENTS.CLICK, (e) => {
         if (dom.leagueSelectorNav.classList.contains(CSS.SHOW)) {
-            if (!dom.leagueLogo.contains(e.target) && !dom.leagueSelectorNav.contains(e.target) && !dom.leagueSwitchButton.contains(e.target)) {
+            if (!dom.leagueSelectorWrapper.contains(e.target) && !dom.leagueSelectorNav.contains(e.target)) {
                 dom.leagueSelectorNav.classList.remove(CSS.SHOW);
             }
         }
