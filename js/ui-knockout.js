@@ -88,37 +88,35 @@ function calculateKnockoutData(sortedTeams, knockoutMatches) {
     const topSeeded = qualifiedTeams.slice(0, seeded);
     const playoffTeams = qualifiedTeams.slice(seeded);
 
-    const kopoMatches = Array.from({ length: playoffTeams.length / 2 }, (_, i) => ({
-        id: `r32-${i}`,
-        homeTeam: playoffTeams[i],
-        awayTeam: playoffTeams[playoffTeams.length - 1 - i],
+    const kopo_matches = Array.from({ length: playoffTeams.length / 2 }, (_, i) => ({
+        id: `r32-${i}`, homeTeam: playoffTeams[i], awayTeam: playoffTeams[playoffTeams.length - 1 - i],
         data: knockoutData[`r32-${i}`]
     }));
 
-    const kopoWinners = kopoMatches.map(m => getWinner(m.data));
+    const r16_matches = Array.from({ length: seeded }, (_, i) => ({
+        id: `r16-${i}`, homeTeam: topSeeded[i], awayTeam: getWinner(kopo_matches[i]?.data),
+        data: knockoutData[`r16-${i}`], dependsOn: `Qualified Teams`
+    }));
 
-    const generateRound = (prefix, groupA, groupB, dependencyText) => {
-        return Array.from({ length: groupA.length }, (_, i) => ({
-            id: `${prefix}-${i}`,
-            homeTeam: groupA[i],
-            awayTeam: groupB[i],
-            data: knockoutData[`${prefix}-${i}`],
-            dependsOn: dependencyText
-        }));
-    };
-    
-    const r16Matches = generateRound('r16', topSeeded, kopoWinners, 'Qualified Teams');
-    const qfMatches = generateRound('qf', kopoWinners.slice(0, 4), kopoWinners.slice(4), 'Winners of R16');
-    const sfMatches = generateRound('sf', kopoWinners.slice(0, 2), kopoWinners.slice(2), 'Winners of QF');
-    const finalMatch = generateRound('final', kopoWinners.slice(0, 1), kopoWinners.slice(1), 'Winners of SF');
+    const qf_matches = Array.from({ length: 4 }, (_, i) => ({
+        id: `qf-${i}`, homeTeam: getWinner(r16_matches[i * 2]?.data), awayTeam: getWinner(r16_matches[i * 2 + 1]?.data),
+        data: knockoutData[`qf-${i}`], dependsOn: `Winners of R16`
+    }));
 
+    const sf_matches = Array.from({ length: 2 }, (_, i) => ({
+        id: `sf-${i}`, homeTeam: getWinner(qf_matches[i * 2]?.data), awayTeam: getWinner(qf_matches[i * 2 + 1]?.data),
+        data: knockoutData[`sf-${i}`], dependsOn: `Winners of QF`
+    }));
+
+    const final_match = [{
+        id: `final-0`, homeTeam: getWinner(sf_matches[0]?.data), awayTeam: getWinner(sf_matches[1]?.data),
+        data: knockoutData[`final-0`], dependsOn: `Winners of SF`
+    }];
 
     return [
-        { title: 'KO PLAY-OFFS', matches: kopoMatches },
-        { title: 'ROUND OF 16', matches: r16Matches },
-        { title: 'QUARTER-FINALS', matches: qfMatches },
-        { title: 'SEMI-FINALS', matches: sfMatches },
-        { title: 'FINAL', matches: finalMatch }
+        { title: 'KO PLAY-OFFS', matches: kopo_matches }, { title: 'ROUND OF 16', matches: r16_matches },
+        { title: 'QUARTER-FINALS', matches: qf_matches }, { title: 'SEMI-FINALS', matches: sf_matches },
+        { title: 'FINAL', matches: final_match }
     ];
 }
 
