@@ -119,37 +119,37 @@ export async function handleLogout() {
 }
 
 function calculateAllTeamStats(matches, teams) {
-    const stats = {};
-    teams.forEach(team => {
-        stats[team] = { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0, form: [] };
-    });
+    const stats = Object.fromEntries(teams.map(team => [team, { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0, form: [] }]));
+
+    const updateStats = (teamStat, goalsFor, goalsAgainst, result) => {
+        teamStat.p++;
+        teamStat.gf += goalsFor;
+        teamStat.ga += goalsAgainst;
+        teamStat.w += (result === 'victory');
+        teamStat.d += (result === 'draw');
+        teamStat.l += (result === 'loss');
+        teamStat.pts += (result === 'victory' ? 3 : (result === 'draw' ? 1 : 0));
+        teamStat.form.unshift(result);
+    };
 
     matches.forEach(match => {
-        if (typeof match.homeScore !== 'number') return;
-        const { homeTeam, awayTeam, homeScore, awayScore } = match;
-        const home = stats[homeTeam];
-        const away = stats[awayTeam];
-        if (!home || !away) return;
+        if (typeof match.homeScore !== 'number' || !stats[match.homeTeam] || !stats[match.awayTeam]) return;
 
-        home.p++; away.p++;
-        home.gf += homeScore; home.ga += awayScore;
-        away.gf += awayScore; away.ga += homeScore;
-
-        if (homeScore > awayScore) {
-            home.w++; home.pts += 3; home.form.unshift('victory');
-            away.l++; away.form.unshift('loss');
-        } else if (awayScore > homeScore) {
-            away.w++; away.pts += 3; away.form.unshift('victory');
-            home.l++; home.form.unshift('loss');
-        } else {
-            home.d++; away.d++; home.pts++; away.pts++;
-            home.form.unshift('draw'); away.form.unshift('draw');
+        let homeResult = 'draw', awayResult = 'draw';
+        if (match.homeScore > match.awayScore) {
+            homeResult = 'victory'; awayResult = 'loss';
+        } else if (match.awayScore > match.homeScore) {
+            homeResult = 'loss'; awayResult = 'victory';
         }
-    });
 
-    Object.values(stats).forEach(s => s.form = s.form.slice(0, 5));
+        updateStats(stats[match.homeTeam], match.homeScore, match.awayScore, homeResult);
+        updateStats(stats[match.awayTeam], match.awayScore, match.homeScore, awayResult);
+    });
+    
+    Object.values(stats).forEach(s => s.form.splice(5));
     return stats;
 }
+
 
 function processLeagueChanges(matches) {
     if (!dom.leagueTableBody) {

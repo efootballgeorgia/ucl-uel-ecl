@@ -128,8 +128,8 @@ export function sortTable() {
 
     const fragment = document.createDocumentFragment();
     rows.forEach((row, index) => {
-        row.cells[0].textContent = index + 1; 
-        fragment.appendChild(row); 
+        row.cells[0].textContent = index + 1;
+        fragment.appendChild(row);
 
         if (qualificationZones[index + 1]) {
             const separatorRow = document.createElement('tr');
