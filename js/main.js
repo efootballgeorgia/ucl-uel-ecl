@@ -7,6 +7,7 @@ export const dom = {
     matchesSection: document.getElementById('matches-section'),
     knockoutSection: document.getElementById('knockout-section'),
     leagueLogo: document.getElementById('league-logo'),
+    leagueSwitchButton: document.getElementById('league-switch-button'),
     leagueSelectorNav: document.querySelector('.league-selector-nav'),
     leagueTableBody: document.querySelector('#leagueTable tbody'),
     leagueTable: document.querySelector('.league-table'),
@@ -124,14 +125,14 @@ function setupEventListeners() {
         });
     }
 
-    dom.leagueLogo.addEventListener(EVENTS.CLICK, (e) => {
+    dom.leagueSwitchButton.addEventListener(EVENTS.CLICK, (e) => {
         e.stopPropagation();
         dom.leagueSelectorNav.classList.toggle(CSS.SHOW);
     });
 
     window.addEventListener(EVENTS.CLICK, (e) => {
         if (dom.leagueSelectorNav.classList.contains(CSS.SHOW)) {
-            if (!dom.leagueLogo.contains(e.target) && !dom.leagueSelectorNav.contains(e.target)) {
+            if (!dom.leagueLogo.contains(e.target) && !dom.leagueSelectorNav.contains(e.target) && !dom.leagueSwitchButton.contains(e.target)) {
                 dom.leagueSelectorNav.classList.remove(CSS.SHOW);
             }
         }

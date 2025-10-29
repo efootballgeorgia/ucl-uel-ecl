@@ -222,6 +222,7 @@ header {
   max-height: 90px;
   display: block;
   cursor: pointer;
+  padding-right: 12px;
 }
 
 .league-selector-nav {
@@ -523,12 +524,14 @@ thead th[data-sort-key]:hover {
   color: #ffffff;
 }
 
-thead th[data-sort="asc"] {
-  color: red;
+thead th[data-sort="asc"]::after {
+  content: ' ▲';
+  color: var(--accent-color-hover);
 }
 
-thead th[data-sort="desc"] {
-  color: yellow;
+thead th[data-sort="desc"]::after {
+  content: ' ▼';
+  color: var(--accent-color-hover);
 }
 
 tbody td {
@@ -865,15 +868,23 @@ tbody.is-sorting {
   .header-content {
     height: auto;
     gap: 0.7rem;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .league-logo {
     max-width: 60px;
+    padding-right: 12px;
+  }
+  
+  tbody td img {
+    margin-right: 1px;
   }
 
   .main-nav {
-    align-items: center;
-    flex-direction: row;
+    order: 3;
+    flex-basis: 100%;
+    justify-content: space-around;
     gap: 0.5rem;
   }
 
@@ -882,13 +893,19 @@ tbody.is-sorting {
     font-size: 10px;
   }
 
+  #auth-btn,
+  #logout-btn {
+    flex-basis: 20%;
+    text-align: center;
+  }
+
   .main-nav .btn {
     font-size: 10.5px;
   }
 
   .league-table {
     width: 98%;
-    font-size: 13px;
+    font-size: 12.5px;
   }
 
   thead th,
