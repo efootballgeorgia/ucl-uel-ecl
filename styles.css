@@ -603,20 +603,21 @@ tbody.is-sorting {
 
 .separator .line {
   display: block;
-  height: 2px;
-  margin: 0 10px;
+  height: 4px;
+  margin: 0 0px;
+  opacity: 0.7
 }
 
 .round16 .line {
-  background-color: #0de41c;
+  background-color: yellow;
 }
 
-.uel-round16 .line {
-  background-color: var(--accent-color);
+.knockout-seeded .line {
+  background-color: green;
 }
 
-.ecl-round16 .line {
-  background-color: #FFA500;
+.knockout-unseeded .line {
+  background-color: red;
 }
 
 /* ============================================
