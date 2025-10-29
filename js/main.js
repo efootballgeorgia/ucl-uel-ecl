@@ -6,7 +6,6 @@ export const dom = {
     leagueSection: document.getElementById('league-section'),
     matchesSection: document.getElementById('matches-section'),
     knockoutSection: document.getElementById('knockout-section'),
-    knockoutContainer: document.querySelector('.knockout-container'),
     leagueLogo: document.getElementById('league-logo'),
     leagueSelectorNav: document.querySelector('.league-selector-nav'),
     leagueTableBody: document.querySelector('#leagueTable tbody'),
@@ -27,7 +26,6 @@ export const dom = {
     loginBtn: document.getElementById('login-btn'),
     signupBtn: document.getElementById('signup-btn'),
     authFeedbackMessage: document.querySelector('.auth-feedback-message'),
-    userStatusSpan: document.getElementById('user-status'),
     authBtn: document.getElementById('auth-btn'),
     logoutBtn: document.getElementById('logout-btn')
 };
