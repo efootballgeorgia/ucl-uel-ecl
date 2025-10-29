@@ -174,8 +174,9 @@ function processLeagueChanges(matches) {
 
 async function fetchLeagueData(league) {
     const { data: matches, error } = await supabase
-        .from(`${league}Matches`)
+        .from('matches')
         .select('*')
+        .eq('league_id', league)
         .order('timestamp', { ascending: true });
 
     if (error) {
@@ -187,8 +188,9 @@ async function fetchLeagueData(league) {
 
 async function fetchKnockoutData(league) {
     const { data, error } = await supabase
-        .from(`${league}KnockoutMatches`)
-        .select('*');
+        .from('knockout_matches')
+        .select('*')
+        .eq('league_id', league);
 
     if (error) {
         console.error(`Error fetching ${league} knockout matches:`, error);
@@ -221,11 +223,21 @@ function setupLeagueListeners(league) {
     const debouncedFetchLeagueData = debounce(() => fetchLeagueData(league));
 
     let channel = supabase.channel(`realtime:${league}`)
-        .on('postgres_changes', { event: '*', schema: 'public', table: `${league}Matches` }, debouncedFetchLeagueData);
+        .on('postgres_changes', {
+            event: '*',
+            schema: 'public',
+            table: 'matches',
+            filter: `league_id=eq.${league}`
+        }, debouncedFetchLeagueData);
 
     if (appState.config[league]?.has_knockout_stage) {
         const debouncedFetchKnockoutData = debounce(() => fetchKnockoutData(league));
-        channel = channel.on('postgres_changes', { event: '*', schema: 'public', table: `${league}KnockoutMatches` }, debouncedFetchKnockoutData);
+        channel = channel.on('postgres_changes', {
+            event: '*',
+            schema: 'public',
+            table: 'knockout_matches',
+            filter: `league_id=eq.${league}`
+        }, debouncedFetchKnockoutData);
     }
 
     channel.subscribe();
@@ -294,13 +306,25 @@ export async function handleScoreSubmission(e) {
 
     card.classList.remove('is-editing');
 
-    const tableName = `${appState.currentLeague}${matchType === 'league' ? 'Matches' : 'KnockoutMatches'}`;
+    const tableName = matchType === 'league' ? 'matches' : 'knockout_matches';
     const homeTeam = matchType === 'league' ? card.dataset.home : form.dataset.homeTeam;
     const awayTeam = matchType === 'league' ? card.dataset.away : form.dataset.awayTeam;
 
-    const matchData = { id: docId, homeScore, awayScore, homeTeam, awayTeam };
-    if (matchType === 'league') matchData.timestamp = new Date().toISOString();
-    else matchData.stage = docId.split('-')[0];
+    const matchData = {
+        id: docId,
+        homeScore,
+        awayScore,
+        homeTeam,
+        awayTeam,
+        league_id: appState.currentLeague
+    };
+
+    if (matchType === 'league') {
+        matchData.timestamp = new Date().toISOString();
+    } else {
+        matchData.stage = docId.split('-')[0];
+    }
+
 
     try {
         const { error } = await supabase.from(tableName).upsert(matchData);
@@ -339,7 +363,7 @@ export async function handleDelete(docId, matchType) {
     const card = document.querySelector(`[data-doc-id="${docId}"]`);
     if (card) card.style.opacity = '0.5';
 
-    const tableName = `${appState.currentLeague}${matchType === 'league' ? 'Matches' : 'KnockoutMatches'}`;
+    const tableName = matchType === 'league' ? 'matches' : 'knockout_matches';
 
     try {
         const { error } = await supabase.from(tableName).delete().eq('id', docId);
