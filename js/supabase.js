@@ -20,64 +20,52 @@ function debounce(func, delay = 350) {
     };
 }
 
-let resolveFirstAuthState;
-const firstAuthStatePromise = new Promise(resolve => {
-    resolveFirstAuthState = resolve;
-});
-
-// --- FIX: SAFETY TIMEOUT ---
-// If Supabase takes longer than 2 seconds (e.g., blocked by cache), 
-// force the app to load as "Logged Out" instead of freezing.
-setTimeout(() => {
-    if (resolveFirstAuthState) {
-        console.warn("Supabase auth took too long. Forcing load.");
-        resolveFirstAuthState(null); 
-        resolveFirstAuthState = null;
-    }
-}, 2000);
-
-supabase.auth.onAuthStateChange(async (event, session) => {
+// --- HELPER: Centralized logic to update app state based on session ---
+async function updateAppStateWithSession(session) {
     appState.currentUser = session?.user || null;
 
     if (appState.currentUser) {
-        // Try to get admin role, but don't block everything if it fails
-        try {
-            const { data } = await supabase
-                .from('profiles')
-                .select('role')
-                .eq('id', appState.currentUser.id)
-                .single();
-            appState.isAdmin = data?.role === 'admin';
-        } catch (e) {
-            console.log("Error checking admin role", e);
-            appState.isAdmin = false;
-        }
+        // Fetch Admin Role
+        const { data } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', appState.currentUser.id)
+            .single();
+        appState.isAdmin = data?.role === 'admin';
     } else {
         appState.isAdmin = false;
     }
 
-    if (resolveFirstAuthState) {
-        resolveFirstAuthState(session);
-        resolveFirstAuthState = null;
-    }
-
     updateAuthUI();
 
-    // If data is already loaded, re-run filters to show/hide admin buttons
+    // If data is already loaded, re-calculate UI elements that depend on Admin status
+    // (This allows admin buttons to appear immediately after login without refresh)
     if (appState.currentLeague && appState.config[appState.currentLeague]) {
-        filterMatches();
-        // Only regenerate knockout if data exists
-        if(appState.sortedTeams.length > 0) {
-            const leagueConfig = appState.config[appState.currentLeague];
-            const teamStats = calculateAllTeamStats(appState.currentLeagueMatches, leagueConfig.teams);
-            generateKnockoutStage(appState.sortedTeams, appState.currentLeagueKnockoutMatches, teamStats);
-        }
+        filterMatches(); // Re-renders matches (showing edit buttons if admin)
+        const leagueConfig = appState.config[appState.currentLeague];
+        const teamStats = calculateAllTeamStats(appState.currentLeagueMatches, leagueConfig.teams);
+        generateKnockoutStage(appState.sortedTeams, appState.currentLeagueKnockoutMatches, teamStats);
+    }
+}
+
+// --- LISTENER: Handle subsequent changes (Login/Logout clicks) ---
+supabase.auth.onAuthStateChange((event, session) => {
+    // We only trigger this if the session ID actually changed to prevent double-firing on load
+    if (session?.user?.id !== appState.currentUser?.id || event === 'SIGNED_OUT') {
+        updateAppStateWithSession(session);
     }
 });
 
-
+// --- INITIALIZATION: This replaces the "Promise" that was hanging ---
 export async function initializeSupabase() {
-    return firstAuthStatePromise;
+    // 1. Actively check if a session exists in storage right now
+    const { data } = await supabase.auth.getSession();
+    
+    // 2. Process that session immediately
+    await updateAppStateWithSession(data.session);
+    
+    // 3. Function returns, allowing main.js to proceed to load the app
+    return; 
 }
 
 function handleAuthError(error) {
@@ -134,6 +122,8 @@ export async function handleLogout() {
         const { error } = await supabase.auth.signOut();
         if (error) throw error;
         showFeedback('Logged out successfully!', true);
+        // Force state update on logout
+        updateAppStateWithSession(null);
     } catch (error) {
         showFeedback(`Logout error: ${error.message}`, false);
     }
