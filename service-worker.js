@@ -1,5 +1,5 @@
-const CACHE_NAME = 'nekro-league-v1.5';
-const DYNAMIC_CACHE_NAME = 'nekro-league-dynamic-v1.0';
+const CACHE_NAME = 'nekro-league-v1.6';
+const DYNAMIC_CACHE_NAME = 'nekro-league-dynamic-v1.6';
 
 const STATIC_ASSETS = [
     '/',
