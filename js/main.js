@@ -2,12 +2,9 @@ import { initializeSupabase, handleAuthAction, handleLogout, switchLeague, handl
 import { filterMatches } from './ui-matches.js';
 import { sortTable } from './ui-table.js';
 
-// --- START: CLEANUP & STABILIZATION SCRIPT ---
-// This block ensures that if a user has the old "broken" Service Worker,
-// it gets removed and their cache is cleared to fix Supabase connections.
+// --- CLEANUP & STABILIZATION SCRIPT ---
 (async function cleanupServiceWorkers() {
     try {
-        // 1. Unregister all Service Workers
         if ('serviceWorker' in navigator) {
             const registrations = await navigator.serviceWorker.getRegistrations();
             for (const registration of registrations) {
@@ -15,23 +12,17 @@ import { sortTable } from './ui-table.js';
                 await registration.unregister();
             }
         }
-
-        // 2. Clear Cache Storage (Fixes the "freezing" issue)
         if ('caches' in window) {
             const keys = await caches.keys();
             if (keys.length > 0) {
                 console.log('Clearing old cache storage...');
                 await Promise.all(keys.map(key => caches.delete(key)));
-                // Optional: Force a reload only if we actually deleted something
-                // so the user gets the fresh site immediately.
-                // window.location.reload(); 
             }
         }
     } catch (e) {
         console.error('Cleanup failed:', e);
     }
 })();
-// --- END: CLEANUP SCRIPT ---
 
 export const dom = {
     leagueSection: document.getElementById('league-section'),
@@ -300,7 +291,10 @@ function setInitialTableView() {
 
 window.onload = async () => {
     setupEventListeners();
-    await initializeSupabase();
+    
+    // --- FIX: DO NOT AWAIT HERE ---
+    // We start initialization, but we don't block the rest of the site loading.
+    initializeSupabase().catch(err => console.error("Supabase init error:", err));
 
     const urlParams = new URLSearchParams(window.location.search);
     const initialLeague = urlParams.get('league') || appState.currentLeague;
