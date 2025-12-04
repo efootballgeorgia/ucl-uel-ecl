@@ -2,6 +2,40 @@ import { initializeSupabase, handleAuthAction, handleLogout, switchLeague, handl
 import { filterMatches } from './ui-matches.js';
 import { sortTable } from './ui-table.js';
 
+// --- START CACHE BUSTER ---
+// This ensures users with the old "frozen" cache get the fix automatically.
+const CURRENT_VERSION = 'v1.7'; 
+
+async function checkAndWipeOldCaches() {
+    const versionKey = 'site_version';
+    const storedVersion = localStorage.getItem(versionKey);
+
+    // If version doesn't match, wipe everything and reload
+    if (storedVersion !== CURRENT_VERSION) {
+        console.log(`Version change detected (${storedVersion} -> ${CURRENT_VERSION}). Wiping old cache...`);
+
+        if ('serviceWorker' in navigator) {
+            const registrations = await navigator.serviceWorker.getRegistrations();
+            for (const registration of registrations) {
+                await registration.unregister();
+            }
+        }
+
+        if ('caches' in window) {
+            const keys = await caches.keys();
+            await Promise.all(keys.map(key => caches.delete(key)));
+        }
+
+        localStorage.setItem(versionKey, CURRENT_VERSION);
+        
+        // Reload to apply changes cleanly
+        window.location.reload(true);
+    }
+}
+// Run this check immediately
+checkAndWipeOldCaches();
+// --- END CACHE BUSTER ---
+
 export const dom = {
     leagueSection: document.getElementById('league-section'),
     matchesSection: document.getElementById('matches-section'),
@@ -267,6 +301,31 @@ function setInitialTableView() {
     }
 }
 
+// Service Worker Registration with Update Notification
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+                console.log('SW Registered');
+                registration.onupdatefound = () => {
+                    const installingWorker = registration.installing;
+                    if (installingWorker == null) {
+                        return;
+                    }
+                    installingWorker.onstatechange = () => {
+                        if (installingWorker.state === 'installed') {
+                            if (navigator.serviceWorker.controller) {
+                                console.log('New content is available and will be used when all tabs for this page are closed.');
+                            } else {
+                                console.log('Content is cached for offline use.');
+                            }
+                        }
+                    };
+                };
+            })
+            .catch(err => console.log('SW Registration Failed: ', err));
+    });
+}
 
 window.onload = async () => {
     setupEventListeners();
