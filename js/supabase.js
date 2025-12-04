@@ -20,53 +20,96 @@ function debounce(func, delay = 350) {
     };
 }
 
-// --- HELPER: Centralized logic to update app state based on session ---
-async function updateAppStateWithSession(session) {
+// Helper to calculate stats (Needed for refreshing UI on login)
+function calculateAllTeamStats(matches, teams) {
+    const stats = Object.fromEntries(teams.map(team => [team, { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0, form: [] }]));
+
+    const updateStats = (teamStat, goalsFor, goalsAgainst, result) => {
+        teamStat.p++;
+        teamStat.gf += goalsFor;
+        teamStat.ga += goalsAgainst;
+        teamStat.w += (result === 'victory');
+        teamStat.d += (result === 'draw');
+        teamStat.l += (result === 'loss');
+        teamStat.pts += (result === 'victory' ? 3 : (result === 'draw' ? 1 : 0));
+        teamStat.form.unshift(result);
+    };
+
+    matches.forEach(match => {
+        if (typeof match.homeScore !== 'number' || !stats[match.homeTeam] || !stats[match.awayTeam]) return;
+
+        let homeResult = 'draw', awayResult = 'draw';
+        if (match.homeScore > match.awayScore) {
+            homeResult = 'victory'; awayResult = 'loss';
+        } else if (match.awayScore > match.homeScore) {
+            homeResult = 'loss'; awayResult = 'victory';
+        }
+
+        updateStats(stats[match.homeTeam], match.homeScore, match.awayScore, homeResult);
+        updateStats(stats[match.awayTeam], match.awayScore, match.homeScore, awayResult);
+    });
+    
+    Object.values(stats).forEach(s => s.form.splice(5));
+    return stats;
+}
+
+// --- CENTRAL SESSION HANDLER ---
+// This function updates the App State whenever auth changes or loads
+async function handleSessionUpdate(session) {
     appState.currentUser = session?.user || null;
+    appState.isAdmin = false; // Default to false
 
     if (appState.currentUser) {
-        // Fetch Admin Role
-        const { data } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', appState.currentUser.id)
-            .single();
-        appState.isAdmin = data?.role === 'admin';
-    } else {
-        appState.isAdmin = false;
+        try {
+            const { data } = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', appState.currentUser.id)
+                .single();
+            appState.isAdmin = data?.role === 'admin';
+        } catch (err) {
+            console.error("Error fetching user profile:", err);
+        }
     }
 
     updateAuthUI();
 
-    // If data is already loaded, re-calculate UI elements that depend on Admin status
-    // (This allows admin buttons to appear immediately after login without refresh)
+    // Re-run filters and UI updates to show/hide admin buttons
     if (appState.currentLeague && appState.config[appState.currentLeague]) {
-        filterMatches(); // Re-renders matches (showing edit buttons if admin)
+        filterMatches();
         const leagueConfig = appState.config[appState.currentLeague];
-        const teamStats = calculateAllTeamStats(appState.currentLeagueMatches, leagueConfig.teams);
-        generateKnockoutStage(appState.sortedTeams, appState.currentLeagueKnockoutMatches, teamStats);
+        if (leagueConfig.teams && appState.currentLeagueMatches.length > 0) {
+            const teamStats = calculateAllTeamStats(appState.currentLeagueMatches, leagueConfig.teams);
+            generateKnockoutStage(appState.sortedTeams, appState.currentLeagueKnockoutMatches, teamStats);
+        }
     }
 }
 
-// --- LISTENER: Handle subsequent changes (Login/Logout clicks) ---
-supabase.auth.onAuthStateChange((event, session) => {
-    // We only trigger this if the session ID actually changed to prevent double-firing on load
-    if (session?.user?.id !== appState.currentUser?.id || event === 'SIGNED_OUT') {
-        updateAppStateWithSession(session);
-    }
-});
-
-// --- INITIALIZATION: This replaces the "Promise" that was hanging ---
+// --- INITIALIZATION ---
 export async function initializeSupabase() {
-    // 1. Actively check if a session exists in storage right now
-    const { data } = await supabase.auth.getSession();
-    
-    // 2. Process that session immediately
-    await updateAppStateWithSession(data.session);
-    
-    // 3. Function returns, allowing main.js to proceed to load the app
-    return; 
+    try {
+        // 1. ACTIVELY fetch the session immediately. Do not wait for an event.
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (error) console.error("Session check error:", error);
+
+        // 2. Process the session (this waits for the admin check to finish)
+        await handleSessionUpdate(session);
+
+        // 3. Set up the listener for FUTURE events (login/logout actions)
+        supabase.auth.onAuthStateChange((_event, session) => {
+            handleSessionUpdate(session);
+        });
+        
+        return session;
+    } catch (err) {
+        console.error("Supabase init failed:", err);
+        // Ensure app doesn't hang even if auth fails
+        return null;
+    }
 }
+
+// --- AUTH ACTIONS ---
 
 function handleAuthError(error) {
     if (error.message.includes('Invalid login credentials')) {
@@ -122,45 +165,12 @@ export async function handleLogout() {
         const { error } = await supabase.auth.signOut();
         if (error) throw error;
         showFeedback('Logged out successfully!', true);
-        // Force state update on logout
-        updateAppStateWithSession(null);
     } catch (error) {
         showFeedback(`Logout error: ${error.message}`, false);
     }
 }
 
-function calculateAllTeamStats(matches, teams) {
-    const stats = Object.fromEntries(teams.map(team => [team, { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0, form: [] }]));
-
-    const updateStats = (teamStat, goalsFor, goalsAgainst, result) => {
-        teamStat.p++;
-        teamStat.gf += goalsFor;
-        teamStat.ga += goalsAgainst;
-        teamStat.w += (result === 'victory');
-        teamStat.d += (result === 'draw');
-        teamStat.l += (result === 'loss');
-        teamStat.pts += (result === 'victory' ? 3 : (result === 'draw' ? 1 : 0));
-        teamStat.form.unshift(result);
-    };
-
-    matches.forEach(match => {
-        if (typeof match.homeScore !== 'number' || !stats[match.homeTeam] || !stats[match.awayTeam]) return;
-
-        let homeResult = 'draw', awayResult = 'draw';
-        if (match.homeScore > match.awayScore) {
-            homeResult = 'victory'; awayResult = 'loss';
-        } else if (match.awayScore > match.homeScore) {
-            homeResult = 'loss'; awayResult = 'victory';
-        }
-
-        updateStats(stats[match.homeTeam], match.homeScore, match.awayScore, homeResult);
-        updateStats(stats[match.awayTeam], match.awayScore, match.homeScore, awayResult);
-    });
-    
-    Object.values(stats).forEach(s => s.form.splice(5));
-    return stats;
-}
-
+// --- DATA FETCHING & LOGIC ---
 
 function processLeagueChanges(matches) {
     if (!dom.leagueTableBody) {
