@@ -1,5 +1,5 @@
-const CACHE_NAME = 'nekro-league-v1.6';
-const DYNAMIC_CACHE_NAME = 'nekro-league-dynamic-v1.6';
+const CACHE_NAME = 'nekro-league-v1.7';
+const DYNAMIC_CACHE_NAME = 'nekro-league-dynamic-v1.7';
 
 const STATIC_ASSETS = [
     '/',
@@ -22,6 +22,7 @@ self.addEventListener('install', evt => {
             return cache.addAll(STATIC_ASSETS);
         }).catch(err => console.error("App Shell Caching Failed: ", err))
     );
+    // Force the waiting service worker to become the active service worker
     self.skipWaiting();
 });
 
@@ -36,39 +37,46 @@ self.addEventListener('activate', evt => {
                 })
             );
         }).then(() => {
+            // Take control of all pages immediately
             return self.clients.claim();
         })
     );
 });
 
 self.addEventListener('fetch', evt => {
-    if (evt.request.url.includes('supabase.co')) {
-        evt.respondWith(
-            caches.open(DYNAMIC_CACHE_NAME).then(cache => {
-                return fetch(evt.request).then(networkResponse => {
-                    if (networkResponse && networkResponse.status === 200) {
-                        cache.put(evt.request, networkResponse.clone());
-                    }
-                    return networkResponse;
-                }).catch(() => {
-                    return cache.match(evt.request);
-                });
-            })
-        );
+    const url = new URL(evt.request.url);
+
+    // --- CRITICAL FIX ---
+    // Do NOT cache Supabase requests. This prevents the "database won't load" issue.
+    // We let these go directly to the network.
+    if (url.href.includes('supabase.co')) {
+        return; 
+    }
+
+    // Do NOT cache video files (saves storage and prevents loading issues)
+    if (url.href.includes('.mp4')) {
         return;
     }
 
-    if (STATIC_ASSETS.includes(new URL(evt.request.url).pathname)) {
+    // 1. Cache Static Assets (App Shell)
+    if (STATIC_ASSETS.includes(url.pathname)) {
         evt.respondWith(caches.match(evt.request));
         return;
     }
 
+    // 2. Dynamic Cache for other requests (e.g., images not in static list)
     evt.respondWith(
         caches.open(DYNAMIC_CACHE_NAME).then(cache => {
             return cache.match(evt.request).then(cachedResponse => {
                 const networkFetch = fetch(evt.request).then(networkResponse => {
-                    cache.put(evt.request, networkResponse.clone());
+                    // Only cache valid responses (status 200)
+                    if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+                        cache.put(evt.request, networkResponse.clone());
+                    }
                     return networkResponse;
+                }).catch(err => {
+                    // Network failed and no cache available
+                    console.log('Network fetch failed', err);
                 });
                 return cachedResponse || networkFetch;
             });
