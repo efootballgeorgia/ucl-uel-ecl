@@ -25,16 +25,33 @@ const firstAuthStatePromise = new Promise(resolve => {
     resolveFirstAuthState = resolve;
 });
 
+// --- FIX: SAFETY TIMEOUT ---
+// If Supabase takes longer than 2 seconds (e.g., blocked by cache), 
+// force the app to load as "Logged Out" instead of freezing.
+setTimeout(() => {
+    if (resolveFirstAuthState) {
+        console.warn("Supabase auth took too long. Forcing load.");
+        resolveFirstAuthState(null); 
+        resolveFirstAuthState = null;
+    }
+}, 2000);
+
 supabase.auth.onAuthStateChange(async (event, session) => {
     appState.currentUser = session?.user || null;
 
     if (appState.currentUser) {
-        const { data } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', appState.currentUser.id)
-            .single();
-        appState.isAdmin = data?.role === 'admin';
+        // Try to get admin role, but don't block everything if it fails
+        try {
+            const { data } = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', appState.currentUser.id)
+                .single();
+            appState.isAdmin = data?.role === 'admin';
+        } catch (e) {
+            console.log("Error checking admin role", e);
+            appState.isAdmin = false;
+        }
     } else {
         appState.isAdmin = false;
     }
@@ -46,11 +63,15 @@ supabase.auth.onAuthStateChange(async (event, session) => {
 
     updateAuthUI();
 
+    // If data is already loaded, re-run filters to show/hide admin buttons
     if (appState.currentLeague && appState.config[appState.currentLeague]) {
         filterMatches();
-        const leagueConfig = appState.config[appState.currentLeague];
-        const teamStats = calculateAllTeamStats(appState.currentLeagueMatches, leagueConfig.teams);
-        generateKnockoutStage(appState.sortedTeams, appState.currentLeagueKnockoutMatches, teamStats);
+        // Only regenerate knockout if data exists
+        if(appState.sortedTeams.length > 0) {
+            const leagueConfig = appState.config[appState.currentLeague];
+            const teamStats = calculateAllTeamStats(appState.currentLeagueMatches, leagueConfig.teams);
+            generateKnockoutStage(appState.sortedTeams, appState.currentLeagueKnockoutMatches, teamStats);
+        }
     }
 });
 
