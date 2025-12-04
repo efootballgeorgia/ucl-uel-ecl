@@ -2,39 +2,36 @@ import { initializeSupabase, handleAuthAction, handleLogout, switchLeague, handl
 import { filterMatches } from './ui-matches.js';
 import { sortTable } from './ui-table.js';
 
-// --- START CACHE BUSTER ---
-// This ensures users with the old "frozen" cache get the fix automatically.
-const CURRENT_VERSION = 'v1.7'; 
-
-async function checkAndWipeOldCaches() {
-    const versionKey = 'site_version';
-    const storedVersion = localStorage.getItem(versionKey);
-
-    // If version doesn't match, wipe everything and reload
-    if (storedVersion !== CURRENT_VERSION) {
-        console.log(`Version change detected (${storedVersion} -> ${CURRENT_VERSION}). Wiping old cache...`);
-
+// --- START: CLEANUP & STABILIZATION SCRIPT ---
+// This block ensures that if a user has the old "broken" Service Worker,
+// it gets removed and their cache is cleared to fix Supabase connections.
+(async function cleanupServiceWorkers() {
+    try {
+        // 1. Unregister all Service Workers
         if ('serviceWorker' in navigator) {
             const registrations = await navigator.serviceWorker.getRegistrations();
             for (const registration of registrations) {
+                console.log('Removing Service Worker to prevent conflicts...');
                 await registration.unregister();
             }
         }
 
+        // 2. Clear Cache Storage (Fixes the "freezing" issue)
         if ('caches' in window) {
             const keys = await caches.keys();
-            await Promise.all(keys.map(key => caches.delete(key)));
+            if (keys.length > 0) {
+                console.log('Clearing old cache storage...');
+                await Promise.all(keys.map(key => caches.delete(key)));
+                // Optional: Force a reload only if we actually deleted something
+                // so the user gets the fresh site immediately.
+                // window.location.reload(); 
+            }
         }
-
-        localStorage.setItem(versionKey, CURRENT_VERSION);
-        
-        // Reload to apply changes cleanly
-        window.location.reload(true);
+    } catch (e) {
+        console.error('Cleanup failed:', e);
     }
-}
-// Run this check immediately
-checkAndWipeOldCaches();
-// --- END CACHE BUSTER ---
+})();
+// --- END: CLEANUP SCRIPT ---
 
 export const dom = {
     leagueSection: document.getElementById('league-section'),
@@ -299,32 +296,6 @@ function setInitialTableView() {
         simplifiedBtn.classList.remove(CSS.ACTIVE);
         fullBtn.classList.add(CSS.ACTIVE);
     }
-}
-
-// Service Worker Registration with Update Notification
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/service-worker.js')
-            .then(registration => {
-                console.log('SW Registered');
-                registration.onupdatefound = () => {
-                    const installingWorker = registration.installing;
-                    if (installingWorker == null) {
-                        return;
-                    }
-                    installingWorker.onstatechange = () => {
-                        if (installingWorker.state === 'installed') {
-                            if (navigator.serviceWorker.controller) {
-                                console.log('New content is available and will be used when all tabs for this page are closed.');
-                            } else {
-                                console.log('Content is cached for offline use.');
-                            }
-                        }
-                    };
-                };
-            })
-            .catch(err => console.log('SW Registration Failed: ', err));
-    });
 }
 
 window.onload = async () => {
