@@ -1203,6 +1203,13 @@ tbody.is-sorting {
     --shadow-color: rgba(238, 174, 0, 0.3);
 }
 
+.club-world-cup-theme {
+    --accent-color: #b9883f;
+    --accent-color-hover: #b28c26;
+    --border-color: #550a21;
+    --shadow-color: rgba(102, 234, 41, 0.3);
+}
+
 .league-view-container {
     width: 95%;
     max-width: 1200px; 
