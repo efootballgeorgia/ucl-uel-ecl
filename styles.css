@@ -1,0 +1,1253 @@
+/* ============================================
+   1. General Styles & CSS Variables
+============================================ */
+:root {
+  --primary-bg: #030424;
+  --secondary-bg: #202026;
+  --tertiary-bg: #2e2e3a;
+  --text-color: #e5e5ff;
+  --text-color-secondary: #a0a3d9;
+  --win-color: #238636;
+  --loss-color: #da3333;
+  --draw-color: #8b949e;
+  --border-radius: 12px;
+  --header-height: 100px;
+  --font-primary: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.ucl-theme {
+  --accent-color: #4134b4;
+  --accent-color-hover: #fff500;
+  --border-color: #000000;
+  --shadow-color: rgba(255, 218, 0, 0.2);
+}
+
+.uel-theme {
+  --accent-color: #ff4500;
+  --accent-color-hover: #ff6a2e;
+  --border-color: #333333;
+  --shadow-color: rgba(255, 69, 0, 0.25);
+}
+
+.ecl-theme {
+  --accent-color: #00ff85;
+  --accent-color-hover: #50ffaa;
+  --border-color: #1e4231;
+  --shadow-color: rgba(0, 255, 133, 0.2);
+}
+
+.la-liga-theme {
+  --accent-color: #af2525;
+  --accent-color-hover: #fff500;
+  --border-color: #000000;
+  --shadow-color: rgba(255, 218, 0, 0.2);
+}
+
+.premier-league-theme {
+  --accent-color: #4bc130;
+  --accent-color-hover: #ff6a2e;
+  --border-color: #333333;
+  --shadow-color: rgba(255, 69, 0, 0.25);
+}
+
+.ligue-1-theme {
+  --accent-color: #7244d4;
+  --accent-color-hover: #50ffaa;
+  --border-color: #1e4231;
+  --shadow-color: rgba(0, 255, 133, 0.2);
+}
+
+.seria-a-theme {
+  --accent-color: #9abee3;
+  --accent-color-hover: #50ffaa;
+  --border-color: #1e4231;
+  --shadow-color: rgba(0, 255, 133, 0.2);
+}
+
+.bundesliga-theme {
+  --accent-color: #4bc130;
+  --accent-color-hover: #ff6a2e;
+  --border-color: #333333;
+  --shadow-color: rgba(255, 69, 0, 0.25);
+}
+
+.super-lig-theme {
+  --accent-color: #4bc130;
+  --accent-color-hover: #ff6a2e;
+  --border-color: #333333;
+  --shadow-color: rgba(255, 69, 0, 0.25);
+}
+
+.liga-portugal-theme {
+  --accent-color: #4bc130;
+  --accent-color-hover: #ff6a2e;
+  --border-color: #333333;
+  --shadow-color: rgba(255, 69, 0, 0.25);
+}
+
+
+
+body {
+  font-family: var(--font-primary);
+  background: var(--primary-bg);
+  color: var(--text-color);
+  text-align: center;
+  margin: 0;
+  padding-bottom: 2.5rem;
+  position: relative;
+  box-sizing: border-box;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+  color: #fff;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* ============================================
+   2. Animations & Keyframes
+============================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.team-logo:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+/* ============================================
+   3. Background & Loading
+============================================ */
+
+#bg-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+  filter: blur(5px) brightness(0.7);
+}
+
+
+/* ============================================
+   4. Header & Navigation
+============================================ */
+header {
+  position: relative;
+  top: 0;
+  z-index: 1000;
+  padding: 0 1rem;
+  background: var(--primary-bg);
+  border-bottom: 2px solid var(--accent-color-hover);
+  transition: padding 0.3s ease, background 0.3s ease;
+}
+
+.header-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 1rem;
+  box-sizing: border-box;
+  height: var(--header-height);
+}
+
+.logo-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.league-selector-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.league-selector-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+  padding: 0.75rem 1.5rem;
+  gap: 0.75rem;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  user-select: none;
+}
+
+.league-selector-header:hover {
+  background-color: #1a1a1a;
+}
+
+.league-selector-bar {
+  height: 4px;
+  background-color: var(--accent-color, #0047ab);
+  border-radius: 0 0 8px 8px;
+  pointer-events: none;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--secondary-bg);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--accent-color);
+  border-radius: 10px;
+  border: 2px solid var(--secondary-bg);
+  transition: background-color 0.3s ease, width 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--accent-color-hover);
+  width: 10px;
+}
+
+.league-logo {
+  width: auto;
+  max-height: 50px;
+  display: block;
+  pointer-events: none;
+}
+
+.league-switch-button {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, color 0.2s ease;
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+}
+
+.league-selector-header:hover .league-switch-button {
+  color: #cccccc;
+}
+
+.league-selector-nav {
+  display: none;
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  z-index: 1100;
+  background: var(--secondary-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: 0.5rem;
+  min-width: 220px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.league-selector-nav.show {
+  display: flex;
+}
+
+.league-selector-nav .btn {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  padding: 0.75rem 1rem;
+  color: var(--text-color);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.league-selector-nav .btn:hover {
+  background-color: var(--accent-color);
+  color: var(--primary-bg);
+}
+
+.league-selector-nav .btn.active {
+  background-color: var(--accent-color);
+  font-weight: 700;
+  color: var(--primary-bg);
+}
+
+
+.main-nav {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  flex-grow: 1;
+}
+
+.main-nav .btn {
+  padding: 0.5rem 0;
+  background: transparent;
+  color: var(--text-color-secondary);
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 1.1em;
+  text-transform: uppercase;
+  transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.main-nav .btn:hover,
+.main-nav .btn:focus {
+  color: #ffffff;
+  background: transparent;
+  border-color: var(--accent-color-hover);
+  box-shadow: none;
+  transform: none;
+}
+
+.main-nav .btn.active {
+  color: #ffffff;
+  border-color: var(--accent-color-hover);
+  background: transparent;
+  box-shadow: none;
+}
+
+.page-section {
+  display: none;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.page-section.active {
+  display: block;
+}
+
+.auth-modal {
+  display: none;
+  position: fixed;
+  z-index: 99999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.3s ease;
+  opacity: 0;
+}
+
+.auth-modal.show {
+  display: flex;
+  opacity: 1;
+}
+
+.auth-modal-content {
+  background: linear-gradient(135deg, var(--secondary-bg), var(--tertiary-bg));
+  backdrop-filter: blur(15px);
+  padding: 2.5rem;
+  border-radius: var(--border-radius);
+  max-width: 450px;
+  width: 90%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  position: relative;
+  animation: fadeIn 0.4s ease-out;
+}
+
+.close {
+  position: absolute;
+  top: 1.5rem;
+  right: 2.5rem;
+  color: #fff;
+  font-size: 3rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close:hover,
+.close:focus {
+  color: var(--accent-color);
+  text-decoration: none;
+}
+
+.auth-modal-content h2 {
+  color: var(--accent-color);
+  margin-bottom: 1.5rem;
+  font-size: 2em;
+}
+
+#auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+#auth-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+#auth-form input[type="email"],
+#auth-form input[type="password"] {
+  padding: 0.8rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--secondary-bg);
+  color: var(--text-color);
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#auth-form input[type="email"]:focus,
+#auth-form input[type="password"]:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 10px var(--shadow-color);
+}
+
+#auth-form .btn {
+  width: 100%;
+  margin-top: 0.5rem;
+  font-size: 1.1em;
+}
+
+.auth-feedback-message {
+  padding: 10px;
+  margin-bottom: 1rem;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: bold;
+  color: white;
+  background-color: var(--loss-color);
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.auth-feedback-message.show {
+  display: block;
+  opacity: 1;
+}
+
+#global-feedback {
+  position: fixed;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  width: 90%;
+  max-width: 500px;
+}
+
+#global-feedback .feedback-message {
+  padding: 1rem;
+  margin-top: 10px;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
+  color: white;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+#global-feedback .feedback-message.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#global-feedback .feedback-message.success {
+  background-color: var(--win-color);
+}
+
+#global-feedback .feedback-message.error {
+  background-color: var(--loss-color);
+}
+
+/* ============================================
+   5. League Table
+============================================ */
+
+.table-view-toggle {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 1rem auto;
+  max-width: 900px;
+  background: rgba(38, 61, 128, 0.55);
+  border-radius: 9999px;
+  padding: 4px;
+  backdrop-filter: saturate(120%) blur(2px);
+}
+
+.table-toggle-btn {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: #cfd5ea;
+  font-weight: 600;
+  text-transform: none;
+  padding: 0.45rem 1rem;
+  cursor: pointer;
+  border-radius: 9999px;
+  line-height: 1;
+  transition: color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+.table-toggle-btn:hover,
+.table-toggle-btn:focus {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+  outline: none;
+}
+
+.table-toggle-btn.active {
+  background: #ffffff;
+  color: #233a7a;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+}
+
+.league-table {
+  width: 65%;
+  max-width: 900px;
+  margin: 2rem auto;
+  border-radius: var(--border-radius);
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
+  overflow-x: auto;
+  font-size: 18px;
+  background-color: #0d1a2d;
+  border: 1px solid #1a2c44;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead th {
+  background-color: #1a2c44;
+  color: #c7c7c7;
+  padding: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  white-space: nowrap;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border-bottom: 2px solid #284a7e;
+}
+
+thead th[data-sort-key]:hover {
+  background-color: #284a7e;
+  color: #ffffff;
+}
+
+thead th[data-sort="asc"]::after {
+  content: ' ▲';
+  color: var(--accent-color-hover);
+}
+
+thead th[data-sort="desc"]::after {
+  content: ' ▼';
+  color: var(--accent-color-hover);
+}
+
+tbody td {
+  padding: 0.8rem 1rem;
+  text-align: left;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+  border-bottom: 1px solid #1a2c44;
+  color: #f0f0f0;
+}
+
+tbody td b.points {
+  color: #ffffff;
+  font-weight: 700;
+}
+
+tbody td img {
+  vertical-align: middle;
+  margin-right: 15px;
+  cursor: pointer;
+  padding: 2px;
+}
+
+tbody tr {
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+}
+
+tbody tr:hover {
+  background-color: #1a2c44;
+}
+
+tbody.is-sorting {
+  opacity: 0.6;
+  transition: opacity 0.1s ease-in-out;
+}
+
+.form-box {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 0 2px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.form-box.victory {
+  background-color: var(--win-color);
+}
+
+.form-box.loss {
+  background-color: var(--loss-color);
+}
+
+.form-box.draw {
+  background-color: var(--draw-color);
+}
+
+.separator td {
+  background-color: transparent !important;
+  padding: 0 !important;
+  height: 25px;
+  position: relative;
+  border: 0;
+}
+
+.separator .line {
+  display: block;
+  height: 4px;
+  margin: 0 0px;
+  opacity: 0.7
+}
+
+.round16 .line {
+  background-color: yellow;
+}
+
+.knockout-seeded .line {
+  background-color: green;
+}
+
+.knockout-unseeded .line {
+  background-color: red;
+}
+
+/* ============================================
+   6. Search Filter
+============================================ */
+
+.search-container-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 95%;
+  max-width: 800px;
+  margin: 2rem auto 0;
+  padding: 1.5rem;
+  background-color: #0d1a2d;
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+  border: 1px solid #1a2c44;
+  border-bottom: none;
+  box-sizing: border-box;
+}
+
+.search-container-wrapper h2 {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  color: #ffffff;
+  /* Brighter title color */
+}
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.team-search-select {
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #1a2c44;
+  background-color: #0d1a2d;
+  color: #f0f0f0;
+  font-size: 1em;
+  min-width: 200px;
+  flex-grow: 1;
+}
+
+#clearSearchBtn {
+  flex-shrink: 0;
+}
+
+.match-box {
+  width: 95%;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  padding: 2rem;
+  background-color: #0d1a2d;
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+  border: 1px solid #1a2c44;
+  border-top: none;
+  box-sizing: border-box;
+}
+
+#match-box-container,
+.knockout-matches-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.knockout-nav {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+
+/* ============================================
+   7. Match & Knockout Cards (Refactored)
+============================================ */
+
+.match-card,
+.knockout-match-card {
+  background-color: #1a2c44;
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  font-size: 1.1em;
+  position: relative;
+  border: 1px solid #284a7e;
+}
+
+.match-card:hover,
+.knockout-match-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  border-color: #6c8cff;
+}
+
+.match-card,
+.knockout-match-card {
+  border-left: 5px solid transparent;
+  border-left-color: #ffffff;
+}
+
+.match-card.played,
+.knockout-match-card.played {
+  border-left-color: #1cba3b;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.team-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.team-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-align: left;
+}
+
+.team-name {
+  color: #f0f0f0;
+}
+
+.team-name.winner {
+  font-weight: 700;
+  color: #6cff8a;
+}
+
+.team-logo {
+  width: 33px;
+  max-height: 33px;
+  object-fit: contain;
+}
+
+.team-score {
+  font-size: 1.2em;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.knockout-placeholder {
+  font-style: italic;
+  color: #a0a3d9;
+}
+
+.match-box-indicator {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #284a7e;
+  color: #ffffff;
+  padding: 2px 8px;
+  border-radius: 5px;
+  font-size: 0.8em;
+  font-weight: bold;
+}
+
+.match-card.skeleton .card-content {
+  height: 82px;
+  background-color: rgba(26, 44, 68, 0.8);
+  border-radius: 8px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.knockout-draw-wrapper {
+  margin-bottom: 2rem;
+}
+
+.knockout-draw-wrapper:empty {
+  display: none;
+}
+
+.knockout-draw-container {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+
+.draw-background-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.draw-logo-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.draw-logo {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+  transition: transform 0.2s ease-in-out;
+}
+
+.draw-logo:hover {
+  transform: translate(-50%, -50%) scale(1.15);
+  z-index: 10;
+}
+
+/* ============================================
+   8. Media Queries & Responsive
+============================================ */
+
+@media (max-width: 768px) {
+  body {
+    font-size: 12px;
+  }
+
+  .table-view-toggle {
+    display: flex;
+  }
+
+  .league-table.simplified-view .optional-col {
+    display: none;
+  }
+
+  .form-container .form-box:nth-child(n+4) {
+    display: none;
+  }
+
+  header {
+    padding: 0.5rem;
+  }
+
+  .header-content {
+    height: auto;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .league-logo {
+    max-width: 60px;
+    max-height: 40px;
+  }
+  
+  .league-selector-header {
+    padding: 0.5rem 1rem;
+    gap: 0.5rem;
+  }
+  
+  .league-selector-bar {
+    height: 3px;
+  }
+  
+  tbody td img {
+    margin-right: 1px;
+  }
+
+  .main-nav {
+    order: 3;
+    flex-basis: 100%;
+    justify-content: space-around;
+    gap: 0.5rem;
+  }
+
+  .btn {
+    padding: 0.3rem 0.4rem;
+    font-size: 10px;
+  }
+
+  #auth-btn,
+  #logout-btn {
+    flex-basis: 20%;
+    text-align: center;
+  }
+
+  .main-nav .btn {
+    font-size: 10.5px;
+  }
+
+  .league-table {
+    width: 98%;
+    font-size: 12.5px;
+  }
+
+  .league-selector-wrapper {
+    margin-right: 130px;
+  }
+   
+  thead th,
+  tbody td {
+    padding: 0.5rem 0.3rem;
+  }
+
+  .form-box {
+    width: 1.2rem;
+    height: 1.2rem;
+    font-size: 0.7rem;
+  }
+
+  .match-box {
+    margin-top: 0;
+    padding: 1rem;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .search-container {
+    flex-direction: column;
+  }
+
+  .team-search-select {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .team-logo {
+    width: 25px;
+    max-height: 25px;
+    object-fit: contain;
+  }
+
+
+  #clearSearchBtn {
+    width: 100%;
+  }
+
+  #match-box-container,
+  .knockout-matches-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 600px) {
+
+  #match-box-container,
+  .knockout-matches-grid {
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  }
+}
+
+/* ============================================
+   9. Unified Card Admin & Edit State
+============================================ */
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  background: rgb(73, 67, 67);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn:hover,
+.btn:focus {
+  background: var(--accent-color);
+  color: var(--primary-bg);
+  border-color: var(--accent-color);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px var(--shadow-color);
+}
+
+.btn.active {
+  background: var(--accent-color);
+  color: var(--primary-bg);
+  border-color: var(--accent-color);
+  box-shadow: 0 0 15px var(--shadow-color);
+}
+
+.card-actions {
+  position: absolute;
+  top: -1rem;
+  right: 0.1rem;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.card-actions .btn {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8em;
+}
+
+.btn-delete {
+  background-color: var(--loss-color);
+  border-color: var(--loss-color) !important;
+  color: #fff !important;
+}
+
+.btn-delete:hover {
+  background-color: #ff4c4c !important;
+  border-color: #ff4c4c !important;
+}
+
+.score-form,
+.btn-save,
+.btn-cancel {
+  display: none;
+}
+
+.score-form {
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.score-form input[type="number"] {
+  width: 45px;
+  padding: 0.4rem;
+  font-size: 1.1em;
+  font-weight: 700;
+  border-radius: 6px;
+  text-align: center;
+  background-color: var(--secondary-bg);
+  border: 1px solid var(--border-color);
+  color: var(--accent-color);
+}
+
+.score-form input[type="number"]::-webkit-outer-spin-button,
+.score-form input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.btn.is-loading .btn-text {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.btn.is-loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  border: 2px solid transparent;
+  border-top-color: var(--primary-bg);
+  border-radius: 50%;
+  animation: spin 1s ease infinite;
+}
+
+.score-form button:disabled {
+  background-color: var(--draw-color);
+  color: var(--primary-bg);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.is-editing .card-content,
+.is-editing .btn-edit,
+.is-editing .btn-delete {
+  display: none;
+}
+
+.is-editing .score-form {
+  display: flex;
+}
+
+.is-editing .btn-save,
+.is-editing .btn-cancel {
+  display: inline-flex;
+}
+
+.world-cup-theme {
+    --accent-color: #8a1538;
+    --accent-color-hover: #eeae00;
+    --border-color: #550a21;
+    --shadow-color: rgba(238, 174, 0, 0.3);
+}
+
+.league-view-container {
+    width: 95%;
+    max-width: 1200px; 
+    margin: 2rem auto;
+}
+
+.groups-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.group-table-card {
+    background-color: #0d1a2d;
+    border: 1px solid #1a2c44;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.group-header {
+    background-color: var(--accent-color);
+    color: white;
+    padding: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 1.1em;
+}
+
+.single-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    background-color: #0d1a2d;
+    border-radius: var(--border-radius);
+    border: 1px solid #1a2c44;
+}
+
+.group-table-card table {
+    font-size: 14px;
+}
+.group-table-card th, 
+.group-table-card td {
+    padding: 0.5rem;
+}
+.group-table-card .optional-col {
+    display: none; 
+}

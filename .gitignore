@@ -1,0 +1,80 @@
+# ==================================
+#         Sensitive Files
+# ==================================
+# Prevent environment variables from being committed.
+# Anyone with these can access and modify your database.
+.env
+.env.*
+!.env.example
+
+# ==================================
+#        Node.js / npm
+# ==================================
+# Dependencies and package manager logs
+node_modules/
+package-lock.json
+npm-debug.log
+yarn.lock
+yarn-error.log
+pnpm-lock.yaml
+
+
+# ==================================
+#      Build & Output Files
+# ==================================
+# General build output directories
+dist/
+build/
+out/
+public/
+
+
+# ==================================
+#          Editor / OS
+# ==================================
+# macOS specific
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbs.db for Windows
+Thumbs.db
+ehthumbs.db
+
+# Visual Studio Code specific
+.vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Other editor folders
+.idea/
+.project
+.classpath
+*.swp
+
+.exe
+
+# ==================================
+#       Media & Large Files
+# ==================================
+# It's better practice to host large assets like videos elsewhere (e.g., S3, Cloudinary),
+# but if you are versioning them, uncomment the line below to ignore them.
+# images/background-video.mp4
+
+
+# ==================================
+#           Debug Logs
+# ==================================
+*.log
+*.log.*
+
+
+# ==================================
+#        Temporary Files
+# ==================================
+*~
+*.tmp
+*.bak
