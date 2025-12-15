@@ -20,6 +20,7 @@ function debounce(func, delay = 350) {
     };
 }
 
+// Helper to calculate stats
 function calculateAllTeamStats(matches, teams) {
     const stats = Object.fromEntries(teams.map(team => [team, { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0, form: [] }]));
 
@@ -52,16 +53,24 @@ function calculateAllTeamStats(matches, teams) {
     return stats;
 }
 
+// --- CENTRAL SESSION HANDLER ---
 async function handleSessionUpdate(session) {
     appState.currentUser = session?.user || null;
     appState.isAdmin = false; 
 
     if (appState.currentUser) {
         try {
-            const { data } = await supabase.from('profiles').select('role').eq('id', appState.currentUser.id).single();
+            const { data } = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', appState.currentUser.id)
+                .single();
             appState.isAdmin = data?.role === 'admin';
-        } catch (err) {}
+        } catch (err) {
+            console.error("Error fetching user profile:", err);
+        }
     }
+
     updateAuthUI();
 
     if (appState.currentLeague && appState.config[appState.currentLeague]) {
@@ -74,67 +83,122 @@ async function handleSessionUpdate(session) {
     }
 }
 
+// --- INITIALIZATION ---
 export async function initializeSupabase() {
     try {
         const { data: { session }, error } = await supabase.auth.getSession();
-        if (error) console.error("Session error:", error);
+        
+        if (error) console.error("Session check error:", error);
         await handleSessionUpdate(session);
-        supabase.auth.onAuthStateChange((_e, session) => handleSessionUpdate(session));
+
+        supabase.auth.onAuthStateChange((_event, session) => {
+            handleSessionUpdate(session);
+        });
+        
         return session;
-    } catch (err) { return null; }
+    } catch (err) {
+        console.error("Supabase init failed:", err);
+        return null;
+    }
+}
+
+// --- AUTH ACTIONS ---
+function handleAuthError(error) {
+    if (error.message.includes('Invalid login credentials')) return 'Invalid email or password.';
+    if (error.message.includes('valid email')) return 'Please enter a valid email address.';
+    if (error.message.includes('User already registered')) return 'An account with this email already exists.';
+    if (error.message.includes('Password should be at least 6 characters')) return 'Password must be at least 6 characters long.';
+    return 'An unexpected error occurred. Please try again.';
 }
 
 export async function handleAuthAction(e) {
     e.preventDefault();
     const action = e.submitter.dataset.action;
+
     try {
         const email = document.getElementById('auth-email').value;
         const password = document.getElementById('auth-password').value;
-        if (action === 'signup' && password.length < 6) return showAuthFeedback('Password too short', false);
 
-        const method = action === 'login' ? supabase.auth.signInWithPassword.bind(supabase.auth) : supabase.auth.signUp.bind(supabase.auth);
-        const { error } = await method({ email, password });
+        if (action === 'signup' && password.length < 6) {
+            return showAuthFeedback('Password must be at least 6 characters long.', false);
+        }
+
+        const authMethod = action === 'login'
+            ? supabase.auth.signInWithPassword.bind(supabase.auth)
+            : supabase.auth.signUp.bind(supabase.auth);
+
+        const { error } = await authMethod({ email, password });
         if (error) throw error;
 
-        showAuthFeedback('Success!', true);
+        const successMessage = action === 'login' ? 'Logged in successfully!' : 'Account created! Please verify email.';
+        showAuthFeedback(successMessage, true);
         dom.authModal.classList.remove('show');
         dom.authForm.reset();
-    } catch (error) { showAuthFeedback(error.message, false); }
+
+    } catch (error) {
+        showAuthFeedback(handleAuthError(error), false);
+    }
 }
 
 export async function handleLogout() {
-    await supabase.auth.signOut();
-    showFeedback('Logged out', true);
+    try {
+        const { error } = await supabase.auth.signOut();
+        if (error) throw error;
+        showFeedback('Logged out successfully!', true);
+    } catch (error) {
+        showFeedback(`Logout error: ${error.message}`, false);
+    }
 }
 
+// --- DATA FETCHING & LOGIC ---
 
 function processLeagueChanges(matches) {
     if (!dom.leagueViewContainer) return;
+
     appState.currentLeagueMatches = matches;
     const leagueConfig = appState.config[appState.currentLeague];
     if (!leagueConfig || !leagueConfig.teams) return;
 
     const teamStats = calculateAllTeamStats(matches, leagueConfig.teams);
+
     updateTableFromStats(teamStats);
     sortTable();
+
+    // Select all rows safely
     const rows = Array.from(document.querySelectorAll('tr[data-team]'));
     appState.sortedTeams = rows.map(row => row.dataset.team);
+
     generateKnockoutStage(appState.sortedTeams, appState.currentLeagueKnockoutMatches, teamStats);
     filterMatches();
 }
 
 async function fetchLeagueData(league) {
-    const { data: matches, error } = await supabase.from('matches').select('*').eq('league_id', league).order('timestamp');
-    if (error) return console.error(error);
+    const { data: matches, error } = await supabase
+        .from('matches')
+        .select('*')
+        .eq('league_id', league)
+        .order('timestamp', { ascending: true });
+
+    if (error) {
+        console.error(`Error fetching ${league} matches:`, error);
+        return;
+    }
     processLeagueChanges(matches || []);
 }
 
 async function fetchKnockoutData(league) {
-    const { data, error } = await supabase.from('knockout_matches').select('*').eq('league_id', league);
-    if (error) return console.error(error);
+    const { data, error } = await supabase
+        .from('knockout_matches')
+        .select('*')
+        .eq('league_id', league);
+
+    if (error) {
+        console.error(`Error fetching ${league} knockout matches:`, error);
+        return;
+    }
     appState.currentLeagueKnockoutMatches = data || [];
     const leagueConfig = appState.config[appState.currentLeague];
-    if (leagueConfig?.teams) {
+    if (leagueConfig && leagueConfig.teams) {
         const teamStats = calculateAllTeamStats(appState.currentLeagueMatches, leagueConfig.teams);
         generateKnockoutStage(appState.sortedTeams, appState.currentLeagueKnockoutMatches, teamStats);
     }
@@ -155,14 +219,27 @@ function removeAllSubscriptions() {
 
 function setupLeagueListeners(league) {
     removeAllSubscriptions();
+
     const debouncedFetchLeagueData = debounce(() => fetchLeagueData(league));
+
     let channel = supabase.channel(`realtime:${league}`)
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'matches', filter: `league_id=eq.${league}` }, debouncedFetchLeagueData);
-    
+        .on('postgres_changes', {
+            event: '*',
+            schema: 'public',
+            table: 'matches',
+            filter: `league_id=eq.${league}`
+        }, debouncedFetchLeagueData);
+
     if (appState.config[league]?.has_knockout_stage) {
-        const debouncedKO = debounce(() => fetchKnockoutData(league));
-        channel = channel.on('postgres_changes', { event: '*', schema: 'public', table: 'knockout_matches', filter: `league_id=eq.${league}` }, debouncedKO);
+        const debouncedFetchKnockoutData = debounce(() => fetchKnockoutData(league));
+        channel = channel.on('postgres_changes', {
+            event: '*',
+            schema: 'public',
+            table: 'knockout_matches',
+            filter: `league_id=eq.${league}`
+        }, debouncedFetchKnockoutData);
     }
+
     channel.subscribe();
     appState.channel = channel;
 }
@@ -173,23 +250,38 @@ export async function switchLeague(league) {
     renderSkeletonMatches();
     dom.matchesContainer.innerHTML = '';
     dom.knockoutSection.innerHTML = '';
-    
+
     try {
         if (!appState.config[league]) {
             const { data, error } = await supabase.from('leagues').select('*').eq('id', league).single();
             if (error) throw error;
-            if (data) appState.config[league] = data;
+            if (!data) throw new Error(`No configuration found for league: ${league}`);
+            appState.config[league] = data;
         }
+
         const currentConfig = appState.config[league];
+
         setupLeagueUI(league, currentConfig);
         renderTable(league);
         await fetchLeagueData(league);
-        if (currentConfig.has_knockout_stage) await fetchKnockoutData(league);
-        else appState.currentLeagueKnockoutMatches = [];
+
+        if (currentConfig.has_knockout_stage) {
+            await fetchKnockoutData(league);
+        } else {
+            appState.currentLeagueKnockoutMatches = [];
+        }
+
         setupLeagueListeners(league);
     } catch (error) {
-        console.error(error);
-        if (dom.leagueViewContainer) dom.leagueViewContainer.innerHTML = `<div class="empty-state">Failed to load league.</div>`;
+        console.error(`Error loading data for ${league}:`, error);
+        showFeedback(`Could not load data for ${league}.`, false);
+        
+        if(dom.leagueViewContainer) {
+            dom.leagueViewContainer.innerHTML = `<div class="empty-state">Failed to load league table.</div>`;
+        }
+        
+        dom.matchesContainer.innerHTML = `<p class="empty-state" style="display:block;">Failed to load matches.</p>`;
+        dom.knockoutSection.innerHTML = `<p class="empty-state" style="display:block;">Failed to load knockout stage.</p>`;
     }
 }
 
@@ -200,12 +292,13 @@ export async function handleScoreSubmission(e) {
     const form = e.target;
     const card = form.closest('.match-card, .knockout-match-card');
     const button = card.querySelector('.btn-save');
-    const docId = form.dataset.docId; 
+    const docId = form.dataset.docId; // This is real DB ID (e.g. "b-vs-a")
     const matchType = card.dataset.type;
 
     button.classList.add('is-loading');
     button.disabled = true;
 
+    // Get input values (Visual Left / Visual Right)
     const visualLeftScore = parseInt(form.querySelector('.score-home').value, 10);
     const visualRightScore = parseInt(form.querySelector('.score-away').value, 10);
 
@@ -218,17 +311,24 @@ export async function handleScoreSubmission(e) {
 
     card.classList.remove('is-editing');
 
+    // DETERMINE REAL VALUES based on REVERSED FLAG
     const isReversed = form.dataset.isReversed === 'true';
+
+    // League Match Logic: swap if needed
+    // If not reversed: Home (DB) = Left (Vis), Away (DB) = Right (Vis)
+    // If reversed: Home (DB) = Right (Vis), Away (DB) = Left (Vis)
     let dbHomeScore = isReversed ? visualRightScore : visualLeftScore;
     let dbAwayScore = isReversed ? visualLeftScore : visualRightScore;
 
+    // Same for teams (Data attributes on card are Visual Left and Visual Right)
+    // dataset.home = Visual Left, dataset.away = Visual Right
     let dbHomeTeam, dbAwayTeam;
 
     if (matchType === 'league') {
         dbHomeTeam = isReversed ? card.dataset.away : card.dataset.home;
         dbAwayTeam = isReversed ? card.dataset.home : card.dataset.away;
     } else {
-
+        // Knockout handles form datasets separately
         dbHomeTeam = form.dataset.homeTeam;
         dbAwayTeam = form.dataset.awayTeam;
         dbHomeScore = visualLeftScore; 
@@ -245,7 +345,7 @@ export async function handleScoreSubmission(e) {
     };
 
     const tableName = matchType === 'league' ? 'matches' : 'knockout_matches';
-    
+
     if (matchType === 'league') {
         matchData.timestamp = new Date().toISOString();
     } else {
@@ -257,8 +357,11 @@ export async function handleScoreSubmission(e) {
         if (error) throw error;
         showFeedback('Match updated successfully!', true);
 
+        const matchIndex = matchType === 'league'
+            ? appState.currentLeagueMatches.findIndex(m => m.id === docId)
+            : appState.currentLeagueKnockoutMatches.findIndex(m => m.id === docId);
+
         const targetArray = matchType === 'league' ? appState.currentLeagueMatches : appState.currentLeagueKnockoutMatches;
-        const matchIndex = targetArray.findIndex(m => m.id === docId);
 
         if (matchIndex > -1) {
             targetArray[matchIndex] = { ...targetArray[matchIndex], ...matchData };
@@ -266,11 +369,14 @@ export async function handleScoreSubmission(e) {
             targetArray.push(matchData);
         }
 
-        if (matchType === 'league') processLeagueChanges(appState.currentLeagueMatches);
-        else generateKnockoutStage(appState.sortedTeams, appState.currentLeagueKnockoutMatches);
+        if (matchType === 'league') {
+            processLeagueChanges(appState.currentLeagueMatches);
+        } else {
+            generateKnockoutStage(appState.sortedTeams, appState.currentLeagueKnockoutMatches);
+        }
 
     } catch (error) {
-        showFeedback(`Error: ${error.message}.`, false);
+        showFeedback(`Error saving match: ${error.message}.`, false);
     } finally {
         button.classList.remove('is-loading');
         button.disabled = false;
@@ -278,12 +384,18 @@ export async function handleScoreSubmission(e) {
 }
 
 export async function handleDelete(docId, matchType) {
-    if (!appState.isAdmin) return showFeedback('Permission denied.', false);
+    if (!appState.isAdmin) return showFeedback('You do not have permission.', false);
+
+    const card = document.querySelector(`[data-doc-id="${docId}"]`);
+    if (card) card.style.opacity = '0.5';
+
     const tableName = matchType === 'league' ? 'matches' : 'knockout_matches';
+
     try {
         const { error } = await supabase.from(tableName).delete().eq('id', docId);
         if (error) throw error;
-        showFeedback('Match deleted', true);
+        showFeedback('Match deleted successfully!', true);
+
         if (matchType === 'league') {
             appState.currentLeagueMatches = appState.currentLeagueMatches.filter(m => m.id !== docId);
             processLeagueChanges(appState.currentLeagueMatches);
@@ -291,5 +403,9 @@ export async function handleDelete(docId, matchType) {
             appState.currentLeagueKnockoutMatches = appState.currentLeagueKnockoutMatches.filter(m => m.id !== docId);
             generateKnockoutStage(appState.sortedTeams, appState.currentLeagueKnockoutMatches);
         }
-    } catch (e) { showFeedback(`Error: ${e.message}`, false); }
+
+    } catch (error) {
+        showFeedback(`Error deleting match: ${error.message}.`, false);
+        if (card) card.style.opacity = '1';
+    }
 }
