@@ -947,7 +947,9 @@ tbody.is-sorting {
     display: flex;
   }
 
-  .league-table.simplified-view .optional-col {
+  .league-table.simplified-view .optional-col,
+  .league-view-container.simplified-view .league-table .optional-col,
+  .league-view-container.simplified-view .optional-col {
     display: none;
   }
 
