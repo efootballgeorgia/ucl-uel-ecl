@@ -166,25 +166,30 @@ export function updateTableFromStats(teamStats) {
         if (!stats) return;
 
         const cells = row.cells;
-        cells[2].textContent = stats.p;
-        
+
+        // Use safe defaults to avoid showing 'undefined'
+        cells[2].textContent = stats.p ?? 0;
+
         if (cells[3].classList.contains('optional-col')) {
-            cells[3].textContent = stats.w;
-            cells[4].textContent = stats.d;
-            cells[5].textContent = stats.l;
+            cells[3].textContent = stats.w ?? 0;
+            cells[4].textContent = stats.d ?? 0;
+            cells[5].textContent = stats.l ?? 0;
         }
 
-        cells[6].textContent = stats.gd > 0 ? `+${stats.gd}` : stats.gd;
-        row.dataset.gd = stats.gd;
-        
-        cells[7].querySelector('.points').textContent = stats.pts;
+        const gd = (typeof stats.gd === 'number' && isFinite(stats.gd)) ? stats.gd : Number(stats.gd) || 0;
+        cells[6].textContent = (gd >= 0) ? `+${gd}` : `${gd}`;
+        row.dataset.gd = String(gd);
+
+        const pointsEl = cells[7].querySelector('.points');
+        if (pointsEl) pointsEl.textContent = (stats.pts ?? 0);
 
         const formContainer = cells[8].querySelector('.form-container');
         if (formContainer) {
             formContainer.innerHTML = '';
-            
-            const displayForm = stats.form.slice(0, formDisplayLimit);
-            
+
+            const formArray = Array.isArray(stats.form) ? stats.form : [];
+            const displayForm = formArray.slice(0, formDisplayLimit);
+
             displayForm.forEach(result => {
                 const span = document.createElement('span');
                 span.className = `form-box ${result}`;

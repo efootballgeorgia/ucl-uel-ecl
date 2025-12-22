@@ -22,12 +22,13 @@ function debounce(func, delay = 350) {
 
 // Helper to calculate stats
 function calculateAllTeamStats(matches, teams) {
-    const stats = Object.fromEntries(teams.map(team => [team, { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0, form: [] }]));
+    const stats = Object.fromEntries(teams.map(team => [team, { p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, gd: 0, pts: 0, form: [] }]));
 
     const updateStats = (teamStat, goalsFor, goalsAgainst, result) => {
         teamStat.p++;
         teamStat.gf += goalsFor;
         teamStat.ga += goalsAgainst;
+        teamStat.gd = teamStat.gf - teamStat.ga;
         teamStat.w += (result === 'victory');
         teamStat.d += (result === 'draw');
         teamStat.l += (result === 'loss');
