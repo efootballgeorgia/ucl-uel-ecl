@@ -7,7 +7,6 @@
   <title>Efootball Georgia</title>
   <link rel="icon" type="image/webp" href="images/leagues/champions-league-logo.webp">
   <link rel="apple-touch-icon" href="images/leagues/champions-league-logo.webp">
-  <link rel="manifest" href="manifest.json">
   
   <link rel="stylesheet" href="styles.css">
   
@@ -50,7 +49,6 @@
         </div>
       </div>
 
-      <!-- Tab Navigation -->
       <nav class="main-nav" role="tablist" aria-label="Main Navigation">
         <button class="nav-btn btn active" id="tab-league" role="tab" aria-selected="true" aria-controls="panel-league"
           data-view="league">Table</button>
@@ -60,34 +58,24 @@
           data-view="knockout">Knockout</button>
       </nav>
 
-      <!-- Auth Buttons -->
       <button id="auth-btn" class="btn">Login</button>
       <button id="logout-btn" class="btn" style="display:none;">Logout</button>
     </div>
   </header>
 
   <main>
-    <!-- Accessibility / Notification Areas -->
     <div class="visually-hidden" aria-live="polite" id="table-sort-announcer"></div>
     <div id="global-feedback" aria-live="polite"></div>
 
-    <!-- 
-      SECTION: LEAGUE / GROUP TABLES 
-      This container is now populated dynamically by JS.
-      It will hold either the standard .league-table wrapper 
-      OR the .groups-grid wrapper for World Cup.
-    -->
     <section id="league-section" class="page-section active" role="tabpanel" aria-labelledby="tab-league">
       <div class="table-view-toggle">
         <button class="table-toggle-btn" data-view="simplified">Simplified</button>
         <button class="table-toggle-btn active" data-view="full">Full</button>
       </div>
       
-      <!-- New dynamic container replacing the hardcoded table -->
       <div id="league-view-container" class="league-view-container"></div>
     </section>
 
-    <!-- SECTION: MATCHES -->
     <section id="matches-section" class="page-section" role="tabpanel" aria-labelledby="tab-matches">
       <div class="search-container-wrapper">
         <h2 id="match-box-title">Match Day</h2>
@@ -107,12 +95,10 @@
       </div>
     </section>
 
-    <!-- SECTION: KNOCKOUT -->
     <section id="knockout-section" class="page-section" role="tabpanel" aria-labelledby="tab-knockout">
     </section>
   </main>
 
-  <!-- AUTH MODAL -->
   <div class="modal auth-modal" id="auth-modal">
     <span class="close" id="closeAuthModal">&times;</span>
     <div class="modal-content auth-modal-content">

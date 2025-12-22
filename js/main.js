@@ -2,26 +2,6 @@ import { initializeSupabase, handleAuthAction, handleLogout, switchLeague, handl
 import { filterMatches } from './ui-matches.js';
 import { sortTable } from './ui-table.js';
 
-// --- START: CLEANUP & STABILIZATION SCRIPT ---
-(async function cleanupServiceWorkers() {
-    try {
-        if ('serviceWorker' in navigator) {
-            const registrations = await navigator.serviceWorker.getRegistrations();
-            for (const registration of registrations) {
-                await registration.unregister();
-            }
-        }
-        if ('caches' in window) {
-            const keys = await caches.keys();
-            if (keys.length > 0) {
-                await Promise.all(keys.map(key => caches.delete(key)));
-            }
-        }
-    } catch (e) {
-        console.error('Cleanup failed:', e);
-    }
-})();
-// --- END: CLEANUP SCRIPT ---
 
 export const dom = {
     leagueSection: document.getElementById('league-section'),
@@ -32,10 +12,7 @@ export const dom = {
     leagueSelectorWrapper: document.querySelector('.league-selector-wrapper'),
     leagueSelectorHeader: document.querySelector('.league-selector-header'),
     leagueSelectorNav: document.querySelector('.league-selector-nav'),
-    
-    // UPDATED: Use the container instead of the table/tbody directly
     leagueViewContainer: document.getElementById('league-view-container'),
-    
     tableViewToggle: document.querySelector('.table-view-toggle'),
     matchesTitle: document.getElementById('match-box-title'),
     matchesContainer: document.getElementById('match-box-container'),
