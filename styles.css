@@ -189,7 +189,7 @@ h6 {
    4. Header & Navigation
 ============================================ */
 header {
-  position: relative;
+  position: sticky;
   top: 0;
   z-index: 1000;
   padding: 0 1rem;
